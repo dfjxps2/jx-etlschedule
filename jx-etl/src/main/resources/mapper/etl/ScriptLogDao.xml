@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.dfjx.modules.etl.dao.ScriptLogDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+	<resultMap type="io.dfjx.modules.etl.entity.ScriptLogEntity" id="scriptLogMap">
+		<result property="id" column="ID" />
+		<result property="scriptid" column="ScriptID" />
+		<result property="scriptversion" column="ScriptVersion" />
+		<result property="etlServer" column="ETL_Server" />
+		<result property="filepath" column="FilePath" />
+		<result property="filename" column="FileName" />
+		<result property="scripttype" column="ScriptType" />
+		<result property="description" column="Description" />
+		<result property="actions" column="Actions" />
+		<result property="message" column="Message" />
+		<result property="author" column="Author" />
+		<result property="logdate" column="LogDate" />
+		<result property="versionfile" column="VersionFile" />
+	</resultMap>
+
+</mapper>

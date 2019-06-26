@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+		<#include "/header.html">
+    <style type="text/css">
+        .selectCus {
+            width: 100px !important;
+        }
+        .col-md-2-cus {
+            width: 11.66666667% !important;padding:0 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <!------------------------------------------------------------>
+
+    <!------------------------------------------------------------>
+    <div v-show="showList">
+        <form class="form-inline">
+
+
+            <div class="form-group col-md-2 col-md-2-cus">
+                <select id="etlSystemSelect" class="selectpicker selectCus" v-model="q.etlSystem"  data-live-search="true" title="系统名称" onchange="getSelectd();">
+                    <option selected value="">全部</option>
+                    <option v-for="item in allsys" :value="item.code">{{item.name}}</option>
+                </select>
+            </div>
+
+
+            <div  class="form-group col-md-2" style="width:20%;" >
+                <div id="datadateid" class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                    <input  class="form-control" size="16" type="text" value="" placeholder="数据日期" readonly onchange="getDate()" >
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+                <input type="hidden" id="dtp_input2" value="" /><br/>
+            </div>
+
+
+            <div class="form-group col-md-2 col-md-2-cus">
+                <input type="text" class="form-control selectCus" v-model="q.etlJob" @keyup.enter="query" placeholder="任务名称">
+            </div>
+            <div class="grid-btn">
+            <a class="btn btn-primary" @click="query">查询</a>
+			<#if shiro.hasPermission("etl:joblog:delete")>
+            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if><#if shiro.hasPermission("etl:joblog:loadlog")>
+            <a class="btn btn-primary" data-toggle="modal" data-target="#myModal" @click="loadlog" ><i class="fa fa-search"></i>&nbsp;查看日志详情</a>
+            </#if><#if shiro.hasPermission("etl:joblog:logdload")>
+            <a class="btn btn-primary"   @click="logdload" ><i class="fa fa-download"></i>&nbsp;下载日志详情</a>
+            </#if>
+
+            <a class="btn btn-primary" @click="timeline" ><i class="fa fa-clock-o"></i>&nbsp;作业时间轴</a>
+            </div>
+        </form>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">作业系统</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="jobLog.etlSystem" placeholder="作业系统"/>
+                </div>
+            </div>
+					<div class="form-group">
+                        <div class="col-sm-2 control-label">作业名称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="jobLog.etlJob" placeholder="作业名称"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">会话ID</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="jobLog.jobsessionid" placeholder="会话ID"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">步骤ID</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="jobLog.jobstepid" placeholder="步骤ID"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">脚本名称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="jobLog.scriptfile" placeholder="脚本名称"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">数据日期</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="jobLog.txdate" placeholder="数据日期"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">开始时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="jobLog.starttime" placeholder="开始时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">结束时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="jobLog.endtime" placeholder="结束时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label"></div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="jobLog.returncode" placeholder=""/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label"></div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="jobLog.seconds" placeholder=""/>
+                        </div>
+                    </div>
+
+        </form>
+    </div>
+    <!-- 按钮触发模态框 -----------------------------------------------------@click="loadlog"------>
+    <!--<button class="btn btn-primary" data-toggle="modal" data-target="#myModal" @click="loadlog" ><i class="fa fa-search"></i>&nbsp;查看日志详情</button>-->
+    <!--<button class="btn btn-primary"   @click="logdload" ><i class="fa fa-download"></i>&nbsp;下载日志详情</button>-->
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="width: 880px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <!--<h4 class="modal-title" id="myModalLabel"><i class="fa fa-apple">作业日志详情</i>-->
+                    <h4 class="modal-title" id="myModalLabel" style="color: #0f6ab4"> <p><span class="glyphicon glyphicon-print">&nbsp;作业日志详情</span></p>
+
+                    </h4>
+                </div>
+                <div class="modal-body" id="joblogdetail">
+                    <!--{{ joblogdetail }}-->
+                </div>
+                <div class="modal-footer">
+                    <button id="btnlog1" type="button" class="btn btn-primary" @click="logdload" >下载日志</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" @click="clearlog">关闭日志</button>
+                    <button id="btnlog2" type="button" class="btn btn-primary" @click="logdload2" style="display:none;" >下载日志</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <!-------------------------------------------------------------------------->
+    <div id="timelineLayer" style="height:100%;width:100%;display:none;">
+    <div style="height:40px;clear:both;">
+        <form class="form-inline">
+            <div style="float:right;margin-right:20px;">
+                <a class="btn btn-primary" onclick="vm.backlist()"> &nbsp;返回 </a>
+            </div>
+        </form>
+
+    </div>
+    <div id="timelineChart" style="width:100%;height:calc(100% - 40px);overflow-y: auto;"></div>
+</div>
+</div>
+
+<link href="${request.contextPath}/statics/js/modules/etl/script-log/history.css" rel="stylesheet">
+<script src="${request.contextPath}/statics/js/modules/etl/joblog.js"></script>
+<script type="text/javascript">
+    $('.form_date').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        todayBtn:true,
+        todayHighlight:true,
+        startDate:2018-01-01
+    });
+
+
+    function getSelectd() {
+        var etlSystemSelect_obj = document.getElementById("etlSystemSelect");
+        var index =  etlSystemSelect_obj.selectedIndex;
+        var select_value = etlSystemSelect_obj.options[index].value;
+        vm.q.etlSystem = select_value;
+    }
+
+    function getDate() {
+        var dateval = $("#datadateid").find("input").val();
+        vm.q.data_date= dateval;
+    }
+</script>
+
+</body>
+</html>

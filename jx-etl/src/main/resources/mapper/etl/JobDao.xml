@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.dfjx.modules.etl.dao.JobDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.dfjx.modules.etl.entity.JobEntity" id="jobMap">
+        <result property="id" column="ID"/>
+        <result property="etlSystem" column="ETL_System"/>
+        <result property="etlJob" column="ETL_Job"/>
+        <result property="etlServer" column="ETL_Server"/>
+        <result property="description" column="Description"/>
+        <result property="frequency" column="Frequency"/>
+        <result property="jobtype" column="JobType"/>
+        <result property="enable" column="Enable"/>
+        <result property="lastStarttime" column="Last_StartTime"/>
+        <result property="lastEndtime" column="Last_EndTime"/>
+        <result property="lastJobstatus" column="Last_JobStatus"/>
+        <result property="lastTxdate" column="Last_TXDate"/>
+        <result property="lastFilecnt" column="Last_FileCnt"/>
+        <result property="lastCubestatus" column="Last_CubeStatus"/>
+        <result property="cubeflag" column="CubeFlag"/>
+        <result property="checkflag" column="CheckFlag"/>
+        <result property="autooff" column="AutoOff"/>
+        <result property="checkcalendar" column="CheckCalendar"/>
+        <result property="calendarbu" column="CalendarBU"/>
+        <result property="runningscript" column="RunningScript"/>
+        <result property="jobsessionid" column="JobSessionID"/>
+        <result property="expectedrecord" column="ExpectedRecord"/>
+        <result property="checklaststatus" column="CheckLastStatus"/>
+        <result property="timetrigger" column="TimeTrigger"/>
+        <result property="priority" column="Priority"/>
+    </resultMap>
+
+    <update id="updateJobStatus">
+        update etl_job set last_jobstatus='Ready',last_txdate=#{lastTxDate}
+        where etl_system=#{etlSystem}
+          and etl_job=#{etlJob}
+
+
+    </update>
+
+    <update id="updateSingleJobStatus">
+        update etl_job set last_jobstatus=#{newJobStatus} where id=#{id}
+    </update>
+
+    <update id="updateSingleJobTxDate">
+        update etl_job set last_txdate=#{newJobTxDate} where id=#{id}
+    </update>
+
+    <update id="updateSingleJobEnable">
+        update etl_job set enable=#{newEnableFlag} where id=#{id}
+    </update>
+
+</mapper>

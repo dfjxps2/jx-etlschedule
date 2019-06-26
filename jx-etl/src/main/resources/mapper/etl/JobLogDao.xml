@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.dfjx.modules.etl.dao.JobLogDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.dfjx.modules.etl.entity.JobLogEntity" id="jobLogMap">
+        <result property="id" column="ID"/>
+        <result property="etlSystem" column="ETL_System"/>
+        <result property="etlJob" column="ETL_Job"/>
+        <result property="jobsessionid" column="JobSessionID"/>
+        <result property="jobstepid" column="JobStepID"/>
+        <result property="scriptfile" column="ScriptFile"/>
+        <result property="txdate" column="TXDate"/>
+        <result property="starttime" column="StartTime"/>
+        <result property="endtime" column="EndTime"/>
+        <result property="returncode" column="ReturnCode"/>
+        <result property="seconds" column="Seconds"/>
+    </resultMap>
+
+
+
+</mapper>

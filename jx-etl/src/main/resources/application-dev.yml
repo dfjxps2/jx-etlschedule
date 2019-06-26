@@ -1,0 +1,70 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    druid:
+#      first:  #数据源1
+#        url: jdbc:mysql://59.212.226.7:3306/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+#        username: etl
+#        password: etl123
+#      second:  #数据源2
+#        url: jdbc:mysql://192.168.137.130:3306/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+#        username: root
+#        password: 123456
+      first:  #数据源1
+        url: jdbc:mysql://192.168.245.100:3306/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+        username: etl
+        password: etl123
+      second:  #数据源2
+        url: jdbc:mysql://192.168.245.100:3306/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+        username: etl
+        password: etl123
+      initial-size: 10
+      max-active: 100
+      min-idle: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      #validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        #login-username: admin
+        #login-password: admin
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+        wall:
+          config:
+            multi-statement-allow: true
+
+system-params:
+#  配置日志下载目录 /home/etl/ETLAuto/LOG/
+  file_download_dir: d:/home/etl/ETLAuto/LOG/
+#  配置公共脚本上传目录 /home/etl/ETLAuto/app/ d:/home/etl/ETLAuto/app/
+  public_script_upload_dir: d:/home/etl/ETLAuto/app/
+#  配置作业脚本上传目录
+  hql_script_upload_dir: /home/etl/ETLAuto/APP/
+# 配置作业控制文件路径
+  control_file_dir: /home/etl/ETLAuto/DATA/receive/
+# 执行脚本软链接目录
+  exec_file_ln_dir: /home/etl/ETLAuto/APP/
+# 是否创建软连接标志
+  create_ln_flag: false
+# 作业配置导出文件
+  config_export_dir: d:/home/etl/ETLAuto/tmp/
+# cas登录服务地址
+#  cas_url: https://127.0.0.1:8443/cas/login?locale=zh_CN&service=http%3A%2F%2F127.0.0.1%3A7202%2Fjx-etl%2Findex.html
+  cas_url: https://127.0.0.1:8443/cas/login?locale=zh_CN&service=http%3A%2F%2Flocalhost%3A8080%2Fportal%2Fcallback%3Fclient_name%3DCasClient
+  portal_url: https://127.0.0.1:8443/cas/logout?service=http%3A%2F%2Flocalhost%3A7202%2Fjx-etl%2F
+  portal_app: 批量数据处理
+  soap_url: http://127.0.0.1:18001/portal/intlDataSynchronizedService?wsdl
+  cas_server_url_prefix: https://127.0.0.1:8443/cas
+  project_url: http://localhost:7202/

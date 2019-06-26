@@ -1,0 +1,14 @@
+version: '2'
+services:
+  dfjx-admin:
+    image: dfjx/admin
+    ports:
+      - "8080:8080"
+    environment:
+      - spring.profiles.active=dev
+  dfjx-api:
+    image: dfjx/api
+    ports:
+      - "8081:8081"
+    environment:
+      - spring.profiles.active=dev

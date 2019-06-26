@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>欢迎页</title>
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap.min.css">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/font-awesome.min.css">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/AdminLTE.min.css">
+<link rel="stylesheet" href="${request.contextPath}/statics/libs/daterangepicker/daterangepicker.css">
+<!-- <link rel="stylesheet" href="${request.contextPath}/statics/css/all-skins.min.css">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/main.css"> -->
+<style type="text/css">
+.content {
+	min-height: 250px;
+	/* padding: 15px; */
+	margin-right: auto;
+	margin-left: auto;
+	/* padding-left: 15px; */
+	/* padding-right: 15px; */
+}
+
+.panel {
+	/* margin-bottom: 20px; */
+	background-color: #fff;
+	border: 0px solid transparent;
+	border-radius: 0px;
+	-webkit-box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
+	/* box-shadow: 0 1px 1px rgba(0,0,0,.05); */
+}
+
+.box {
+	position: relative;
+	border-radius: 3px;
+	background: #ffffff;
+	border-top: 0px solid #d2d6de;
+	margin-bottom: 0px;
+	width: 100%;
+	box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
+}
+</style>
+</head>
+<!-- <body style="overflow-y: hidden;"> -->
+<body>
+  <div class="panel panel-default" style="border: none">
+    <!-- Main content -->
+    <section class="content">
+      <!-- 任务信息 -->
+      <div class="row">
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="info-box bg-aqua">
+            <span class="info-box-icon"><i class="fa fa-flag-o"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">任务数量</span> <span class="info-box-number">2</span>
+              <div class="progress">
+                <div class="progress-bar" style="width: 100%"></div>
+              </div>
+              <span class="progress-description">调度中心运行的任务数量</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="info-box bg-yellow">
+            <span class="info-box-icon"><i class="fa fa-calendar"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">调度次数</span> <span class="info-box-number">518</span>
+              <div class="progress">
+                <div class="progress-bar" style="width: 100%"></div>
+              </div>
+              <span class="progress-description"> 调度中心触发的调度次数 </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="info-box bg-green">
+            <span class="info-box-icon"><i class="fa fa-sliders"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">执行器数量</span> <span class="info-box-number">1</span>
+              <div class="progress">
+                <div class="progress-bar" style="width: 100%"></div>
+              </div>
+              <span class="progress-description">调度中心在线的执行器机器数量</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="border-top:4px solid #ecf0f5">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">调度报表</h3>
+              <!-- tools box -->
+              <div class="pull-right box-tools">
+                <button type="button" class="btn btn-primary btn-sm daterange pull-right" data-toggle="tooltip" id="filterTime">
+                  <i class="fa fa-calendar"></i>
+                </button>
+              </div>
+              <!-- /. tools -->
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-8">
+                  <div id="lineChart" style="height: 295px;"></div>
+                </div>
+                <div class="col-md-4">
+                  <div id="pieChart" style="height: 295px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="${request.contextPath}/statics/libs/jquery.min.js"></script>
+  <script src="${request.contextPath}/statics/libs/vue.min.js"></script>
+  <script src="${request.contextPath}/statics/libs/router.js"></script>
+  <script src="${request.contextPath}/statics/libs/bootstrap.min.js"></script>
+  <script src="${request.contextPath}/statics/libs/app.js"></script>
+  <script src="${request.contextPath}/statics/plugins/layer/layer.js"></script>
+  <script src="${request.contextPath}/statics/libs/daterangepicker/moment.min.js"></script>
+  <script src="${request.contextPath}/statics/libs/daterangepicker/daterangepicker.js"></script>
+  <script src="${request.contextPath}/statics/libs/echarts/echarts.min.js"></script>
+  <script type="text/javascript">
+  /**
+   * Created by xuxueli on 17/4/24.
+   */
+
+
+  $(function () {
+
+      // 过滤时间
+      var _startDate = moment().subtract(1, 'months');    // 默认，最近一月
+      var _endDate = moment();
+      $('#filterTime').daterangepicker({
+          autoApply:false,
+          singleDatePicker:false,
+          showDropdowns:false,        // 是否显示年月选择条件
+          timePicker: true, 			// 是否显示小时和分钟选择条件
+          timePickerIncrement: 10, 	// 时间的增量，单位为分钟
+          timePicker24Hour : true,
+          opens : 'left', //日期选择框的弹出位置
+          ranges: {
+              //'最近1小时': [moment().subtract(1, 'hours'), moment()],
+              '今日': [moment().startOf('day'), moment().endOf('day')],
+              '昨日': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+              '本月': [moment().startOf('month'), moment().endOf('month')],
+              '上个月': [moment().subtract(1, 'months').startOf('month'), moment().subtract(1, 'months').endOf('month')],
+              '最近1周': [moment().subtract(1, 'weeks'), moment()],
+              '最近1月': [_startDate, _endDate]
+          },
+          locale : {
+              format: 'YYYY-MM-DD HH:mm:ss',
+              separator : ' - ',
+              customRangeLabel : '自定义',
+              applyLabel : '确定',
+              cancelLabel : '取消',
+              fromLabel : '起始时间',
+              toLabel : '结束时间',
+              daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],
+              monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月' ],
+              firstDay : 1
+          },
+          startDate:_startDate,
+          endDate: _endDate
+      }, function (start, end, label) {
+          freshChartDate(start, end);
+      });
+      freshChartDate(_startDate, _endDate);
+
+      /**
+       * 刷新报表
+       *
+       * @param startDate
+       * @param endDate
+       */
+      function freshChartDate(startDate, endDate) {
+    	 var data={
+    			"code": 200,
+    			"msg": null,
+    			"content": {
+    				"triggerCountFailTotal": 418,
+    				"triggerDayList": ["2018-07-24", "2018-07-31"],
+    				"triggerCountSucTotal": 701,
+    				"triggerDayCountFailList": [248, 170],
+    				"triggerDayCountSucList": [243, 458]
+    			}
+    		}
+    	   lineChartInit(data)
+           pieChartInit(data);
+ /*          $.ajax({
+              type : 'POST',
+              url : base_url + '/triggerChartDate',
+              data : {
+                  'startDate':startDate.format('YYYY-MM-DD HH:mm:ss'),
+                  'endDate':endDate.format('YYYY-MM-DD HH:mm:ss')
+              },
+              dataType : "json",
+              success : function(data){
+                  if (data.code == 200) {
+                      lineChartInit(data)
+                      pieChartInit(data);
+                  } else {
+                      layer.open({
+                          title: '系统提示',
+                          content: (data.msg || '调度报表数据加载异常'),
+                          icon: '2'
+                      });
+                  }
+              }
+          }); */
+      }
+
+      /**
+       * 折线图
+       */
+      function lineChartInit(data) {
+          var option = {
+                 title: {
+                     text: '日期分布图'
+                 },
+                 tooltip : {
+                     trigger: 'axis',
+                     axisPointer: {
+                         type: 'cross',
+                         label: {
+                             backgroundColor: '#6a7985'
+                         }
+                     }
+                 },
+                 legend: {
+                     data:['成功调度次数','失败调度次数']
+                 },
+                 toolbox: {
+                     feature: {
+                         /*saveAsImage: {}*/
+                     }
+                 },
+                 grid: {
+                     left: '3%',
+                     right: '4%',
+                     bottom: '3%',
+                     containLabel: true
+                 },
+                 xAxis : [
+                     {
+                         type : 'category',
+                         boundaryGap : false,
+                         data : data.content.triggerDayList
+                     }
+                 ],
+                 yAxis : [
+                     {
+                         type : 'value'
+                     }
+                 ],
+                 series : [
+                     {
+                         name:'成功调度次数',
+                         type:'line',
+                         stack: '总量',
+                         areaStyle: {normal: {}},
+                         data: data.content.triggerDayCountSucList
+                     },
+                     {
+                         name:'失败调度次数',
+                         type:'line',
+                         stack: '总量',
+                         label: {
+                             normal: {
+                                 show: true,
+                                 position: 'top'
+                             }
+                         },
+                         areaStyle: {normal: {}},
+                         data: data.content.triggerDayCountFailList
+                     }
+                 ],
+                  color:['#00A65A', '#F39C12']
+          };
+
+          var lineChart = echarts.init(document.getElementById('lineChart'));
+          lineChart.setOption(option);
+      }
+
+      /**
+       * 饼图
+       */
+      function pieChartInit(data) {
+          var option = {
+              title : {
+                  text: '成功比例图',
+                  /*subtext: 'subtext',*/
+                  x:'center'
+              },
+              tooltip : {
+                  trigger: 'item',
+                  formatter: "{a} <br/>{b} : {c} ({d}%)"
+              },
+              legend: {
+                  orient: 'vertical',
+                  left: 'left',
+                  data: ['成功调度次数','失败调度次数']
+              },
+              series : [
+                  {
+                      name: '分布比例',
+                      type: 'pie',
+                      radius : '55%',
+                      center: ['50%', '60%'],
+                      data:[
+                          {
+                              value:data.content.triggerCountSucTotal,
+                              name:'成功调度次数'
+                          },
+                          {
+                              value:data.content.triggerCountFailTotal,
+                              name:'失败调度次数'
+                          }
+                      ],
+                      itemStyle: {
+                          emphasis: {
+                              shadowBlur: 10,
+                              shadowOffsetX: 0,
+                              shadowColor: 'rgba(0, 0, 0, 0.5)'
+                          }
+                      }
+                  }
+              ],
+              color:['#00A65A', '#F39C12']
+          };
+          var pieChart = echarts.init(document.getElementById('pieChart'));
+          pieChart.setOption(option);
+      }
+
+  });
+  </script>
+</body>
+</html>

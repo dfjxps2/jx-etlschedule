@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.dfjx.modules.etl.dao.ScriptDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+	<resultMap type="io.dfjx.modules.etl.entity.ScriptEntity" id="scriptMap">
+		<result property="scriptid" column="ScriptID" />
+		<result property="etlServer" column="ETL_Server" />
+		<result property="filepath" column="FilePath" />
+		<result property="filename" column="FileName" />
+		<result property="scripttype" column="ScriptType" />
+		<result property="description" column="Description" />
+		<result property="username" column="Username" />
+		<result property="shareflag" column="ShareFlag" />
+		<result property="enable" column="Enable" />
+	</resultMap>
+	<select id="getScripts" resultType="java.util.LinkedHashMap">
+	 select ScriptID code ,FileName name from etl_script where enable='1'
+	</select>
+</mapper>

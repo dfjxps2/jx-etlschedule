@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.dfjx.modules.etl.dao.ServerDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.dfjx.modules.etl.entity.ServerEntity" id="serverMap">
+        <result property="id" column="ID"/>
+        <result property="etlServer" column="ETL_Server"/>
+        <result property="description" column="Description"/>
+        <result property="ipaddress" column="IPAddress"/>
+        <result property="agentport" column="AgentPort"/>
+        <result property="livecount" column="LiveCount"/>
+    </resultMap>
+
+    <select id="getServices" resultType="java.util.LinkedHashMap">
+       select etl_server  code ,etl_server name from etl_server
+    </select>
+
+</mapper>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<#include "/header.html">
+</head>
+<body>
+  <div id="rrapp" v-cloak>
+    <div v-show="showList">
+      <div class="grid-btn">
+        <div class="form-group col-sm-2">
+          <input type="text" class="form-control" v-model="q.filename" @keyup.enter="query" placeholder="模板名称">
+        </div>
+        <a class="btn btn-default" @click="query">查询</a>
+        <#if shiro.hasPermission("etl:script:save")>
+        <a class="btn btn-primary" @click="add">
+          <i class="fa fa-plus"></i>
+          &nbsp;新增
+        </a>
+        </#if> <#if shiro.hasPermission("etl:script:update")>
+        <a class="btn btn-primary" @click="update">
+          <i class="fa fa-pencil-square-o"></i>
+          &nbsp;修改
+        </a>
+        </#if> <#if shiro.hasPermission("etl:script:delete")>
+        <a class="btn btn-primary disabled" @click="del">
+          <i class="fa fa-trash-o"></i>
+          &nbsp;删除
+        </a>
+        </#if>
+        <a class="btn btn-primary" @click="readScripts">
+          <i class="fa fa-search"></i>
+          &nbsp;查看内容
+        </a>
+
+        <a class="btn btn-primary" @click="editScripts">
+          <i class="fa fa-file-code-o"></i>
+          &nbsp;编辑内容
+        </a>
+
+        <a class="btn btn-warning" style="float:right;" @click="goScriptLog">版本信息</a>
+
+      </div>
+      <table id="jqGrid"></table>
+      <div id="jqGridPager"></div>
+    </div>
+    <div v-show="!showList" class="panel panel-default">
+      <div class="panel-heading">{{title}}</div>
+      <form class="form-horizontal">
+        <div class="form-group" style="display: none">
+          <div class="col-sm-2 control-label">模板ID</div>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="script.scriptid" placeholder="模板ID" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-2 control-label">服务器名称</div>
+          <select id="etlServerSelect" class="selectpicker col-sm-10" style="" v-model="script.etlServer" data-live-search="true" title="服务器名称" onchange="getSelectdServer(); ">
+            <option v-for="option in allServers" v-bind:value="option.code">{{ option.name }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-2 control-label">模板路径</div>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="script.filepath" placeholder="模板路径" readonly="readonly" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-2 control-label">模板名称</div>
+          <div class="col-sm-10">
+            <!-- readonly="readonly" -->
+            <input type="text" class="form-control" v-model="script.filename" placeholder="模板名称" readonly="readonly" style="width: 80%; display: inline;">
+            <input type="button" class="btn btn-primary" onclick="uploadScript();" id="upload" value="导入" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-2 control-label">模板类型</div>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="script.scripttype" readonly="readonly" placeholder="模板类型" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-2 control-label">模板描述</div>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="script.description" placeholder="模板描述" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-2 control-label">是否生效</div>
+          <div class="col-sm-10">
+            <select id="enableid" class="selectpicker form-control" v-model="script.enable" title="请选择是否生效" onchange="">
+              <option value="1">生效</option>
+              <option value="0">失效</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-2 control-label">是否共享</div>
+          <div class="col-sm-10">
+            <select id="shareflagid" class="selectpicker form-control" v-model="script.shareflag" title="请选择是否共享" onchange="">
+              <option value="1">共享</option>
+              <option value="0">私有</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-2 control-label"></div>
+          <input type="hidden" v-model="script.username" />
+          <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定" />
+          &nbsp;&nbsp;
+          <input type="button" class="btn btn-warning" @click="reBack" value="返回" />
+        </div>
+      </form>
+    </div>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document" style="width: 880px;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+              &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel" style="color: #0f6ab4"> <p><span class="glyphicon glyphicon-print">&nbsp;作业模板详情</span></p>
+
+            </h4>
+          </div>
+          <div class="modal-body"><!--class="form-control"-->
+          <textarea  id="scriptDetail" style="width:100%;">
+          </textarea>
+          </div>
+          <div class="modal-footer">
+            <button id="showSaveScript" type="button" class="btn btn-primary" @click="saveScripts" >保存模板</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" @click="closeScripts">关闭模板</button>
+
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+    <!-------------------------------------------------------------------------->
+  </div>
+  <!-- <script src="${request.contextPath}/statics/js/modules/etl/script.js?_${.now?long}"></script> -->
+  <link href="${request.contextPath}/statics/libs/codemirror/lib/codemirror.css" rel="stylesheet">
+  <link href="${request.contextPath}/statics/libs/codemirror/theme/dracula.css" rel="stylesheet">
+  <link href="${request.contextPath}/statics/libs/codemirror/addon/hint/show-hint.css" rel="stylesheet">
+  <script src="${request.contextPath}/statics/libs/codemirror/lib/codemirror.js"></script>
+  <script src="${request.contextPath}/statics/libs/codemirror/mode/clike.js"></script>
+  <script src="${request.contextPath}/statics/libs/codemirror/mode/perl.js"></script>
+  <script src="${request.contextPath}/statics/libs/codemirror/mode/shell.js"></script>
+  <script src="${request.contextPath}/statics/libs/codemirror/mode/sql.js"></script>
+  <script src="${request.contextPath}/statics/libs/codemirror/mode/python.js"></script>
+  <script src="${request.contextPath}/statics/js/modules/etl/script.js"></script>
+</body>
+</html>

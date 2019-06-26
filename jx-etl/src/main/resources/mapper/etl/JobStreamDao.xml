@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.dfjx.modules.etl.dao.JobStreamDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.dfjx.modules.etl.entity.JobStreamEntity" id="jobStreamMap">
+        <result property="etlSystem" column="ETL_System"/>
+        <result property="etlJob" column="ETL_Job"/>
+        <result property="streamSystem" column="Stream_System"/>
+        <result property="streamJob" column="Stream_Job"/>
+        <result property="description" column="Description"/>
+        <result property="enable" column="Enable"/>
+    </resultMap>
+
+
+</mapper>

@@ -1,0 +1,112 @@
+
+#rrapp{;height:100%;width:100%;overflow-y: auto;overflow-x: hidden;}
+html,body { overflow:hidden;height:100%;width:100%; }
+body{background:#f5f4f9;}
+.content-header {
+	position: relative;
+	padding: 0 0 3px 8px
+}
+
+.content-header>.breadcrumb {
+    position: relative;
+    top: 0;
+    right: 0;
+    float: none;
+    margin-top: 0px;
+    padding-left: 10px;
+    background: #ecf0f5;
+}
+
+.main-footer {
+    padding: 7px;
+    color: #444;
+    border-top: 1px solid #eee;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+.grid-btn{
+	margin-bottom:12px;
+}
+.grid-btn .btn{
+	margin-right:10px;
+}
+.pointer{cursor: pointer;}
+
+.ml-10 { margin-left:0 !important; }
+@media (min-width: 768px) {
+	.ml-10 { margin-left:10px !important; }
+	.col-sm-10 {width: 70%;padding-left: 0px;}
+	.col-sm-2 {width: 24%;}
+}
+tbody > tr > th {font-weight: normal; }
+.panel .table { margin:0 0; }
+.panel .pagination { margin:0; }
+.panel-default>.panel-heading {background-color: #f5f5f5;}
+.row{
+	border-top: 1px solid #ddd;
+	margin:0;
+	padding:20px 2px 0px 2px;
+}
+.col-xs-6{padding-left: 0px;padding-right: 0px;}
+.form-horizontal .form-group {margin-left:0px;margin-right:0px;}
+.form-horizontal{
+	 width:550px; 
+	padding-top:20px;
+}
+.form-horizontal_auto{
+	padding-top:20px;
+}
+.do-success {
+	/* border: 1px solid #999; */
+	text-align: center;
+    background: #e6e6e6 !important;
+    box-shadow: 1px 1px 9px rgba(0, 0, 0, 0.3)!important;
+}
+.do-success-content {
+	padding-top: 23px;
+	font-size: 15px;
+	font-weight: bold;
+	color: #000;
+	text-align: center;
+	
+}
+.layui-layer-content{
+	border:1px solid #dcd5d5;
+	border-bottom:0px solid red;
+}
+
+
+.cus-p-diag {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	background: rgba(0, 0, 0, 0.1);
+	overflow: auto;
+}
+
+.cusdialog {
+	border: 1px solid #ddd;
+	border-top: 1px solid #888;
+	border-left: 1px solid #888;
+	box-shadow: 3px 3px 3px #888888;
+	margin-left: 20%;
+	margin-top: 10%;
+	width: 60%;
+	z-index: 10;
+	opacity: 1;
+}
+
+.cusdialog .form-horizontal {
+	max-height: 350px;
+	overflow-y: auto;
+}
+.cusdialog .form-horizontal2 {
+	max-height: 400px;
+	overflow-y: auto;
+}

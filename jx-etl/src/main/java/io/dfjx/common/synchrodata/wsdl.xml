@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://internal.synchrodata.security.portal.quick.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="intlDataSynchronizedService" targetNamespace="http://internal.synchrodata.security.portal.quick.com/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://internal.synchrodata.security.portal.quick.com/" elementFormDefault="unqualified" targetNamespace="http://internal.synchrodata.security.portal.quick.com/" version="1.0">
+
+  <xs:element name="getUserApplicationPrivilegeByAppID" type="tns:getUserApplicationPrivilegeByAppID"/>
+
+  <xs:element name="getUserApplicationPrivilegeByAppIDResponse" type="tns:getUserApplicationPrivilegeByAppIDResponse"/>
+
+  <xs:element name="getUsersDataByUserID" type="tns:getUsersDataByUserID"/>
+
+  <xs:element name="getUsersDataByUserIDResponse" type="tns:getUsersDataByUserIDResponse"/>
+
+  <xs:complexType name="getUserApplicationPrivilegeByAppID">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg2" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getUserApplicationPrivilegeByAppIDResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getUsersDataByUserID">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getUsersDataByUserIDResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="getUserApplicationPrivilegeByAppID">
+    <wsdl:part element="tns:getUserApplicationPrivilegeByAppID" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUsersDataByUserIDResponse">
+    <wsdl:part element="tns:getUsersDataByUserIDResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUserApplicationPrivilegeByAppIDResponse">
+    <wsdl:part element="tns:getUserApplicationPrivilegeByAppIDResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUsersDataByUserID">
+    <wsdl:part element="tns:getUsersDataByUserID" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="IDataSynchronizedWsdl">
+    <wsdl:operation name="getUserApplicationPrivilegeByAppID">
+      <wsdl:input message="tns:getUserApplicationPrivilegeByAppID" name="getUserApplicationPrivilegeByAppID">
+    </wsdl:input>
+      <wsdl:output message="tns:getUserApplicationPrivilegeByAppIDResponse" name="getUserApplicationPrivilegeByAppIDResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUsersDataByUserID">
+      <wsdl:input message="tns:getUsersDataByUserID" name="getUsersDataByUserID">
+    </wsdl:input>
+      <wsdl:output message="tns:getUsersDataByUserIDResponse" name="getUsersDataByUserIDResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="intlDataSynchronizedServiceSoapBinding" type="tns:IDataSynchronizedWsdl">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getUserApplicationPrivilegeByAppID">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getUserApplicationPrivilegeByAppID">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getUserApplicationPrivilegeByAppIDResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUsersDataByUserID">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="getUsersDataByUserID">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getUsersDataByUserIDResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="intlDataSynchronizedService">
+    <wsdl:port binding="tns:intlDataSynchronizedServiceSoapBinding" name="DataSynchronizedWsdlImplPort">
+      <soap:address location="http://127.0.0.1:18001/portal/intlDataSynchronizedService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

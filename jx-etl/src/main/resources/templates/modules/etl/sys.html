@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+		<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+
+            <div class="form-group col-sm-2">
+                <input type="text" class="form-control" v-model="q.etlSystem" @keyup.enter="query" placeholder="作业系统名称">
+            </div>
+            <a class="btn btn-default" @click="query">查询</a>
+			<#if shiro.hasPermission("etl:sys:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("etl:sys:update")>
+            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("etl:sys:delete")>
+            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">作业系统名称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="sys.etlSystem" placeholder="作业系统名称（要求大写且3个字符）"/>
+                        </div>
+                    </div>
+
+					<div class="form-group">
+                        <div class="col-sm-2 control-label">作业系统描述</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="sys.description" placeholder="作业系统描述"/>
+                        </div>
+                    </div>
+											                    <div class="form-group" style="display:none">
+                        <div class="col-sm-2 control-label">数据保存周期</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="sys.datakeepperiod" placeholder="10" value="10" readonly />
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">日志保存周期</div>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" v-model="sys.logkeepperiod" placeholder="日志保存周期，只能输入数字" value="10"/>
+                        </div>
+                    </div>
+											                    <div class="form-group" style="display:none">
+                        <div class="col-sm-2 control-label">记录保存周期</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="sys.recordkeepperiod" placeholder="10" value="10" readonly />
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">优先级</div>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" v-model="sys.priority" placeholder="优先级，只能输入数字"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">并发数</div>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" v-model="sys.concurrent" placeholder="并发数，只能输入数字" />
+                        </div>
+                    </div>
+							            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/etl/sys.js?_${.now?long}"></script>
+</body>
+</html>

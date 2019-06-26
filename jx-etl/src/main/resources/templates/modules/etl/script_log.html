@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>作业模板版本信息</title>
+<#include "/header.html">
+
+</head>
+<body>
+<div id="rrapp">
+	<div class="grid-btn">
+		<!--<div class="form-group col-sm-2">
+			<input type="text" class="form-control" v-model="q.scriptId" @keyup.enter="query" placeholder="模板ID">
+		</div>
+		<a class="btn btn-default" @click="query">查询</a>-->
+		&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="back" value="返回"/>
+	</div>
+    <table id="jqGrid"></table>
+    <div id="jqGridPager"></div>
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document" style="width: 880px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="myModalLabel" style="color: #0f6ab4"> <p><span class="glyphicon glyphicon-print">&nbsp;作业模板详情</span></p>
+
+					</h4>
+				</div>
+				<div class="modal-body">
+				  <textarea  id="scriptDetail" style="width:100%;">
+				  </textarea>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭模板</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal -->
+	</div>
+	<!-------------------------------------------------------------------------->
+</div>
+<link href="${request.contextPath}/statics/libs/codemirror/lib/codemirror.css" rel="stylesheet">
+<link href="${request.contextPath}/statics/libs/codemirror/theme/dracula.css" rel="stylesheet">
+<script src="${request.contextPath}/statics/libs/codemirror/lib/codemirror.js"></script>
+<script src="${request.contextPath}/statics/libs/codemirror/mode/clike.js"></script>
+<script src="${request.contextPath}/statics/libs/codemirror/mode/perl.js"></script>
+<script src="${request.contextPath}/statics/libs/codemirror/mode/shell.js"></script>
+<script src="${request.contextPath}/statics/libs/codemirror/mode/sql.js"></script>
+<script src="${request.contextPath}/statics/libs/codemirror/mode/python.js"></script>
+<script src="${request.contextPath}/statics/js/modules/etl/script_log.js?_${.now?long}"></script>
+</body>
+</html>

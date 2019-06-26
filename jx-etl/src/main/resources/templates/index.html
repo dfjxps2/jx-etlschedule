@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>批量数据处理系统</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link href="${request.contextPath}/favicon.ico" rel="shortcut icon">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap.min.css">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/font-awesome.min.css">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/AdminLTE.min.css">
+<!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+<link rel="stylesheet" href="${request.contextPath}/statics/css/all-skins.min.css">
+<link rel="stylesheet" href="${request.contextPath}/statics/css/main.css">
+<style type="text/css">
+.main-header .logo {
+  text-align: left;padding: 0px 0px 0px 60px;
+}
+
+.logo-lg b {
+	font-family: "微软雅黑";
+	font-size: 16px;
+	color: #fff;
+}
+
+.skin-blue .main-header .navbar .nav>li>a {
+	font-family: "微软雅黑";
+	font-size: 14px;
+	color: #fff;
+}
+.skin-blue .main-header .navbar .nav>li>a i{
+  font-size:18px;
+}
+
+.skin-blue .sidebar-menu>li>.treeview-menu {
+	background-color: #1e222e;
+}
+
+.skin-blue .wrapper, .skin-blue .main-sidebar, .skin-blue .left-side {
+	background-color: #292d37;
+}
+.skin-blue .sidebar-menu > li:hover > a, .skin-blue .sidebar-menu > li.active > a{
+	color: #fff;  background: #448aff;border-left-color: #fff;
+}
+.skin-blue .sidebar a,.skin-blue .treeview-menu>li>a{color:#d4d6dc;}
+.skin-blue .treeview-menu>li>a:hover{background: #448aff;}
+.skin-blue .treeview-menu>li.active>a{color:#fff;background: #448aff;}
+
+.sidebar-menu>li>a{
+	padding: 13px 5px 13px 17px;
+}
+.sidebar-menu .treeview-menu>li>a{
+  padding: 13px 5px 13px 17px;
+}
+
+.skin-blue .sidebar a {
+	font-size: 14px;
+}
+
+.skin-blue .treeview-menu>li>a {
+	font-size: 12px;
+}
+
+.skin-blue .sidebar-menu>li.header {
+	background: none;
+}
+.main-header{background:url(statics/img/nav.png);min-height:54px;max-height:150px;}
+.skin-blue .main-header .navbar{background:transparent;}
+.skin-blue .main-header .logo{height:54px;line-height: 54px;background:url(statics/img/logo.png) no-repeat 20px;}
+.main-header .sidebar-toggle{padding:17px 15px}
+.content{padding:5px 0 5px 0;height: calc(100% - 39px);min-height:500px;background: #f5f4f9; overflow-y: hidden;}
+.main-footer{height:40px;padding:5px 0 5px 0;}
+.nav>li>a{padding:15px 22px;}
+.logout{padding:15px 10px 15px 22px;}
+/*定义滚动条轨道*/
+::-webkit-scrollbar-track {
+	background-color: #F5F5F5;
+	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.22);
+}
+/*定义滚动条高宽及背景*/
+::-webkit-scrollbar {
+	width: 0px;
+	background-color: rgba(0, 0, 0, 0.34);
+}
+/*定义滚动条*/
+::-webkit-scrollbar-thumb {
+	background-color: rgba(0, 255, 255, 0.22);
+	border-radius: 10px;
+}
+.sidebar-menu>li>a>.fa{
+  width:18px;height:18px;font-size:18px;margin-right:5px;
+}
+.main-sidebar, .left-side{
+  width:200px;
+}
+.content-wrapper{
+  margin-left:200px;
+}
+.navbar-custom-menu{float:right;}
+.navbar-custom-menu li{float:left;}
+.sidebar-toggle{}
+</style>
+</head>
+<!-- ADD THE CLASS layout-boxed TO GET A BOXED LAYOUT -->
+<body class="hold-transition skin-blue sidebar-mini" style="overflow: hidden;">
+  <!-- Site wrapper -->
+  <div class="wrapper" id="rrapp" v-cloak style="overflow: hidden;">
+    <header class="main-header">
+      <a href="javascript:void(0);" class="logo" onclick="firstPage();return false;">
+        <span class="logo-lg"><b>批量数据处理系统</b></span>
+      </a>
+      <!-- Header Navbar: style can be found in header.less -->
+      <nav class="navbar navbar-static-top" role="navigation">
+        <!-- Sidebar toggle button-->
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+          <span class="sr-only">&emsp;</span>
+        </a>
+        <div class="navbar-custom-menu">
+          <ul class="nav navbar-nav">
+            <!--<li>
+              <a href="javascript:;" @click="updatePassword">
+                <i class="fa fa-lock"></i>
+                &nbsp;修改密码
+              </a>
+            </li>-->
+            <li>
+              <a href="javascript:void(0);"> &nbsp;当前用户：&nbsp;{{user.userRealName}} </a>
+            </li>
+            <li>
+              <a href="logout" class="logout">
+                <i class="fa fa-sign-out"></i>退出
+                &nbsp;
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <!-- =============================================== -->
+    <!-- Left side column. contains the sidebar -->
+    <aside class="main-sidebar" id="mainSidebar">
+      <!-- sidebar: style can be found in sidebar.less -->
+      <section class="sidebar">
+        <!-- /.search form -->
+        <!-- sidebar menu: : style can be found in sidebar.less ; -->
+        <ul class="sidebar-menu" id="sidebarMenu" style="overflow-y: auto;height: 500px;margin-top:6px;">
+          <!--<li class="header"></li>-->
+          <!-- vue生成的菜单 -->
+          <menu-item :item="item" v-for="item in menuList"></menu-item>
+        </ul>
+      </section>
+      <!-- /.sidebar -->
+    </aside>
+    <!-- =============================================== -->
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <ol class="breadcrumb" id="nav_title" style="position: static; float: none;">
+          <li class="active">
+            <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i>
+            &nbsp; 首页
+          </li>
+          <li class="active">{{navTitle}}</li>
+        </ol>
+      </section>
+      <!-- Main content -->
+      <section class="content" >
+        <iframe scrolling="yes" frameborder="0" style="width: 100%; height: 100%; overflow: visible;" :src="main"></iframe>
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <!--<footer class="main-footer" style="text-align: center;"> 北京泰豪智能工程有限公司 </footer>-->
+    <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+    <!-- 修改密码 -->
+    <div id="passwordLayer" style="display: none; overflow: hidden;">
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="form-group">
+            <div class="col-sm-2 control-label">账号</div>
+            <span class="label label-success" style="vertical-align: bottom;">{{user.username}}</span>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-2 control-label">原密码</div>
+            <div class="col-sm-10">
+              <input type="password" class="form-control" v-model="password" placeholder="原密码" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-2 control-label">新密码</div>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" v-model="newPassword" placeholder="新密码" />
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- ./wrapper -->
+  <script src="${request.contextPath}/statics/libs/jquery.min.js"></script>
+  <script src="${request.contextPath}/statics/libs/vue.min.js"></script>
+  <script src="${request.contextPath}/statics/libs/router.js"></script>
+  <script src="${request.contextPath}/statics/libs/bootstrap.min.js"></script>
+  <script src="${request.contextPath}/statics/libs/app.js"></script>
+  <script src="${request.contextPath}/statics/plugins/layer/layer.js"></script>
+  <script src="${request.contextPath}/statics/js/index.js"></script>
+</body>
+</html>

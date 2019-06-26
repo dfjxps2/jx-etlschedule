@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<#include "/header.html">
+<style type="text/css">
+.selectCus {
+	width: 100px !important;
+}
+
+.col-md-2-cus {
+	width: 10% !important;
+}
+
+.col-md-2-cus2 {
+	padding-right: 0px ! important;
+	padding-left: 15px ! important;
+	width: 13.66666667% !important;
+}
+
+.form-control-cus {
+	padding: 0px !important;
+}
+
+.row {
+	border-top: 0px dotted #ddd;
+	margin: 0;
+	padding: 20px 2px 0px 2px;
+}
+
+.container {
+	padding-right: 0px;
+	padding-left: 0px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.cus-select-width>.bootstrap-select {
+	width: 100% ! important;
+}
+#rrapp{overflow-x: auto;}
+</style>
+</head>
+<body>
+  <div id="rrapp" v-cloak>
+    <div v-show="showList">
+      <div class="grid-btn">
+        <form class="form-inline">
+          <div class="form-group col-md-2 col-md-2-cus">
+            <select id="etlSystemSelect" class="selectpicker selectCus" style="" v-model="q.etlSystem" data-live-search="true" title="系统名称" onchange="getSelectd(); ">
+              <option selected value="">全部</option>
+              <option v-for="option in allsys" v-bind:value="option.code">{{ option.name }}</option>
+            </select>
+          </div>
+          <div class="form-group col-md-2 col-md-2-cus">
+            <select id="etlStatusSelect" class="selectpicker  selectCus" v-model="q.lastJobStatus" data-live-search="true" title="作业状态" onchange="getSelectStatus();">
+              <option selected value="">全部</option>
+              <option v-for="item in allstatus" :value=item.status>{{item.status_desc}}</option>
+            </select>
+          </div>
+          <!--     <div class="form-group col-md-2 col-md-2-cus2">
+            <div id="lastTxDateStart" class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+              <input class="form-control" size="16" type="text" value="" placeholder="起始数据日期" readonly onchange="getReqDateStart()">
+              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+          </div>
+          <div class="form-group col-md-2 col-md-2-cus2">
+            <div id="lastTxDateEnd" class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+              <input class="form-control" size="16" type="text" value="" placeholder="截止数据日期" readonly onchange="getReqDateEnd()">
+              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+          </div> -->
+          <div class="form-group col-md-2">
+            <input type="text" class="form-control" v-model="q.etlJob" @keyup.enter="query" placeholder="作业名称">
+          </div>
+        </form>
+        <a class=" btn btn-primary" @click="query" style='margin-left: 30px;'> 查询 </a>
+        <#if shiro.hasPermission("etl:job:save")>
+        <a class="btn btn-primary" @click="add" > <i class="fa fa-plus"></i>&nbsp;新增 </a>
+        </#if> <#if shiro.hasPermission("etl:job:update")>
+        <a class="btn btn-primary" @click="update"> <i class="fa fa-pencil-square-o"></i> &nbsp;修改 </a>
+        </#if>
+        <!--<#if shiro.hasPermission("etl:job:delete")>-->
+        <!--<a class="btn btn-primary disabled" @click="del"> &nbsp;删除 </a>-->
+        <!--</#if> -->
+
+        <a class="btn btn-warning" id="uploadxls"><i class="fa fa-upload"></i>&nbsp;配置上传</a>
+        <a class="btn btn-warning" id="batchconfigid" @click="batchconfig">&nbsp;校验配置</a>
+        <a class="btn btn-primary" id="epxortcfgid" @click="expconfig"><i class="fa fa-download"></i> &nbsp;导出配置 </a>
+        <!--<a class="btn btn-primary" id="epxortcfgid" @click=""><i class="fa fa-download"></i> &nbsp;导出配置 </a>-->
+      </div>
+
+
+      <div>
+        <!--<#if shiro.hasPermission("etl:job:info")>-->
+        <a class="btn btn-primary" @click="dependency"> &nbsp;上层依赖 </a>
+        <!--</#if> <#if shiro.hasPermission("etl:job:list")>-->
+        <a class="btn btn-primary" @click="alldependency"> &nbsp;所有依赖 </a>
+        <!--</#if> <#if shiro.hasPermission("etl:job:analysis")>-->
+        <a class="btn btn-primary" @click="analysis"> &nbsp;血缘影响分析 </a>
+        </#if>
+      </div>
+      <table id="jqGrid"></table>
+      <div id="jqGridPager"></div>
+    </div>
+    <!--  第一部分新增配置作业基础信息------------------------------------------------------------------------------------------------ -->
+    <div v-show="!showList" class="panel panel-default">
+      <div class="panel-heading">{{title}}</div>
+      <form class="form form-horizontal">
+        <div class="container">
+          <label class="btn btn-default disabled" style="border: none; font-weight: 700;">配置作业基础信息</label>
+          <div class="row clearfix" style="border-top: 1px dotted #ddd;">
+            <div class="col-sm-12 column">
+              <div class="form-group">
+                <div class="col-sm-6">
+                  <div class="col-sm-3 control-label">服务器名称</div>
+                  <div class="col-sm-9 cus-select-width">
+                    <select id="etlServerAddSelect" class="selectpicker" v-model="job.etlServer" data-live-search="true" title="服务器名称" onchange="getEtlServerAddSelect();">
+                      <option v-for="item in allServer" :value=item.code>{{item.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="col-sm-3 control-label">系统名称</div>
+                  <div class="col-sm-9 cus-select-width">
+                    <select id="etlSystemAddSelect" class="selectpicker" v-model="job.etlSystem" data-live-search="true" title="系统名称" onchange="getEtlSystemAddSelect();">
+                      <option v-for="item in allsys" :value=item.code>{{item.name}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-6">
+                  <div class="col-sm-3 control-label">作业名称</div>
+                  <div class="col-sm-9">
+                    <!-- readonly="readonly" -->
+                    <input type="text" class="form-control" v-model="job.etlJob" placeholder="作业名称" onblur="setDoScript();" style="width:75%; display: inline;">
+                    <input type="button" class="btn btn-primary" onclick="uploadScript();" id="upload" value="上传" />
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                      <div class="col-sm-3 control-label">描述</div>
+                      <div class="col-sm-9">
+                          <input type="text" class="form-control" v-model="job.description" placeholder="描述" />
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-6">
+                  <div class="col-sm-3 control-label">作业模板</div>
+                  <div class="col-sm-9 cus-select-width">
+                    <select id="publicScriptid" class="selectpicker" v-model="job.publicScript" data-live-search="true" title="作业模板" onchange="getPublicScript();">
+                      <option v-for="item in doScripts" :value=item.code>{{item.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="col-sm-3 control-label">执行脚本</div>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" v-model="job.runningscript" placeholder="执行脚本" readonly="readonly" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-6">
+                  <div class="col-sm-3 control-label">是否生效</div>
+                  <div class="col-sm-9">
+                    <select id="enableid" class="selectpicker form-control" v-model="job.enable" title="请选择是否生效" onchange="">
+                      <option value="1">生效</option>
+                      <option value="0">失效</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="col-sm-3 control-label">作业状态</div>
+                  <div class="col-sm-9">
+                    <select id="etlStatusAddSelectId" class="selectpicker  form-control" v-model="job.lastJobstatus" data-live-search="true" title="作业状态" onchange="getSelectAddStatus();">
+                      <option v-for="item in allstatus" :value=item.status>{{item.status_desc}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-6">
+                      <div class="col-sm-3 control-label">周期类型</div>
+                      <div class="col-sm-9">
+                          <select id="frequencyid" class="selectpicker form-control" title="请选择周期类型" onchange="getFrequency()" style="width: 275px">
+                              <option value="0">日作业</option>
+                              <option value="-1">月作业</option>
+                          </select>
+                          <input type="hidden" id="frequency" name="frequency" v-model="job.frequency" />
+                      </div>
+                </div>
+                <div id="freqbox1" class="col-sm-6" style="display: none;">
+                    <div class="col-sm-3 control-label">执行时间</div>
+                    <div class="col-sm-9">
+                        <select id="frequencydate" class="selectpicker" data-live-search="true" title="每月执行时间" onchange="getFrequency2()">
+                            <option v-for="option in alldate" :value="option.value">{{option.text}}</option>
+                        </select>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <!--  第二部分新增配置作业基础信息------------------------------------------------------------------------------------------------ -->
+          </div>
+          <div class="row clearfix" style="border-top: 1px dotted #ddd;">
+            <div class="col-md-2 column" style="padding-right: 0px; width: 15.66666667%;">
+              <input type="button" class="btn btn-primary" @click="selectDependJobs" value="配置依赖作业" />
+              <br> <br>
+              <input type="button" class="btn btn-primary" @click="addTriggerJob" value="配置触发作业" />
+              <br> <br>
+              <input type="button" class="btn btn-danger" @click="removeDependJob" value="删除依赖作业" />
+            </div>
+            <div class="col-md-10 column" style="padding-left: 0px;">
+              <div class="form-group">
+                <table id="jqGridDependJob"></table>
+                <div id="jqGridPagerDependJob"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-2 control-label"></div>
+          <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确 定" />
+          &nbsp;&nbsp;
+          <input type="button" class="btn btn-warning" @click="reBack" value="返 回" />
+        </div>
+      </form>
+    </div>
+    <!-- 选择作业 -->
+    <div id="selectJobLayer" style="display: none; padding: 10px; height: 100%;overflow: hidden;">
+      <div class="row" style='padding-top: 10px;'>
+        <form class="form-inline">
+          <div class="col-md-5">
+            <select id="dependEtlSystemid" class="selectpicker" v-model="dependQ.etlSystem" data-live-search="true" title="系统名称" onchange="getDependEtlSystem();">
+              <option selected value="">全部</option>
+              <option v-for="option in allsys" :value="option.code">{{option.name}}</option>
+            </select>
+          </div>
+          <div class="col-md-5">
+            <input type="text" class="form-control" v-model="dependQ.etlJob" @keyup.enter="query" placeholder="作业名称">
+          </div>
+        </form>
+        <a class=" btn btn-primary" @click="reloadDependJobsSelect"> 查询 </a>
+      </div>
+      <div class="row" style="height: 90%;padding-top: 10px;">
+        <table id="jqGridJob"></table>
+        <div id="jqGridPagerJob"></div>
+      </div>
+    </div>
+    <!-- 血缘影响分析图 -->
+    <div id="analysisLayer" style="height:100%;width:100%;display:none;">
+        <div style="height:40px;clear:both;">
+            <form class="form-inline">
+                <div class="form-group" style="margin: 7px auto;">
+                    <label>显示</label>
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="0" checked="checked" onclick="setLayer(this.value)"/> 所有层
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="1" onclick="setLayer(this.value)"/> 邻近层
+                    </label>
+                </div>
+                <div style="float:right;margin-right:20px;">
+                    <a class="btn btn-primary" @click="back"> &nbsp;返回 </a>
+                </div>
+            </form>
+
+        </div>
+        <div id="analysisChart" style="width:100%;height:calc(100% - 40px);overflow-x:auto;overflow-y: auto;"></div>
+    </div>
+    <!--重跑日期选择 -->
+      <div v-show="showQueryData" class='cus-p-diag'>
+          <div class="panel panel-primary  cusdialog">
+              <div class="panel-heading">{{title}}</div>
+              <div class="form-horizontal">
+                  <div id="rerundateid" style='margin-left: 150px; margin-bottom: 30px; width: 300px;' class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2"
+                       data-link-format="yyyy-mm-dd">
+                      <input class="form-control" size="16" type="text" value="" placeholder="重跑数据日期" readonly onchange="getRerunDate()">
+                      <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <div class="col-sm-2 control-label"></div>
+                  <input type="button" class="btn btn-primary" @click="rerun" value="确定" />
+                  &nbsp;&nbsp;
+                  <input type="button" class="btn btn-warning" @click="reBack2" value="返回" />
+              </div>
+          </div>
+      </div>
+      <!-- 按钮触发模态框 -----------------------------------------------------@click="loadlog"------>
+      <!-- 模态框（Modal） -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document" style="width: 880px;">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                          &times;
+                      </button>
+                      <h4 class="modal-title" id="myModalLabel" style="color: #0f6ab4"> <p><span class="glyphicon glyphicon-print">&nbsp;作业日志详情</span></p>
+
+                      </h4>
+                  </div>
+                  <div class="modal-body" id="joblogdetail">
+                      <!--{{ joblogdetail }}-->
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-primary" @click="loadlog" >下载日志</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal" @click="clearlog">关闭日志</button>
+                  </div>
+              </div><!-- /.modal-content -->
+          </div><!-- /.modal -->
+      </div>
+      <!-------------------------------------------------------------------------->
+  </div>
+  <script src="${request.contextPath}/statics/libs/echarts/echarts.min.js"></script>
+  <script src="${request.contextPath}/statics/js/modules/etl/job.js"></script>
+  <script src="${request.contextPath}/statics/libs/ajaxupload.js"></script>
+  <script>
+            $(document)
+                    .ready(
+                            function() {
+                                var MaxInputs = 8; //maximum input boxes allowed
+                                var InputsWrapper = $("#InputsWrapper"); //Input boxes wrapper ID
+                                var AddButton = $("#AddMoreFileBox"); //Add button ID
+
+                                var x = InputsWrapper.length; //initlal text box count
+                                var FieldCount = 1; //to keep track of text box added
+                                $(AddButton)
+                                        .click(
+                                                function(e) //on add input button click
+                                                {
+                                                    if (x <= MaxInputs) //max input box allowed
+                                                    {
+                                                        FieldCount++; //text box added increment
+                                                        //add input box
+                                                        $(InputsWrapper)
+                                                                .append(
+                                                                        '<div><input type="text" name="mytext[]" id="field_'+ FieldCount +'" value="Text '+ FieldCount +'"/><a href="#" class="removeclass"><input type="button" value="删除"></a></div>');
+                                                        x++; //text box increment
+                                                    }
+                                                    return false;
+                                                });
+
+                                $("body").on("click", ".removeclass", function(e) { //user click on remove text
+                                    if (x > 1) {
+                                        $(this).parent('div').remove(); //remove text box
+                                        x--; //decrement textbox
+                                    }
+                                    return false;
+                                })
+
+                            });
+
+            $('.form_date').datetimepicker({
+                format : 'yyyy-mm-dd',
+                language : 'zh-CN',
+                weekStart : 1,
+                todayBtn : 1,
+                autoclose : 1,
+                todayHighlight : 1,
+                startView : 2,
+                minView : 2,
+                forceParse : 0,
+                todayBtn : true,
+                todayHighlight : true,
+                startDate : 2018 - 01 - 01
+            });
+
+            /*             function getReqDateStart() {
+             var dateval = $("#lastTxDateStart").find("input").val();
+             vm.q.lastTxDateStart = dateval;
+             }
+             function getReqDateEnd() {
+             var dateval = $("#lastTxDateEnd").find("input").val();
+             vm.q.lastTxDateEnd = dateval;
+             } */
+
+            function getRerunDate() {
+                var dateval = $("#rerundateid").find("input").val();
+                vm.q.rerun_data_date = dateval;
+            }
+
+            function getSelectd() {
+                var etlSystemSelect_obj = document.getElementById("etlSystemSelect");
+                var index = etlSystemSelect_obj.selectedIndex;
+                var select_value = etlSystemSelect_obj.options[index].value;
+                vm.q.etlSystem = select_value;
+            }
+
+            function getSelectStatus() {
+                var etlStatusSelect_obj = document.getElementById("etlStatusSelect");
+                var index = etlStatusSelect_obj.selectedIndex;
+                var select_value = etlStatusSelect_obj.options[index].value;
+                vm.q.lastJobStatus = select_value;
+            }
+
+            function getEtlServerAddSelect() {
+                //vm.job.etlServer =$("#etlServerAddSelect").val();
+                vm.job.etlServer = $("#etlServerAddSelect").find("option:selected").text();
+            }
+            function getEtlSystemAddSelect() {
+                //vm.job.etlServer =$("#etlServerAddSelect").val();
+                vm.job.etlSystem = $("#etlSystemAddSelect").find("option:selected").text();
+            }
+            function getPublicScript() {
+                vm.job.etlServer = $("#etlServerAddSelect").val();
+                // alert("getPublicScript========");
+                var script = $("#publicScriptid").find("option:selected").text();
+                var scriptId = $("#publicScriptid").find("option:selected").val();
+                // alert("script==" + script);
+                //vm.job.runningscript = script;
+                var index = script.lastIndexOf(".");
+                var end = script.substr(index, script.length);
+                vm.job.runningscript = vm.job.etlJob.toLocaleLowerCase() + "0100" + end;
+                vm.job.scriptId = scriptId;
+                if (isBlank(script) || isBlank(vm.job.etlJob)) {
+                    vm.job.runningscript = '';
+                }
+            }
+            function getFrequency() {
+                $("#frequency").val( $("#frequencyid").find("option:selected").val() );
+                vm.job.frequency = $("#frequency").val();
+                if(vm.job.frequency == '0'){
+                    $("#freqbox1").hide();
+                }else{
+                    $("#freqbox1").show();
+                    $("#frequencydate").selectpicker('val','-1');
+                }
+            }
+            function getFrequency2(){
+                $("#frequency").val( $("#frequencydate").val() );
+                vm.job.frequency = $("#frequency").val();
+            }
+            function getDependEtlSystem() {
+                vm.dependQ.etlSystem = $("#dependEtlSystemid").find("option:selected").text();
+            }
+            function getSelectAddStatus() {
+                vm.job.lastJobstatus = $("#etlStatusAddSelectId").find("option:selected").val();
+            }
+        </script>
+</body>
+</html>

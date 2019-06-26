@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<#include "/header.html">
+<style type="text/css">
+.selectCus {
+	width: 150px !important;
+}
+
+.col-md-2-cus {
+	width: 14% !important;
+}
+
+.col-md-2-cus2 {
+	padding-right: 0px ! important;
+	/*padding-left: 15px ! important;*/
+	padding-left: 15px ! important;
+	/*width: 13.6% !important;*/
+	width: 15% !important;
+}
+
+.form-control-cus {
+	padding: 0px !important;
+}
+
+.row {
+   border-top: 0px dotted #ddd;
+	margin: 0;
+	padding: 20px 2px 0px 2px;
+}
+.form-group{
+    margin-bottom:10px;
+}
+</style>
+</head>
+<body>
+  <div id="rrapp" v-cloak>
+    <div v-show="showList">
+      <div class="grid-btn" style="margin-bottom:0px;">
+        <form> <!--class="form-inline" -->
+          <div class="form-group col-md-2 col-md-2-cus">
+            <select id="etlSystemSelect" class="selectpicker selectCus" style="" v-model="q.etlSystem" data-live-search="true" title="请选择系统名称" onchange="getSelectd(); ">
+              <option selected value="">全部</option>
+              <option v-for="option in allsys" :value="option.code">{{ option.name }}</option>
+            </select>
+          </div>
+          <div class="form-group col-md-2 col-md-2-cus">
+            <select id="etlStatusSelect" class="selectpicker  selectCus" v-model="q.lastJobStatus" data-live-search="true" title="请选择作业状态" onchange="getSelectStatus();">
+              <option selected value="">全部</option>
+              <option v-for="item in allstatus" :value=item.status>{{item.status_desc}}</option>
+            </select>
+          </div>
+          <div class="form-group col-md-2 col-md-2-cus2">
+            <div id="lastTxDateStart" class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+              <input class="form-control" size="16" type="text" value="" placeholder="起始数据日期" readonly onchange="getReqDateStart()">
+              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+          </div>
+          <div class="form-group col-md-2 col-md-2-cus2">
+            <div id="lastTxDateEnd" class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+              <input class="form-control" size="16" type="text" value="" placeholder="截止数据日期" readonly onchange="getReqDateEnd()">
+              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+          </div>
+          <div class="form-group col-md-2 col-md-2-cus">
+            <input type="text" class="form-control selectCus" v-model="q.etlJob" @keyup.enter="query" placeholder="作业名称">
+          </div>
+          <div class="form-group col-md-1">
+            <a class=" btn btn-primary" @click="query"><span class="glyphicon glyphicon-search"></span>&nbsp; 查询 </a>
+          </div>
+          <div class="form-group col-md-1">
+              <#if shiro.hasPermission("etl:job:rerunmulti")>
+                  <a class="btn btn-warning" @click="openRerun"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量重跑 </a>
+              </#if>
+          </div>
+            <div class="col-md-8">
+      <a class="btn btn-warning" @click="openUpdateStatus"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业状态 </a>
+      <a class="btn btn-warning" @click="openUpdateTxDate"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业数据日期 </a>
+      <a class="btn btn-warning" @click="openUpdateEnable"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业有效性 </a>
+            </div>
+            <div class="col-md-3" style="float:right;">
+                <div class="col-md-1 checkbox" style="width:80px;padding:0;"><label><input type="checkbox" v-model="refresh_auto" />自动刷新</label></div>
+                <div class="col-md-1" style="width:65px;padding:0;">
+                    <select v-model="refresh_freq" class="form-control" data-live-search="true" title="请选择刷新时间">
+                        <option value="10000">10</option>
+                        <option selected value="20000">20</option>
+                        <option value="30000">30</option>
+                        <option value="60000">60</option>
+                        <option value="120000">120</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+        <!--<#if shiro.hasPermission("etl:job:rerun")>-->
+        <!--<a class="btn btn-warning" @click="openRerun"><span class="glyphicon glyphicon-repeat"></span> &nbsp;重跑 </a>-->
+        <!--</#if>-->
+        <div style="clear:both;"></div>
+      </div>
+
+      <table id="jqGrid"></table>
+      <div id="jqGridPager"></div>
+    </div>
+    <div v-show="showQueryData" class='cus-p-diag'>
+    <div class="panel panel-primary  cusdialog">
+      <div class="panel-heading">{{title}}</div>
+      <div class="form-horizontal">
+        <div id="rerundateid" style='margin-left: 150px; margin-bottom: 30px; width: 300px;' class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2"
+             data-link-format="yyyy-mm-dd">
+          <input class="form-control" size="16" type="text" value="" placeholder="重跑数据日期" readonly onchange="getRerunDate()">
+          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label"></div>
+        <!--<input type="button" class="btn btn-primary" @click="rerun" value="确定" />-->
+        <input type="button" class="btn btn-primary" @click="rerunmulti" value="确定" />
+        &nbsp;&nbsp;
+        <input type="button" class="btn btn-warning" @click="reBack" value="返回" />
+      </div>
+    </div>
+  </div>
+
+  <!--批量更新作业状态开始-->
+  <div v-show="showUpdateBatchStatus" class='cus-p-diag'>
+    <div class="panel panel-primary  cusdialog">
+      <div class="panel-heading">更新作业状态</div>
+      <div class="form-horizontal">
+        <div style='margin-left: 200px; margin-bottom: 150px; width: 300px;' class="input-group col-md-12" >
+          <select id="updateBatchStatusSelect" class="selectpicker  selectCus" v-model="q.newJobStatus" data-live-search="false" title="请选择作业状态" onchange="getSelectStatus2();">
+            <option v-for="item in allstatus" :value=item.status>{{item.status_desc}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label"></div>
+        <input type="button" class="btn btn-primary" @click="updateBatchStatus" value="确定" />
+        &nbsp;&nbsp;
+        <input type="button" class="btn btn-warning" @click="reBack2" value="返回" />
+      </div>
+    </div>
+  </div>
+  <!--批量更新作业状态结束-->
+
+  <!--批量更新作业数据日期开始-->
+  <div v-show="showUpdateBatchJobTxDate" class='cus-p-diag'>
+    <div class="panel panel-primary  cusdialog">
+      <div class="panel-heading">更新作业数据日期</div>
+      <div class="form-horizontal">
+        <div id="updateBatchJobTxDateSelect" style='margin-left: 150px; margin-bottom: 30px; width: 300px;' class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2"
+             data-link-format="yyyy-mm-dd">
+          <input class="form-control" size="16" type="text" value="" placeholder="请选择更新作业数据日期" readonly onchange="getNewTxDate()">
+          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label"></div>
+        <input type="button" class="btn btn-primary" @click="updateBatchJobTxDate" value="确定" />
+        &nbsp;&nbsp;
+        <input type="button" class="btn btn-warning" @click="reBack3" value="返回" />
+      </div>
+    </div>
+  </div>
+  <!--批量更新作业数据日期结束-->
+
+  <!--批量更新作业有效性开始-->
+  <div v-show="showUpdateBatchEnable" class='cus-p-diag'>
+    <div class="panel panel-primary  cusdialog">
+      <div class="panel-heading">更新作业有效性</div>
+      <div class="form-horizontal">
+        <div style='margin-left: 200px; margin-bottom: 150px; width: 300px;' class="input-group col-md-12" >
+          <select id="updateBatchEnableSelect" class="selectpicker  selectCus" v-model="q.newEnableFlag" data-live-search="false" title="请选择作业有效性" onchange="getSelectEnable();">
+            <option value='1'>置为有效</option>
+            <option value='0'>置为无效</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2 control-label"></div>
+        <input type="button" class="btn btn-primary" @click="updateBatchEnable" value="确定" />
+        &nbsp;&nbsp;
+        <input type="button" class="btn btn-warning" @click="reBack4" value="返回" />
+      </div>
+    </div>
+  </div>
+  <!--批量更新作业有效性结束-->
+
+
+  </div>
+  <!-- 选择作业 -->
+  <div id="selectJobLayer" style="display: none; padding: 10px; height: 100%;">
+    <div class="row">
+      <form class="form-inline">
+        <div class="col-md-3">
+          <select id="dependEtlSystem" class="selectpicker" style="" v-model="dependQ.etlSystem" data-live-search="true" title="请系统名称" onchange="return false;">
+            <option selected value="">全部</option>
+            <option v-for="option in allsys" v-bind:value="option.code">{{ option.name }}</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <input type="text" class="form-control" v-model="dependQ.etlJob" @keyup.enter="query" placeholder="作业名称">
+        </div>
+      </form>
+      <a class=" btn btn-primary" @click="query"> 查询 </a>
+    </div>
+    <div class="row" style="height: 90%;">
+      <table id="jqGridJob"></table>
+      <div id="jqGridPagerJob"></div>
+    </div>
+  </div>
+  <script src="${request.contextPath}/statics/js/modules/etl/jobrerun.js"></script>
+  <script>
+			$(document)
+					.ready(
+							function() {
+								var MaxInputs = 8; //maximum input boxes allowed
+								var InputsWrapper = $("#InputsWrapper"); //Input boxes wrapper ID
+								var AddButton = $("#AddMoreFileBox"); //Add button ID
+
+								var x = InputsWrapper.length; //initlal text box count
+								var FieldCount = 1; //to keep track of text box added
+								$(AddButton)
+										.click(
+												function(e) //on add input button click
+												{
+													if (x <= MaxInputs) //max input box allowed
+													{
+														FieldCount++; //text box added increment
+														//add input box
+														$(InputsWrapper)
+																.append(
+																		'<div><input type="text" name="mytext[]" id="field_'+ FieldCount +'" value="Text '+ FieldCount +'"/><a href="#" class="removeclass"><input type="button" value="删除"></a></div>');
+														x++; //text box increment
+													}
+													return false;
+												});
+
+								$("body").on("click", ".removeclass", function(e) { //user click on remove text
+									if (x > 1) {
+										$(this).parent('div').remove(); //remove text box
+										x--; //decrement textbox
+									}
+									return false;
+								})
+
+							});
+
+			$('.form_date').datetimepicker({
+				format : 'yyyy-mm-dd',
+				language : 'zh-CN',
+				weekStart : 1,
+				todayBtn : 1,
+				autoclose : 1,
+				todayHighlight : 1,
+				startView : 2,
+				minView : 2,
+				forceParse : 0,
+				todayBtn : true,
+				todayHighlight : true,
+				startDate : 2018 - 01 - 01
+			});
+
+			function getReqDateStart() {
+				var dateval = $("#lastTxDateStart").find("input").val();
+				vm.q.lastTxDateStart = dateval;
+			}
+			function getReqDateEnd() {
+				var dateval = $("#lastTxDateEnd").find("input").val();
+				vm.q.lastTxDateEnd = dateval;
+			}
+
+			function getRerunDate() {
+				var dateval = $("#rerundateid").find("input").val();
+				vm.q.rerun_data_date = dateval;
+			}
+
+			function getSelectd() {
+				var etlSystemSelect_obj = document.getElementById("etlSystemSelect");
+				var index = etlSystemSelect_obj.selectedIndex;
+				var select_value = etlSystemSelect_obj.options[index].value;
+				vm.q.etlSystem = select_value;
+			}
+
+			function getSelectStatus() {
+				var etlStatusSelect_obj = document.getElementById("etlStatusSelect");
+				var index = etlStatusSelect_obj.selectedIndex;
+				var select_value = etlStatusSelect_obj.options[index].value;
+				vm.q.lastJobStatus = select_value;
+
+			}
+
+            function getSelectStatus2() {
+                var updateBatchStatusSelect_obj = document.getElementById("updateBatchStatusSelect");
+                var index = updateBatchStatusSelect_obj.selectedIndex;
+                var select_value = updateBatchStatusSelect_obj.options[index].value;
+                vm.q.newJobStatus = select_value;
+            }
+
+            function getNewTxDate() {
+                var dateval = $("#updateBatchJobTxDateSelect").find("input").val();
+                vm.q.newJobTxdate = dateval;
+            }
+
+
+            function getSelectEnable() {
+                var updateBatchEnableSelect_obj = document.getElementById("updateBatchEnableSelect");
+                var index = updateBatchEnableSelect_obj.selectedIndex;
+                var select_value = etlStatusSelect_obj.options[index].value;
+                vm.q.newEnableFlag = select_value;
+
+            }
+		</script>
+</body>
+</html>

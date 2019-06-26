@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.dfjx.modules.etl.dao.JobDependencyDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.dfjx.modules.etl.entity.JobDependencyEntity" id="jobDependencyMap">
+        <result property="id" column="ID"/>
+        <result property="etlSystem" column="ETL_System"/>
+        <result property="etlJob" column="ETL_Job"/>
+        <result property="dependencySystem" column="Dependency_System"/>
+        <result property="dependencyJob" column="Dependency_Job"/>
+        <result property="description" column="Description"/>
+        <result property="enable" column="Enable"/>
+    </resultMap>
+
+    <select id="selectDependencyJobs" resultType="io.dfjx.modules.etl.entity.JobDependencyEntity">
+        select * from etl_job_dependency
+        where etl_system=#{etlSystem} and etl_job=#{etlJob}
+    </select>
+
+    <select id="selectDependencyAllJobs" resultType="map">
+        SELECT j.id,d.etl_system AS etlSystem,d.etl_job AS etlJob,j.etl_server AS etlServer
+                ,j.description,j.frequency,j.jobtype,j.`enable`,j.last_starttime AS lastStarttime,j.last_endtime AS lastEndtime,j.last_jobstatus AS lastJobstatus,j.last_txdate AS lastTxdate,j.last_filecnt AS lastFilecnt,j.last_cubestatus AS lastCubestatus,j.jobsessionid,j.expectedrecord,j.checklaststatus
+                ,d.Dependency_System AS dependencySystem, d.Dependency_Job AS dependencyJob
+          FROM etl_job_dependency d left join etl_job j on j.etl_system = d.dependency_system and j.etl_job = d.dependency_job
+    </select>
+
+</mapper>

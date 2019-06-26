@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.dfjx.modules.etl.dao.JobSourceDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.dfjx.modules.etl.entity.JobSourceEntity" id="jobSourceMap">
+        <result property="id" column="ID"/>
+        <result property="source" column="Source"/>
+        <result property="etlSystem" column="ETL_System"/>
+        <result property="etlJob" column="ETL_Job"/>
+        <result property="convFileHead" column="Conv_File_Head"/>
+        <result property="autofilter" column="AutoFilter"/>
+        <result property="alert" column="Alert"/>
+        <result property="beforehour" column="BeforeHour"/>
+        <result property="beforemin" column="BeforeMin"/>
+        <result property="offsetday" column="OffsetDay"/>
+        <result property="lastcount" column="LastCount"/>
+    </resultMap>
+
+
+</mapper>

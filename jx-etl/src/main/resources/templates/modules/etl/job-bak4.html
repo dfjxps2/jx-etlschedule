@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+		<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <form class="form-inline">
+
+
+            <div class="form-group col-sm-2">
+                <select id="etlSystemSelect" class="selectpicker " style="" v-model="q.etlSystem"  data-live-search="true" title="请选择系统名称" onchange="getSelectd(); ">
+                    <option selected value="">全部</option>
+                    <option v-for="item in allsys">{{item}}</option>
+                </select>
+            </div>
+
+            <div class="form-group col-sm-2">
+                <select id="etlStatusSelect" class="selectpicker " v-model="q.lastJobStatus"  data-live-search="true" title="请选择作业状态" onchange="getSelectStatus();">
+                    <option selected value="">全部</option>
+                    <option v-for="item in allstatus" :value= item.status >{{item.status_desc}}</option>
+                </select>
+            </div>
+
+
+
+            <div  class="form-group col-sm-2">
+                <div id="reqdateid" class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                    <input  class="form-control" size="16" type="text" value="" placeholder="请选择查询数据日期" readonly onchange="getReqDate()" >
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+                <input type="hidden" id="dtp_input2" value="" /><br/>
+            </div>
+
+            <!--<div class="form-group col-sm-2">-->
+            <input type="text" class="form-control" v-model="q.etlJob" @keyup.enter="query" placeholder="任务名称">
+            <!--</div>-->
+            <a class="btn btn-default" @click="query">查询</a>
+
+        </form>
+        <div   class="clearfix" style="margin-bottom: 10px;"> </div>
+        <div   class="clearfix" style="margin-bottom: 10px;"> </div>
+        <!--<div class="grid-btn">-->
+            <#if shiro.hasPermission("etl:job:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </#if>
+            <#if shiro.hasPermission("etl:job:update")>
+            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </#if>
+            <#if shiro.hasPermission("etl:job:delete")>
+            <a class="btn btn-primary disabled" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </#if>
+
+            <#if shiro.hasPermission("etl:job:info")>
+            <a class="btn btn-primary" @click="dependency"><i class="fa fa-arrow-circle-left"></i>&nbsp;查看依赖</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </#if>
+            <!--<#if shiro.hasPermission("etl:job:update")>-->
+            <!--<a class="btn btn-warning" @click="rerun"><i class="fa fa-arrow-circle-right"></i>&nbsp;重跑任务</a>-->
+            <!--</#if>-->
+            <#if shiro.hasPermission("etl:job:update")>
+            <a class="btn btn-warning" @click="rerun"><i class="glyphicon glyphicon-repeat"></i>&nbsp;重跑任务</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <div  class="form-group col-sm-2">
+                <div id="rerundateid" class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input1" data-link-format="yyyy-mm-dd">
+                    <input  class="form-control" size="16" type="text" value="" placeholder="请选择重跑数据日期" readonly onchange="getRerunDate()" >
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+                <input type="hidden" id="dtp_input1" value="" /><br/>
+            </div>
+        </#if>
+    <!--</div>-->
+
+
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form form-horizontal">
+
+            <div class="container">
+                <label class="btn btn-default disabled">配置作业基础信息</label>
+                <div class="row clearfix">
+
+                    <div class="col-sm-6 column">
+
+                        <div class="form-group">
+                            <div class="col-sm-4 control-label">系统名称</div>
+                            <div class="col-sm-8">
+                                <select id="jobsysid" class="selectpicker form-control" v-model="job.etlSystem"  title="请选择系统名称" onchange="">
+                                    <option  value="SDT">SDT</option>
+                                    <option  value="PDT" >PDT</option>
+                                    <option  value="CSM" >CSM</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4 control-label">服务器名称</div>
+                            <div class="col-sm-8">
+                                <input  type="text" class="form-control" v-model="job.etlServer" placeholder="服务器名称"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4 control-label">周期日</div>
+                            <div class="col-sm-8">
+                                <input  type="text" class="form-control" v-model="job.frequency" placeholder="周期日"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4 control-label">是否生效</div>
+                                <div class="col-sm-8">
+                                    <select id="enableid" class="selectpicker form-control" v-model="job.enable" title="请选择是否生效" onchange="" >
+                                        <option  selected value="1">生效</option>
+                                        <option  value="0" >失效</option>
+                                    </select>
+                                </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <form enctype="multipart/form-data">
+                                <div class="col-sm-4 control-label">请上传HQL脚本</div>
+                                <div class="col-sm-8">
+                                    <input id="filezh" name="files" type="file" multiple>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="form-group">
+                                <div class="col-sm-4 control-label"></div>
+                                <div class="col-sm-8">
+                                </div>
+                        </div>
+
+                    </div>
+
+
+
+
+
+<!---------------------------------------------------------------------------------------->
+
+
+                    <div class="col-sm-6 column">
+
+                        <div class="form-group">
+                            <div class="col-sm-4 control-label">作业名称</div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" v-model="job.etlJob" placeholder="作业名称"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4 control-label">描述</div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" v-model="job.description" placeholder="描述"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <!--<div class="col-sm-2 control-label">周期类型</div>-->
+                            <!--<div class="col-sm-10">-->
+                            <!--<input type="text" class="form-control" v-model="job.jobtype" placeholder="周期类型"/>-->
+                            <!--</div>-->
+                            <div class="col-sm-4 control-label">周期类型</div>
+                            <div class="col-sm-8">
+                                <select id="jobtypeid" class="selectpicker form-control" v-model="job.jobtype" title="请选择周期类型" onchange="" style="width: 275px">
+                                    <option  selected value="0">日作业</option>
+                                    <option  value="-1" disabled>月作业</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4 control-label">执行脚本</div>
+                            <div class="col-sm-8">
+                                <select id="jobscriptypeeid" class="selectpicker form-control" v-model="job.jobtype" title="请选择执行脚本" onchange="" style="width: 275px">
+                                    <option  selected value="1">test1.sh</option>
+                                    <option  value="2" >test2.py</option>
+                                    <option  value="3" >test3.pl</option>
+                                    <option  value="4" >test4.java</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+
+                <label class="btn btn-default disabled">配置依赖作业信息</label>
+                <div class="row clearfix">
+
+
+                    <a href="#" id="AddMoreFileBox"  class="btn btn-info">添加更多依赖</a></span></p>
+                    <div id="InputsWrapper">
+                        <div><input type="text" name="mytext[]" class="form-control" id="field_1" value="Text 1"/><a href="#" class="removeclass"><input type='button' class="btn btn-default" value='删除'></a></div>
+                    </div>
+
+
+
+                </div>
+
+                <label class="btn btn-default disabled">配置触发作业信息</label>
+                <div class="row clearfix">
+
+                    ---=====
+                </div>
+
+            </div>
+
+
+
+
+
+
+
+			<div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确 定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返 回" />
+            </div>
+        </form>
+        </div>
+    </div>
+
+<script src="${request.contextPath}/statics/js/modules/etl/job.js?_${.now?long}"></script>
+<script>
+    $(document).ready(function() {
+
+        var MaxInputs       = 8; //maximum input boxes allowed
+        var InputsWrapper   = $("#InputsWrapper"); //Input boxes wrapper ID
+        var AddButton       = $("#AddMoreFileBox"); //Add button ID
+
+        var x = InputsWrapper.length; //initlal text box count
+        var FieldCount=1; //to keep track of text box added
+
+        $(AddButton).click(function (e)  //on add input button click
+        {
+            if(x <= MaxInputs) //max input box allowed
+            {
+                FieldCount++; //text box added increment
+                //add input box
+                $(InputsWrapper).append('<div><input type="text" name="mytext[]" id="field_'+ FieldCount +'" value="Text '+ FieldCount +'"/><a href="#" class="removeclass"><input type="button" value="删除"></a></div>');
+                x++; //text box increment
+            }
+            return false;
+        });
+
+        $("body").on("click",".removeclass", function(e){ //user click on remove text
+            if( x > 1 ) {
+                $(this).parent('div').remove(); //remove text box
+                x--; //decrement textbox
+            }
+            return false;
+        })
+
+    });
+
+    $('.form_date').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        todayBtn:true,
+        todayHighlight:true,
+        startDate:2018-01-01
+    });
+
+
+
+    function getReqDate() {
+        var dateval = $("#reqdateid").find("input").val();
+        vm.q.lastTxDate= dateval;
+    }
+
+    function getRerunDate() {
+        var dateval = $("#rerundateid").find("input").val();
+        vm.q.rerun_data_date= dateval;
+    }
+
+    function getSelectd() {
+        var etlSystemSelect_obj = document.getElementById("etlSystemSelect");
+        var index =  etlSystemSelect_obj.selectedIndex;
+        var select_value = etlSystemSelect_obj.options[index].value;
+        vm.q.etlSystem = select_value;
+    }
+
+
+
+    function getSelectStatus() {
+        var etlStatusSelect_obj = document.getElementById("etlStatusSelect");
+        var index =  etlStatusSelect_obj.selectedIndex;
+        var select_value = etlStatusSelect_obj.options[index].value;
+        vm.q.lastJobStatus = select_value;
+
+    }
+
+</script>
+
+</body>
+</html>
