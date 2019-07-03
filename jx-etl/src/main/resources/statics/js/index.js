@@ -7,12 +7,11 @@ var menuItem = Vue
             },
             template : [
                     '<li>',
-                    '	<a v-if="item.type === 0" href="javascript:;">',
+                    '	<a v-if="item.type === 0" href="javascript:;" class="nav-top-item">',
                     '		<i v-if="item.icon != null" :class="item.icon"></i>',
                     '		<span>{{item.name}}</span>',
-                    '		<i class="fa fa-angle-left pull-right"></i>',
                     '	</a>',
-                    '	<ul v-if="item.type === 0" class="treeview-menu">',
+                    '	<ul v-if="item.type === 0" class="treeview-menu secondary-menu ">',
                     '		<menu-item :item="item" v-for="item in item.list"></menu-item>',
                     '	</ul>',
 
@@ -22,7 +21,7 @@ var menuItem = Vue
                     '	</a>',
 
                    // '	<a v-if="item.type === 1 && item.parentId != 0" :href="\'#\'+item.url"><i v-if="item.icon != null" :class="item.icon"></i><i v-else class="fa fa-circle-o"></i> {{item.name}}</a>',
-                    ' <a v-if="item.type === 1 && item.parentId != 0" :href="\'#\'+item.url"><i style="width: 20px;;display: inline-block;"></i><i v-else style="width: 20px;;display: inline-block;"></i> {{item.name}}</a>',
+                    ' <a v-if="item.type === 1 && item.parentId != 0" :href="\'#\'+item.url" class="submenu-item"><i style="width: 20px;;display: inline-block;"></i><i v-else style="width: 20px;;display: inline-block;"></i> {{item.name}}</a>',
                     '</li>' ].join('')
         });
 
