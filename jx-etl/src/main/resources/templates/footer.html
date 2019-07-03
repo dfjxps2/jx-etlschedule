@@ -1,27 +1,42 @@
-<div class="control-sidebar-bg"></div>
-<!-- 修改密码 -->
-<div id="passwordLayer" style="display: none; overflow: hidden;">
-  <form class="form-horizontal">
-    <div class="form-group">
+  <div class="control-sidebar-bg"></div>
+  <!-- 修改密码 -->
+  <div id="passwordLayer" style="display: none; overflow: hidden;">
+    <form class="form-horizontal">
       <div class="form-group">
-        <div class="col-sm-2 control-label">账号</div>
-        <span class="label label-success" style="vertical-align: bottom;">{{user.username}}</span>
-      </div>
-      <div class="form-group">
-        <div class="col-sm-2 control-label">原密码</div>
-        <div class="col-sm-10">
-          <input type="password" class="form-control" v-model="password" placeholder="原密码" />
+        <div class="form-group">
+          <div class="col-sm-2 control-label">账号</div>
+          <span class="label label-success" style="vertical-align: bottom;">{{user.username}}</span>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-2 control-label">原密码</div>
+          <div class="col-sm-10">
+            <input type="password" class="form-control" v-model="password" placeholder="原密码" />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-2 control-label">新密码</div>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" v-model="newPassword" placeholder="新密码" />
+          </div>
         </div>
       </div>
-      <div class="form-group">
-        <div class="col-sm-2 control-label">新密码</div>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" v-model="newPassword" placeholder="新密码" />
-        </div>
+    </form>
+  </div>
+
+  <div class="footer">
+    <div class="bottom">
+      <div class="">
+        建议使用360极速浏览器/IE9+浏览器    分辨率1280*768
+      </div>
+      <div class="">
+        北京市经济和信息化局主办      北京市信息资源管理中心承办
+      </div>
+      <div class="">
+        技术支持：平台运维组        联系电话：84371878
       </div>
     </div>
-  </form>
-</div>
+  </div>
+
 </div>
 <!-- ./wrapper -->
 <script src="${request.contextPath}/statics/libs/jquery.min.js"></script>
