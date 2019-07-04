@@ -4,94 +4,72 @@
 <title></title>
 <#include "/header.html">
 <style type="text/css">
-.selectCus {
-	width: 150px !important;
-}
-
-.col-md-2-cus {
-	width: 14% !important;
-}
-
-.col-md-2-cus2 {
-	padding-right: 0px ! important;
-	/*padding-left: 15px ! important;*/
-	padding-left: 15px ! important;
-	/*width: 13.6% !important;*/
-	width: 15% !important;
-}
-
-.form-control-cus {
-	padding: 0px !important;
-}
-
-.row {
-   border-top: 0px dotted #ddd;
-	margin: 0;
-	padding: 20px 2px 0px 2px;
-}
-.form-group{
-    margin-bottom:10px;
-}
+  .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+    width:100%
+  }
 </style>
 </head>
 <body>
   <div id="rrapp" v-cloak>
     <div v-show="showList">
-      <div class="grid-btn" style="margin-bottom:0px;">
-        <form> <!--class="form-inline" -->
-          <div class="form-group col-md-2 col-md-2-cus">
+      <div class="grid-btn">
+        <div class="row">
+          <div class="col-xs-4">
             <select id="etlSystemSelect" class="selectpicker selectCus" style="" v-model="q.etlSystem" data-live-search="true" title="请选择系统名称" onchange="getSelectd(); ">
               <option selected value="">全部</option>
               <option v-for="option in allsys" :value="option.code">{{ option.name }}</option>
             </select>
           </div>
-          <div class="form-group col-md-2 col-md-2-cus">
+          <div class="col-xs-4">
             <select id="etlStatusSelect" class="selectpicker  selectCus" v-model="q.lastJobStatus" data-live-search="true" title="请选择作业状态" onchange="getSelectStatus();">
               <option selected value="">全部</option>
               <option v-for="item in allstatus" :value=item.status>{{item.status_desc}}</option>
             </select>
           </div>
-          <div class="form-group col-md-2 col-md-2-cus2">
+          <div class="col-xs-4">
             <div id="lastTxDateStart" class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
               <input class="form-control" size="16" type="text" value="" placeholder="起始数据日期" readonly onchange="getReqDateStart()">
               <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
           </div>
-          <div class="form-group col-md-2 col-md-2-cus2">
+        </div>
+        <div class="row">
+          <div class="col-xs-4">
             <div id="lastTxDateEnd" class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
               <input class="form-control" size="16" type="text" value="" placeholder="截止数据日期" readonly onchange="getReqDateEnd()">
               <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
           </div>
-          <div class="form-group col-md-2 col-md-2-cus">
+          <div class="col-xs-4">
             <input type="text" class="form-control selectCus" v-model="q.etlJob" @keyup.enter="query" placeholder="作业名称">
           </div>
-          <div class="form-group col-md-1">
-            <a class=" btn btn-primary" @click="query"><span class="glyphicon glyphicon-search"></span>&nbsp; 查询 </a>
+          <div class="col-xs-4">
+            <a class=" btn btn-primary btn-sm" @click="query"><span class="glyphicon glyphicon-search"></span>&nbsp; 查询 </a>
           </div>
-          <div class="form-group col-md-1">
-              <#if shiro.hasPermission("etl:job:rerunmulti")>
-                  <a class="btn btn-warning" @click="openRerun"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量重跑 </a>
-              </#if>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <#if shiro.hasPermission("etl:job:rerunmulti")>
+            <a class="btn btn-warning btn-sm" @click="openRerun"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量重跑 </a>
+            </#if>
+
+            <a class="btn btn-warning btn-sm" @click="openUpdateStatus"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业状态 </a>
+            <a class="btn btn-warning btn-sm" @click="openUpdateTxDate"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业数据日期 </a>
+            <a class="btn btn-warning btn-sm" @click="openUpdateEnable"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业有效性 </a>
           </div>
-            <div class="col-md-8">
-      <a class="btn btn-warning" @click="openUpdateStatus"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业状态 </a>
-      <a class="btn btn-warning" @click="openUpdateTxDate"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业数据日期 </a>
-      <a class="btn btn-warning" @click="openUpdateEnable"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业有效性 </a>
+          <div class="col-md-3" style="float:right;">
+            <div class="col-md-1 checkbox" style="width:80px;padding:0;"><label><input type="checkbox" v-model="refresh_auto" />自动刷新</label></div>
+            <div class="col-md-1" style="width:65px;padding:0;">
+              <select v-model="refresh_freq" class="form-control" data-live-search="true" title="请选择刷新时间">
+                <option value="10000">10</option>
+                <option selected value="20000">20</option>
+                <option value="30000">30</option>
+                <option value="60000">60</option>
+                <option value="120000">120</option>
+              </select>
             </div>
-            <div class="col-md-3" style="float:right;">
-                <div class="col-md-1 checkbox" style="width:80px;padding:0;"><label><input type="checkbox" v-model="refresh_auto" />自动刷新</label></div>
-                <div class="col-md-1" style="width:65px;padding:0;">
-                    <select v-model="refresh_freq" class="form-control" data-live-search="true" title="请选择刷新时间">
-                        <option value="10000">10</option>
-                        <option selected value="20000">20</option>
-                        <option value="30000">30</option>
-                        <option value="60000">60</option>
-                        <option value="120000">120</option>
-                    </select>
-                </div>
             </div>
-        </form>
+        </div>
         <!--<#if shiro.hasPermission("etl:job:rerun")>-->
         <!--<a class="btn btn-warning" @click="openRerun"><span class="glyphicon glyphicon-repeat"></span> &nbsp;重跑 </a>-->
         <!--</#if>-->

@@ -4,12 +4,6 @@
     <title></title>
 		<#include "/header.html">
     <style type="text/css">
-        .selectCus {
-            width: 100px !important;
-        }
-        .col-md-2-cus {
-            width: 11.66666667% !important;padding:0 10px;
-        }
     </style>
 </head>
 <body>
@@ -17,47 +11,45 @@
     <!------------------------------------------------------------>
 
     <!------------------------------------------------------------>
-    <div v-show="showList">
-        <form class="form-inline">
-
-
-            <div class="form-group col-md-2 col-md-2-cus">
+    <div v-show="showList" class="grid-btn">
+      <div class="row">
+            <div class="col-xs-4">
                 <select id="etlSystemSelect" class="selectpicker selectCus" v-model="q.etlSystem"  data-live-search="true" title="系统名称" onchange="getSelectd();">
                     <option selected value="">全部</option>
                     <option v-for="item in allsys" :value="item.code">{{item.name}}</option>
                 </select>
             </div>
-
-
-            <div  class="form-group col-md-2" style="width:20%;" >
+            <div  class="col-xs-4">
                 <div id="datadateid" class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
                     <input  class="form-control" size="16" type="text" value="" placeholder="数据日期" readonly onchange="getDate()" >
                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                 </div>
-                <input type="hidden" id="dtp_input2" value="" /><br/>
+                <input type="hidden" id="dtp_input2" value="" />
             </div>
-
-
-            <div class="form-group col-md-2 col-md-2-cus">
+            <div class="col-xs-4">
                 <input type="text" class="form-control selectCus" v-model="q.etlJob" @keyup.enter="query" placeholder="任务名称">
             </div>
-            <div class="grid-btn">
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
             <a class="btn btn-primary" @click="query">查询</a>
-			<#if shiro.hasPermission("etl:joblog:delete")>
-            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-			</#if><#if shiro.hasPermission("etl:joblog:loadlog")>
+            <#if shiro.hasPermission("etl:joblog:delete")>
+                  <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+            </#if><#if shiro.hasPermission("etl:joblog:loadlog")>
             <a class="btn btn-primary" data-toggle="modal" data-target="#myModal" @click="loadlog" ><i class="fa fa-search"></i>&nbsp;查看日志详情</a>
             </#if><#if shiro.hasPermission("etl:joblog:logdload")>
             <a class="btn btn-primary"   @click="logdload" ><i class="fa fa-download"></i>&nbsp;下载日志详情</a>
             </#if>
-
-            <a class="btn btn-primary" @click="timeline" ><i class="fa fa-clock-o"></i>&nbsp;作业时间轴</a>
-            </div>
-        </form>
-        <table id="jqGrid"></table>
-        <div id="jqGridPager"></div>
+            <a class="btn btn-primary" @click="timeline"><i class="fa fa-clock-o"></i>&nbsp;作业时间轴</a>
+          </div>
+        </div>
     </div>
+
+<div class="ml-15 mr-15">
+  <table id="jqGrid"></table>
+  <div id="jqGridPager"></div>
+</div>
 
     <div v-show="!showList" class="panel panel-default">
         <div class="panel-heading">{{title}}</div>
