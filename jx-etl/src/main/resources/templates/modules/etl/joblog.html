@@ -33,15 +33,15 @@
       </div>
       <div class="row">
         <div class="col-xs-12">
-            <a class="btn btn-primary" @click="query">查询</a>
+            <a class="btn btn-primary btn-sm" @click="query">查询</a>
             <#if shiro.hasPermission("etl:joblog:delete")>
-                  <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                  <a class="btn btn-primary btn-sm" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
             </#if><#if shiro.hasPermission("etl:joblog:loadlog")>
-            <a class="btn btn-primary" data-toggle="modal" data-target="#myModal" @click="loadlog" ><i class="fa fa-search"></i>&nbsp;查看日志详情</a>
+            <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" @click="loadlog" ><i class="fa fa-search"></i>&nbsp;查看日志详情</a>
             </#if><#if shiro.hasPermission("etl:joblog:logdload")>
-            <a class="btn btn-primary"   @click="logdload" ><i class="fa fa-download"></i>&nbsp;下载日志详情</a>
+            <a class="btn btn-primary btn-sm"   @click="logdload" ><i class="fa fa-download"></i>&nbsp;下载日志详情</a>
             </#if>
-            <a class="btn btn-primary" @click="timeline"><i class="fa fa-clock-o"></i>&nbsp;作业时间轴</a>
+            <a class="btn btn-primary btn-sm" @click="timeline"><i class="fa fa-clock-o"></i>&nbsp;作业时间轴</a>
           </div>
         </div>
     </div>
@@ -138,9 +138,9 @@
                     <!--{{ joblogdetail }}-->
                 </div>
                 <div class="modal-footer">
-                    <button id="btnlog1" type="button" class="btn btn-primary" @click="logdload" >下载日志</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal" @click="clearlog">关闭日志</button>
-                    <button id="btnlog2" type="button" class="btn btn-primary" @click="logdload2" style="display:none;" >下载日志</button>
+                    <button id="btnlog1" type="button" class="btn btn-primary btn-sm" @click="logdload" >下载日志</button>
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" @click="clearlog">关闭日志</button>
+                    <button id="btnlog2" type="button" class="btn btn-primary btn-sm" @click="logdload2" style="display:none;" >下载日志</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
