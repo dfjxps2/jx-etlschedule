@@ -85,7 +85,9 @@ tbody > tr > th {font-weight: normal; }
 	border-bottom:0px solid red;
 }
 
-
+.form-control{
+	height: 30px;
+}
 .cus-p-diag {
 	position: absolute;
 	top: 0px;
