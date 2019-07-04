@@ -56,19 +56,18 @@
             <a class="btn btn-warning btn-sm" @click="openUpdateStatus"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业状态 </a>
             <a class="btn btn-warning btn-sm" @click="openUpdateTxDate"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业数据日期 </a>
             <a class="btn btn-warning btn-sm" @click="openUpdateEnable"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业有效性 </a>
+
+            <label><input type="checkbox" v-model="refresh_auto" />自动刷新</label>
+            <select v-model="refresh_freq"  data-live-search="true" title="请选择刷新时间">
+              <option value="10000">10</option>
+              <option selected value="20000">20</option>
+              <option value="30000">30</option>
+              <option value="60000">60</option>
+              <option value="120000">120</option>
+            </select>
+
           </div>
-          <div class="col-md-3" style="float:right;">
-            <div class="col-md-1 checkbox" style="width:80px;padding:0;"><label><input type="checkbox" v-model="refresh_auto" />自动刷新</label></div>
-            <div class="col-md-1" style="width:65px;padding:0;">
-              <select v-model="refresh_freq" class="form-control" data-live-search="true" title="请选择刷新时间">
-                <option value="10000">10</option>
-                <option selected value="20000">20</option>
-                <option value="30000">30</option>
-                <option value="60000">60</option>
-                <option value="120000">120</option>
-              </select>
-            </div>
-            </div>
+
         </div>
         <!--<#if shiro.hasPermission("etl:job:rerun")>-->
         <!--<a class="btn btn-warning" @click="openRerun"><span class="glyphicon glyphicon-repeat"></span> &nbsp;重跑 </a>-->
