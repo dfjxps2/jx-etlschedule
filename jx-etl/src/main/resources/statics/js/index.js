@@ -15,7 +15,7 @@ var menuItem = Vue
                     '		<menu-item :item="item" v-for="item in item.list"></menu-item>',
                     '	</ul>',
 
-                    '	<a v-if="item.type === 1 && item.parentId === 0" :href="\'#\'+item.url" class="nav-top-item">',
+                    '	<a v-if="item.type === 1 && item.parentId === 0" :href="\'#\'+item.url" class="nav-top-item non-pic">',
                     '		<i v-if="item.icon != null" :class="item.icon"></i>',
                     '		<span>{{item.name}}</span>',
                     '	</a>',
