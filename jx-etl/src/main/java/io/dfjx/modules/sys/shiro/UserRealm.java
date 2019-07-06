@@ -95,13 +95,10 @@ public class UserRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(
 			AuthenticationToken authcToken) throws AuthenticationException {
-		UsernamePasswordToken token = (UsernamePasswordToken)authcToken;
+		UsernamePasswordTokenEx token = (UsernamePasswordTokenEx) authcToken;
 
 		//查询用户信息
-		SysUserEntity user = new SysUserEntity();
-		user.setUsername(token.getUsername());
-		user = sysUserDao.selectOne(user);
-
+		SysUserEntity user = sysUserDao.selectById(token.getUserId());
 		//账号不存在
 		if(user == null) {
 			throw new UnknownAccountException("账号或密码不正确");
@@ -112,23 +109,13 @@ public class UserRealm extends AuthorizingRealm {
 			throw new LockedAccountException("账号已被锁定,请联系管理员");
 		}
 
-		//从UsernamePasswordToken中获取username
-		String username = token.getUsername();
-		//查看UsernamePasswordToken可知，getCredentials()方法的返回值是char []类型的，所以不能直接转化成string。
-		char [] ch = (char[]) token.getCredentials();
-		String password = new String(ch);
-		if("无需登录密码".equals(password)){
-			String passwordSHA = ShiroUtils.sha256(password, user.getSalt());
-			SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, passwordSHA, ByteSource.Util.bytes(user.getSalt()), getName());
-			return info;
-		}
 		SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, user.getPassword(), ByteSource.Util.bytes(user.getSalt()), getName());
 		return info;
 	}
 
 	@Override
 	public void setCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
-		HashedCredentialsMatcher shaCredentialsMatcher = new HashedCredentialsMatcher();
+		OauthHashedCredentialsMatcher shaCredentialsMatcher = new OauthHashedCredentialsMatcher();
 		shaCredentialsMatcher.setHashAlgorithmName(ShiroUtils.hashAlgorithmName);
 		shaCredentialsMatcher.setHashIterations(ShiroUtils.hashIterations);
 		super.setCredentialsMatcher(shaCredentialsMatcher);

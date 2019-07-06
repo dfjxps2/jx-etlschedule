@@ -1,0 +1,28 @@
+/**
+ * 2019 东方金信
+ *
+ *
+ *
+ *
+ */
+
+package io.dfjx.modules.sys.dao;
+
+
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import io.dfjx.modules.sys.entity.SysUserTokenEntity;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+
+/**
+ * 系统用户Token
+ *
+ * @author Mark sunlightcs@gmail.com
+ */
+@Repository
+@Mapper
+public interface SysUserTokenDao extends BaseMapper<SysUserTokenEntity> {
+
+    SysUserTokenEntity queryByToken(String token);
+	
+}

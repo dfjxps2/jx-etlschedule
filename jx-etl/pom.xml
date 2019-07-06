@@ -158,6 +158,29 @@
 			<version>${axis2.version}</version>
 		</dependency>
 		<!-- portal对接依赖 End -->
+
+		<!--太极单点登陆验证jar add by SongChaoqun 2019-07-03-->
+		<dependency>
+			<groupId>com.bjgov.ca</groupId>
+			<artifactId>sso</artifactId>
+			<version>P12</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.bjgov.ca</groupId>
+			<artifactId>security</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.8</version>
+		</dependency>
 	</dependencies>
 
 	<build>
