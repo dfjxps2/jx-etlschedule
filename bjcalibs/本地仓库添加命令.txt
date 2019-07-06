@@ -1,0 +1,4 @@
+mvn install:install-file -Dfile=/本地路径/dfjinxin-fast/bjcalibs/bjcaticketsso_For_P12.jar -DgroupId=com.bjgov.ca -DartifactId=sso -Dversion=P12 -Dpackaging=jar
+
+
+mvn install:install-file -Dfile=/本地路径/dfjinxin-fast/bjcalibs/SecEngineDeal.jar -DgroupId=com.bjgov.ca -DartifactId=security -Dversion=1.0 -Dpackaging=jar
