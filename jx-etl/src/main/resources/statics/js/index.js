@@ -101,7 +101,22 @@ var vm = new Vue({
                 shadeClose : false,
                 content : [ 'http://cdn.dfjx.io/donate.jpg', 'no' ]
             });
-        }
+        },
+        logout: function() {
+            if (confirm('确定要删除选中的记录？') ) {
+                $.ajax({
+                    type: "GET",
+                    url: "ca/logout/",
+                    dataType: "json",
+                    success: function(result){
+                        if(result.code == 0){//登录成功
+                            parent.location.href ='/jx-etl/login.html';
+                        }else{
+                        }
+                    }
+                });
+            }
+        },
     },
     created : function() {
         this.getMenuList();
