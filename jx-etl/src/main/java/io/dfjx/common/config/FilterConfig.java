@@ -18,12 +18,13 @@ package io.dfjx.common.config;
 
 import javax.servlet.DispatcherType;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
-import io.dfjx.common.xss.XssFilter;
+
 
 /**
  * Filter配置
@@ -32,6 +33,7 @@ import io.dfjx.common.xss.XssFilter;
  * @since 2.1.0 2017-04-21
  */
 @Configuration
+@ConditionalOnProperty(prefix = "ca", name = "valid", havingValue = "true", matchIfMissing = true)
 public class FilterConfig {
 
     @Bean
@@ -46,14 +48,25 @@ public class FilterConfig {
         return registration;
     }
 
+//    @Bean
+//    public FilterRegistrationBean xssFilterRegistration() {
+//        FilterRegistrationBean registration = new FilterRegistrationBean();
+//        registration.setDispatcherTypes(DispatcherType.REQUEST);
+//        registration.setFilter(new XssFilter());
+//        registration.addUrlPatterns("/*");
+//        registration.setName("xssFilter");
+//        registration.setOrder(Integer.MAX_VALUE);
+//        return registration;
+//    }
+
     @Bean
-    public FilterRegistrationBean xssFilterRegistration() {
+    public FilterRegistrationBean govFilterRegistration(){
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setDispatcherTypes(DispatcherType.REQUEST);
-        registration.setFilter(new XssFilter());
-        registration.addUrlPatterns("/*");
-        registration.setName("xssFilter");
-        registration.setOrder(Integer.MAX_VALUE);
+        registration.setFilter(new GovCaFilter());
+        registration.addUrlPatterns("/jx-etl");
+        registration.setName("jxetlFilter");
+        registration.setOrder(Integer.MIN_VALUE);
         return registration;
     }
 }
