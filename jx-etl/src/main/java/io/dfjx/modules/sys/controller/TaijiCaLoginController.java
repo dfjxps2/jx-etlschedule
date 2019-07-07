@@ -37,17 +37,8 @@ public class TaijiCaLoginController extends AbstractController{
      * CA认证中心跳转过来的接口
      * @throws IOException
      */
-    @PostMapping("cleanse")
+    @PostMapping("jx-etl")
     @ApiOperation("太极登陆接口")
-//    public void cleanseRedirect(@RequestParam String BJCA_TOKEN,
-//                                @RequestParam String BJCA_SERVER_CERT,
-//                                @RequestParam String BJCA_TICKET,
-//                                @RequestParam String BJCA_TICKET_TYPE,
-//                                @RequestParam String BJCA_TARGET_URL,
-//                                @RequestParam String BJCA_TARGET_INFO,
-//                                HttpServletResponse response) throws IOException {
-
-
     public void cleanseRedirect(HttpServletRequest request,
                                   HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("gbk");
