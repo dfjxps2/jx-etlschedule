@@ -49,7 +49,9 @@ var vm = new Vue({
         main : "main.html",
         password : '',
         newPassword : '',
-        navTitle : "控制台"
+        navTitle : "控制台",
+        localMenu:[],
+        headerMenus: [],
     },
     methods : {
         getMenuList : function(event) {
@@ -61,6 +63,20 @@ var vm = new Vue({
             $.getJSON("sys/user/info?_" + $.now(), function(r) {
                 vm.user = r.user;
             });
+        },
+        menuHoverOrClick : function(eventVal){
+            this.headerMenus.forEach(headerMenu=>{
+                headerMenu.actived = false
+            })
+            eventVal.actived = !eventVal.actived
+
+        },
+        menuClick : function(eventVal){
+            if(eventVal.url&&eventVal.url!=''&&eventVal.outLink=='Y'){
+                window.location.href = eventVal.url
+            }else{
+                this.$emit('changeTaijiMenuList',eventVal.name)
+            }
         },
         updatePassword : function() {
             layer.open({
@@ -117,10 +133,73 @@ var vm = new Vue({
                 });
             }
         },
+
     },
     created : function() {
         this.getMenuList();
         this.getUser();
+
+        let me = this;
+        $.getJSON("statics/js/taijiMenuMock.json?" + $.now(), function(taijiMenuResponse) {
+            if(taijiMenuResponse&&taijiMenuResponse.code==1){
+                const taijiMenuArray = taijiMenuResponse.data
+
+                const fullMenuArrayList = JSON.parse(sessionStorage.getItem('menuList') || '[]')
+
+                const taijiAuthMenuMapTMp = {}
+
+                function parseTaijiMenu(menuArrayParam){
+                    const parseResultMenu = []
+                    if(menuArrayParam&&menuArrayParam.length>0){
+                        menuArrayParam.forEach(taijiMenuData=>{
+                            const menuCode = taijiMenuData.code
+                            const menuName = taijiMenuData.name
+                            const menuUrl = taijiMenuData.url
+                            const children = taijiMenuData.subMenu
+
+                            taijiAuthMenuMapTMp[menuName] = true
+
+                            parseResultMenu.push({
+                                id:menuCode,
+                                name:menuName,
+                                actived:menuName=='数据处理'?true:false,
+                                url:menuUrl,
+                                outLink:me.localMenu[menuName]?'Y':'N',
+                                children:parseTaijiMenu(children)
+                            })
+                        })
+                    }
+                    return parseResultMenu
+                }
+
+                function localMenuFilter(menuList){
+                    if(menuList&&menuList.length>0){
+                        const resultFilterMenu = new Array()
+                        menuList.forEach(localMenuTmp=>{
+                            const localMenuTmpName = localMenuTmp.name
+                            if(taijiAuthMenuMapTMp[localMenuTmpName]){
+                            const localMenuTmpParse = JSON.parse(JSON.stringify(localMenuTmp))
+                            localMenuTmpParse.list=[]
+                            resultFilterMenu.push(localMenuTmpParse)
+                            // console.log(localMenuTmp)
+                            if(localMenuTmp.list&&localMenuTmp.list.length>0){
+                                localMenuTmpParse.list = localMenuFilter(localMenuTmp.list)
+                            }
+                        }
+                    })
+                        return resultFilterMenu
+                    }
+                }
+                me.headerMenus = parseTaijiMenu(taijiMenuArray)
+                console.info(me.headerMenus)
+                // console.log(fullMenuArrayList)
+                const localShowMenus = localMenuFilter(fullMenuArrayList)
+                // console.log(localShowMenus)
+                //me.$emit('initTaijiMenuList',localShowMenus)
+
+            }
+        });
+
     },
     updated : function() {
         // 路由

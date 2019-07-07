@@ -14,6 +14,7 @@
          folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="${request.contextPath}/statics/css/all-skins.min.css">
   <link rel="stylesheet" href="${request.contextPath}/statics/css/main.css">
+  <link rel="stylesheet" href="${request.contextPath}/statics/js/element-ui/index.css">
   <style type="text/css">
     .main-header .logo {
       text-align: left;padding: 0px 0px 0px 60px;
@@ -541,67 +542,33 @@
 
   <div class="m-nav fn-clear">
     <ul class="menu-root">
-      <div class="el-dropdown">
-        <li class="menu-root-item" aria-haspopup="list" role="button" tabindex="0">
-          <span class="navdot"></span>
+
+      <el-dropdown v-bind:style="{width:1230/headerMenus.length+'px'}" @visible-change="menuHoverOrClick(headerMenu)"
+                   v-for="headerMenu in headerMenus"
+                   placement="bottom-end"
+                   trigger="hover" class="el-dropdown-cust">
+        <li class="menu-root-item" @click="menuClick(headerMenu)"
+            v-bind:class="{'menu-on':headerMenu.actived}">
+          <!--<span class="navdot"></span>-->
           <a href="#">
-            <span class="el-dropdown-link">首页</span></a>
+                                <span class="el-dropdown-link">
+                                    {{headerMenu.name}}
+                                </span>
+          </a>
         </li>
-      </div>
-      <div class="el-dropdown">
-        <li class="menu-root-item menu-on" aria-haspopup="list" role="button" tabindex="0">
-          <span class="navdot"></span>
-          <a href="#">
-            <span class="el-dropdown-link">目录链</span></a>
-        </li>
-      </div>
-      <div class="el-dropdown">
-        <li class="menu-root-item el-dropdown-selfdefine" aria-haspopup="list" role="button" tabindex="0">
-          <span class="navdot"></span>
-          <a href="#">
-            <span class="el-dropdown-link">数据资源</span></a>
-        </li>
-        <ul class="el-dropdown-menu el-popper child-menu-gov el-dropdown-menu--medium" id="dropdown-menu-4043" style="display: none;"></ul>
-      </div>
-      <div class="el-dropdown">
-        <li class="menu-root-item" aria-haspopup="list" role="button" tabindex="0">
-          <span class="navdot"></span>
-          <a href="#">
-            <span class="el-dropdown-link">数据处理</span></a>
-        </li>
-        <ul class="el-dropdown-menu el-popper child-menu-gov el-dropdown-menu--medium" id="dropdown-menu-2421" style="display: none;">
-          <li tabindex="-1" class="el-dropdown-menu__item child-menu-gov-item">
-            <!---->
-            <!---->数据脱敏</li>
-          <li tabindex="-1" class="el-dropdown-menu__item child-menu-gov-item">
-            <!---->
-            <span class="line-bt"></span>数据清洗</li>
-        </ul>
-      </div>
-      <div class="el-dropdown">
-        <li class="menu-root-item el-dropdown-selfdefine" aria-haspopup="list" role="button" tabindex="0">
-          <span class="navdot"></span>
-          <a href="#">
-            <span class="el-dropdown-link">组件服务</span></a>
-        </li>
-        <ul class="el-dropdown-menu el-popper child-menu-gov el-dropdown-menu--medium" style="display: none;"></ul>
-      </div>
-      <div class="el-dropdown">
-        <li class="menu-root-item el-dropdown-selfdefine" aria-haspopup="list" role="button" tabindex="0">
-          <span class="navdot"></span>
-          <a href="#">
-            <span class="el-dropdown-link">领导驾驶舱</span></a>
-        </li>
-        <ul class="el-dropdown-menu el-popper child-menu-gov el-dropdown-menu--medium" style="display: none;"></ul>
-      </div>
-      <div class="el-dropdown">
-        <li class="menu-root-item el-dropdown-selfdefine" aria-haspopup="list" role="button" tabindex="0">
-          <span class="navdot"></span>
-          <a href="#">
-            <span class="el-dropdown-link">平台管理</span></a>
-        </li>
-        <ul class="el-dropdown-menu el-popper child-menu-gov el-dropdown-menu--medium" style="display: none;"></ul>
-      </div>
+
+        <el-dropdown-menu  class="child-menu-gov" v-bind:style="{width:1230/headerMenus.length+'px'}"
+                           v-show="headerMenu.children!=null&&headerMenu.children.length>0"
+                           slot="dropdown">
+          <el-dropdown-item class="child-menu-gov-item" style="width:100%;"
+                            v-for="(headerMenuChild,index) in headerMenu.children">
+            <div @click="menuClick(headerMenuChild)">
+              <span v-if="index>0" class="line-bt"></span>
+              {{headerMenuChild.name}}
+            </div>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </ul>
   </div>
 

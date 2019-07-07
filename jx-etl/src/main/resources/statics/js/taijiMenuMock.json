@@ -1,0 +1,521 @@
+{
+  "code": 1,
+  "data": [
+    {
+      "subMenu": [],
+      "code": "10000",
+      "name": "首页",
+      "url": "http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=dsjmh&sid="
+    },
+    {
+      "subMenu": [],
+      "code": "20000",
+      "name": "目录链",
+      "url": ""
+    },
+    {
+      "subMenu": [
+        {
+          "subMenu": [],
+          "code": "31000",
+          "name": "北京市数据",
+          "url": ""
+        },
+        {
+          "subMenu": [],
+          "code": "32000",
+          "name": "国家数据",
+          "url": ""
+        },
+        {
+          "subMenu": [],
+          "code": "33000",
+          "name": "社会数据",
+          "url": ""
+        }
+      ],
+      "code": "30000",
+      "name": "数据资源",
+      "url": "http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=dsjmh_zsj&sid="
+    },
+    {
+      "subMenu": [
+        {
+          "subMenu": [
+            {
+              "subMenu": [
+                {
+                  "subMenu": [],
+                  "code": "41110",
+                  "name": "表管理",
+                  "url": "http://172.26.60.219:8081/bigdata/#/datastorage/old/table_1/list"
+                },
+                {
+                  "subMenu": [],
+                  "code": "41120",
+                  "name": "目录管理",
+                  "url": "http://172.26.60.219:8081/bigdata/#/datastorage/old/table_1/fold"
+                }
+              ],
+              "code": "41100",
+              "name": "表/目录管理",
+              "url": ""
+            },
+            {
+              "subMenu": [],
+              "code": "41200",
+              "name": "资源管理",
+              "url": "http://172.26.60.219:8081/bigdata/#/datastorage/old/assetsmager_1"
+            },
+            {
+              "subMenu": [],
+              "code": "41300",
+              "name": "数据获取",
+              "url": "http://172.26.60.219:8081/bigdata/#/datastorage/old/sourcegetter_1"
+            },
+            {
+              "subMenu": [],
+              "code": "41400",
+              "name": "数据查看",
+              "url": "http://172.26.60.219:8081/bigdata/#/datastorage/old/datasourcemager_1"
+            }
+          ],
+          "code": "41000",
+          "name": "原始区管理",
+          "url": ""
+        },
+        {
+          "subMenu": [
+            {
+              "subMenu": [
+                {
+                  "subMenu": [],
+                  "code": "42110",
+                  "name": "表管理",
+                  "url": "http://172.26.60.219:8081/bigdata/#/datastorage/handler/table_2/list"
+                },
+                {
+                  "subMenu": [],
+                  "code": "42120",
+                  "name": "目录管理",
+                  "url": "http://172.26.60.219:8081/bigdata/#/datastorage/handler/table_2/fold"
+                }
+              ],
+              "code": "42100",
+              "name": "表/目录管理",
+              "url": ""
+            },
+            {
+              "subMenu": [],
+              "code": "42200",
+              "name": "资源管理",
+              "url": "http://172.26.60.219:8081/bigdata/#/datastorage/handler/assetsmager_2"
+            },
+            {
+              "subMenu": [],
+              "code": "42300",
+              "name": "数据获取",
+              "url": "http://172.26.60.219:8081/bigdata/#/datastorage/handler/sourcegetter_2"
+            },
+            {
+              "subMenu": [],
+              "code": "42400",
+              "name": "数据查看",
+              "url": "http://172.26.60.219:8081/bigdata/#/datastorage/handler/datasourcemager_2"
+            }
+          ],
+          "code": "42000",
+          "name": "处理区管理",
+          "url": ""
+        },
+        {
+          "subMenu": [
+            {
+              "subMenu": [
+                {
+                  "subMenu": [],
+                  "code": "43110",
+                  "name": "表管理",
+                  "url": "http://172.26.60.219:8081/bigdata/#/datastorage/analysis/table_3/list"
+                },
+                {
+                  "subMenu": [],
+                  "code": "43120",
+                  "name": "目录管理",
+                  "url": "http://172.26.60.219:8081/bigdata/#/datastorage/analysis/table_3/fold"
+                }
+              ],
+              "code": "43100",
+              "name": "表/目录管理",
+              "url": ""
+            },
+            {
+              "subMenu": [],
+              "code": "43200",
+              "name": "资源管理",
+              "url": "http://172.26.60.219:8081/bigdata/#/datastorage/analysis/assetsmager_3"
+            },
+            {
+              "subMenu": [],
+              "code": "43300",
+              "name": "数据获取",
+              "url": "http://172.26.60.219:8081/bigdata/#/datastorage/analysis/sourcegetter_3"
+            },
+            {
+              "subMenu": [],
+              "code": "43400",
+              "name": "数据查看",
+              "url": "http://172.26.60.219:8081/bigdata/#/datastorage/analysis/datasourcemager_3"
+            }
+          ],
+          "code": "43000",
+          "name": "分析区管理",
+          "url": ""
+        },
+        {
+          "subMenu": [],
+          "code": "44000",
+          "name": "统计分析",
+          "url": "http://172.26.60.219:8081/bigdata/#/datastorage/statistics/organalysis"
+        }
+      ],
+      "code": "40000",
+      "name": "数据管理",
+      "url": "http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=dsjmh2_sjgl&sid="
+    },
+    {
+      "subMenu": [
+        {
+          "subMenu": [
+            {
+              "subMenu": [
+                {
+                  "subMenu": [],
+                  "code": "51100",
+                  "name": "探查模板",
+                  "url": ""
+                },
+                {
+                  "subMenu": [],
+                  "code": "51100",
+                  "name": "元数据整理",
+                  "url": ""
+                },
+                {
+                  "subMenu": [],
+                  "code": "51100",
+                  "name": "数据探查",
+                  "url": ""
+                },
+                {
+                  "subMenu": [],
+                  "code": "51100",
+                  "name": "配置清洗规则",
+                  "url": ""
+                },
+                {
+                  "subMenu": [],
+                  "code": "51100",
+                  "name": "清洗作业管理",
+                  "url": ""
+                },
+                {
+                  "subMenu": [],
+                  "code": "51100",
+                  "name": "查看清洗报告",
+                  "url": ""
+                },
+                {
+                  "subMenu": [],
+                  "code": "51100",
+                  "name": "自动探查规则管理",
+                  "url": ""
+                }
+              ],
+              "code": "51100",
+              "name": "数据清洗",
+              "url": "http://172.26.60.219:8081/bigdata/#/datahandler/task/create"
+            },
+            {
+              "subMenu": [
+                {
+                  "subMenu": [],
+                  "code": "51200",
+                  "name": "数据存储查看",
+                  "url": "http://172.26.60.219:8081/bigdata/#/datahandler/task/config"
+                },
+                {
+                  "subMenu": [],
+                  "code": "51200",
+                  "name": "数据存储报告",
+                  "url": "http://172.26.60.219:8081/bigdata/#/datahandler/task/config"
+                }
+              ],
+              "code": "51200",
+              "name": "数据存储",
+              "url": "http://172.26.60.219:8081/bigdata/#/datahandler/task/config"
+            },
+            {
+              "subMenu": [
+                {
+                  "subMenu": [],
+                  "code": "51200",
+                  "name": "数据存储报告",
+                  "url": "http://172.26.60.219:8081/bigdata/#/datahandler/task/config"
+                },
+                {
+                  "subMenu": [],
+                  "code": "51200",
+                  "name": "标签类目管理",
+                  "url": "http://172.26.60.219:8081/bigdata/#/datahandler/task/config"
+                },
+                {
+                  "subMenu": [],
+                  "code": "51200",
+                  "name": "标签规则管理",
+                  "url": "http://172.26.60.219:8081/bigdata/#/datahandler/task/config"
+                },
+                {
+                  "subMenu": [],
+                  "code": "51200",
+                  "name": "字段标签管理",
+                  "url": "http://172.26.60.219:8081/bigdata/#/datahandler/task/config"
+                },
+                {
+                  "subMenu": [],
+                  "code": "51200",
+                  "name": "表标签管理",
+                  "url": "http://172.26.60.219:8081/bigdata/#/datahandler/task/config"
+                }
+
+              ],
+              "code": "51300",
+              "name": "标签管理",
+              "url": "http://172.26.60.219:8081/bigdata/#/datahandler/task/monior"
+            }
+          ],
+          "code": "51000",
+          "name": "数据清洗",
+          "url": "http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=dsjmh2_sjqx&sid="
+        },
+        {
+          "subMenu": [
+            {
+              "subMenu": [],
+              "code": "52100",
+              "name": "数据脱敏",
+              "url": "http://172.26.60.219:8081/bigdata/#/datahandler/sensitive/create"
+            }
+          ],
+          "code": "52000",
+          "name": "数据脱敏",
+          "url": "http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=dsjmh2_sjtm&sid="
+        }
+      ],
+      "code": "50000",
+      "name": "数据处理",
+      "url": ""
+    },
+    {
+      "subMenu": [
+        {
+          "subMenu": [],
+          "code": "61000",
+          "name": "数据分析",
+          "url": "http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=dsjmh2_sjfx&sid="
+        },
+        {
+          "subMenu": [],
+          "code": "62000",
+          "name": "数据可视化",
+          "url": "http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=dsjmh2_sjksh&sid="
+        }
+      ],
+      "code": "60000",
+      "name": "组件服务",
+      "url": ""
+    },
+    {
+      "subMenu": [],
+      "code": "70000",
+      "name": "领导驾驶舱",
+      "url": ""
+    },
+    {
+      "subMenu": [],
+      "code": "80000",
+      "name": "个人中心",
+      "url": "http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=dsjmh_grzx&sid="
+    },
+    {
+      "subMenu": [],
+      "code": "90000",
+      "name": "评估评价",
+      "url": ""
+    },
+    {
+      "subMenu": [
+        {
+          "subMenu": [
+            {
+              "subMenu": [],
+              "code": "A1100",
+              "name": "创建库/文件",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/assets/add"
+            },
+            {
+              "subMenu": [],
+              "code": "A1200",
+              "name": "软件分配",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/assets/set"
+            }
+          ],
+          "code": "A1000",
+          "name": "平台资产管理",
+          "url": ""
+        },
+        {
+          "subMenu": [
+            {
+              "subMenu": [],
+              "code": "A2100",
+              "name": "原始区监控",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/assetsmonitor/old"
+            },
+            {
+              "subMenu": [],
+              "code": "A2200",
+              "name": "处理/分析区监控",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/assetsmonitor/other"
+            }
+          ],
+          "code": "A2000",
+          "name": "平台资产监控",
+          "url": ""
+        },
+        {
+          "subMenu": [
+            {
+              "subMenu": [],
+              "code": "A3100",
+              "name": "任务监控",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/monitor/task"
+            },
+            {
+              "subMenu": [],
+              "code": "A3200",
+              "name": "Hadoop监控",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/monitor/hadoop"
+            },
+            {
+              "subMenu": [],
+              "code": "A3300",
+              "name": "信息统计",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/monitor/infostatistics"
+            }
+          ],
+          "code": "A3000",
+          "name": "平台监控",
+          "url": ""
+        },
+        {
+          "subMenu": [
+            {
+              "subMenu": [],
+              "code": "A4100",
+              "name": "系统日志",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/monitor/logs/system"
+            },
+            {
+              "subMenu": [],
+              "code": "A4200",
+              "name": "数据日志",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/monitor/logs/data"
+            },
+            {
+              "subMenu": [],
+              "code": "A4300",
+              "name": "申请日志",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/monitor/logs/apply"
+            },
+            {
+              "subMenu": [],
+              "code": "A4400",
+              "name": "审批日志",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/monitor/logs/approval"
+            },
+            {
+              "subMenu": [],
+              "code": "A4500",
+              "name": "交换日志",
+              "url": "http://172.26.60.219:8081/bigdata/#//platformmanager/monitor/logs/exchange"
+            },
+            {
+              "subMenu": [],
+              "code": "A4600",
+              "name": "审计配置",
+              "url": ""
+            },
+            {
+              "subMenu": [],
+              "code": "A4700",
+              "name": "审计统计",
+              "url": ""
+            }
+          ],
+          "code": "A4000",
+          "name": "日志管理",
+          "url": ""
+        },
+        {
+          "subMenu": [
+            {
+              "subMenu": [],
+              "code": "A5100",
+              "name": "原始区监控",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/datasource/old"
+            },
+            {
+              "subMenu": [],
+              "code": "A5200",
+              "name": "分析/处理区监控",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/datasource/other"
+            }
+          ],
+          "code": "A5000",
+          "name": "数据资源监控",
+          "url": ""
+        },
+        {
+          "subMenu": [],
+          "code": "A6000",
+          "name": "租户管理",
+          "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/tenent/tenentmanager/list"
+        },
+        {
+          "subMenu": [
+            {
+              "subMenu": [],
+              "code": "A7100",
+              "name": "角色管理",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/role"
+            },
+            {
+              "subMenu": [],
+              "code": "A7200",
+              "name": "用户管理",
+              "url": "http://172.26.60.219:8081/bigdata/#/platformmanager/user"
+            }
+          ],
+          "code": "A7000",
+          "name": "权限管理",
+          "url": ""
+        }
+      ],
+      "code": "A0000",
+      "name": "平台管理",
+      "url": "http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=dsjmh2_ptgl&sid="
+    }
+  ],
+  "message": "success"
+}
