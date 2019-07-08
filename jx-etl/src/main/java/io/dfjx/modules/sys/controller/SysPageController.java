@@ -25,6 +25,7 @@ import io.dfjx.modules.sys.shiro.ShiroUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -52,7 +53,7 @@ public class SysPageController {
 		return "modules/" + module + "/" + url;
 	}
 
-	@RequestMapping("index.html")
+	@GetMapping(value = {"/", "index.html"})
 	public String index(HttpServletRequest request){
         PortalFilter sso = new PortalFilter();
         boolean isLogin = sso.doLogin(request);
