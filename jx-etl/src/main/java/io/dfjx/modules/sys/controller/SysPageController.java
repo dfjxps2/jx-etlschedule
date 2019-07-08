@@ -52,11 +52,11 @@ public class SysPageController {
 		return "modules/" + module + "/" + url;
 	}
 
-	@RequestMapping(value = {"/", "index.html"})
-	public String index(HttpServletRequest request){
-		return ssoLogin(request);
-		//return "index";
-	}
+//	@RequestMapping(value = {"/", "index.html"})
+//	public String index(HttpServletRequest request){
+//		return ssoLogin(request);
+//		//return "index";
+//	}
 
 	@RequestMapping("index1.html")
 	public String index1(){

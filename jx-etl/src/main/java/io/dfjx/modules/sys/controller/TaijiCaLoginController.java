@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +38,7 @@ public class TaijiCaLoginController extends AbstractController{
      * CA认证中心跳转过来的接口
      * @throws IOException
      */
-    @PostMapping("jx-etl")
+    @PostMapping("/")
     @ApiOperation("太极登陆接口")
     public void cleanseRedirect(HttpServletRequest request,
                                   HttpServletResponse response) throws IOException {
@@ -172,12 +173,17 @@ public class TaijiCaLoginController extends AbstractController{
         }
     }
 
+    @Value("${ca.valid}")
+    private boolean caVaid;
+
     @GetMapping("/ca/logout")
     @ApiOperation("太极登出接口")
     public Map<String, Object> logout() {
 
-        sysUserTokenService.logout(ShiroUtils.getUserEntity().getUserId().toString());
-        SecurityUtils.getSubject().logout();
+        if (caVaid) {
+            sysUserTokenService.logout(ShiroUtils.getUserEntity().getUserId().toString());
+            SecurityUtils.getSubject().logout();
+        }
 
         return R.ok();
     }

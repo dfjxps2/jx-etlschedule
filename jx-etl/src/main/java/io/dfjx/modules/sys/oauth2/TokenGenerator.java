@@ -9,7 +9,6 @@
 package io.dfjx.modules.sys.oauth2;
 
 
-
 import io.dfjx.common.exception.RRException;
 
 import java.security.MessageDigest;

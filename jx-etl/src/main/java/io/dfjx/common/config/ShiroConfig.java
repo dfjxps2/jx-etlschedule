@@ -16,7 +16,7 @@
 
 package io.dfjx.common.config;
 
-import io.dfjx.common.synchrodata.PortalFilter;
+import io.dfjx.modules.sys.oauth2.OAuth2Filter;
 import io.dfjx.modules.sys.shiro.RedisShiroSessionDAO;
 import io.dfjx.modules.sys.shiro.UserRealm;
 import org.apache.shiro.mgt.SecurityManager;
@@ -28,10 +28,12 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -42,6 +44,7 @@ import java.util.Map;
  * @since 3.0.0 2017-09-27
  */
 @Configuration
+@ConditionalOnProperty(prefix = "ca", name = "valid", havingValue = "true", matchIfMissing = true)
 public class ShiroConfig {
 
     @Bean("sessionManager")
@@ -75,9 +78,15 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
         shiroFilter.setSecurityManager(securityManager);
+
         //shiroFilter.setLoginUrl("/login.html");
         shiroFilter.setLoginUrl("/logincas");
         //shiroFilter.setUnauthorizedUrl("/");
+
+        //oauth过滤
+        Map<String, Filter> filters = new HashMap<>();
+        filters.put("oauth2", new OAuth2Filter());
+        shiroFilter.setFilters(filters);
 
         Map<String, String> filterMap = new LinkedHashMap<>();
         filterMap.put("/swagger/**", "anon");
