@@ -63,8 +63,8 @@ system-params:
   # 作业配置导出文件
   config_export_dir: /usr/share/etl/tmp/
   # cas登录服务地址
-  cas_url: http://172.26.52.167:17001/cas/login?locale=zh_CN&service=http%3A%2F%2F172.26.52.167%3A8080%2Fportal%2Fcallback%3Fclient_name%3DCasClient
-  portal_url: http://172.26.52.167:17001/cas/logout?service=http%3A%2F%2F172.26.52.168%3A9095%2Fjx-etl%2Flogin.html
+  cas_url: http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=gydsj_sjpcl&sid=871b412eab6ea3e7b21cb2dfa4b64c58
+  portal_url: http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=gydsj_sjpcl&sid=871b412eab6ea3e7b21cb2dfa4b64c58
   portal_app: 批量数据处理系统
   soap_url: http://172.26.52.167:18001/portal/intlDataSynchronizedService?wsdl
   cas_server_url_prefix: http://172.26.52.167:17001/cas

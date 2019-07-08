@@ -65,7 +65,7 @@ public class TaijiCaLoginController extends AbstractController{
                     .append("?token=").append(token).append("&type=").append("cleanse").toString();
 
             logger.info("Redirect url ====> {}",redirectUrl);
-            this.doRedirect(redirectUrl,response);
+            this.doRedirect("index.html",response);
 
         }
     }
@@ -103,7 +103,10 @@ public class TaijiCaLoginController extends AbstractController{
     public R login(@RequestBody GovCaUserForm form,
                                      @PathVariable(value = "mockUserId", required = false) String mockUserId)  {
         if(!Strings.isNullOrEmpty(mockUserId)){
-            return this.mockLogin(Long.parseLong(mockUserId));
+            SysUserEntity sysUserEntity = new SysUserEntity();
+            sysUserEntity.setUserId(Long.parseLong(mockUserId));
+            sysUserEntity.setUsername("mockUser");
+            return this.mockLogin(sysUserEntity);
         }
 
         logger.info("Send to Ca =========== /n {}",new Gson().toJson(form));
@@ -122,49 +125,12 @@ public class TaijiCaLoginController extends AbstractController{
 
             //用户姓名
             String username = userticket.getUserName();//这个是由“BJCA公司” 配置的选项，如果没有值需要告知“BJCA公司”。
-            //用户3	2位唯一标识码
-            String userid = userticket.getUserUniqueID();
-            //用户所在部门的编码
-            String departcd = userticket.getUserDepartCode();
-            //用户所在部门的名称
-            String departname = userticket.getUserDepartName();
-//
-//            TnmtEntity tnmtEntity = tnmtService.getTnmtByDepart(departcd);
 
             SysUserEntity sysUserEntity = new SysUserEntity();
-            sysUserEntity.setUserId(Long.parseLong(userid));
+            sysUserEntity.setUserId(1l);
             sysUserEntity.setUsername(username);
-            //sysUserEntity.setTenantId(new Long(tnmtEntity.getTnmtid()));
 
-            ShiroUtils.setSessionAttribute("user",sysUserEntity);
-
-            //用户所拥有的角色信息
-//            Hashtable roles = userticket.getUserRoles();
-//            String s_role = "";
-//            if(roles != null && roles.size() > 0) {
-//                int index = 1;
-//                Enumeration e = roles.keys();
-//                Enumeration e2 = roles.elements();
-//                for(;e.hasMoreElements();){
-//                    String rolecode = (String)e.nextElement();
-//                    String rolename = (String)e2.nextElement();
-//                    if(rolename.indexOf("?") != -1) {
-//                        rolename = new String(rolename.getBytes("ISO-8859-1"),"GB2312");
-//
-//                    }
-//                    if(index == 1){
-//                        s_role = rolecode;
-//                    }else{
-//                        s_role = s_role + "," + rolecode;
-//                    }
-//                    index++;
-//                    System.out.println("s_role======="+s_role);
-//                    System.out.println("rolename======="+rolename);
-//                }
-//            }
-
-            R createResult = sysUserTokenService.createToken(sysUserEntity.getUserId().toString());
-            return createResult;
+            return this.mockLogin(sysUserEntity);
 
         }else{
             logger.error("CA认证中心用户查找失败:{}",new Gson().toJson(form));
@@ -188,16 +154,11 @@ public class TaijiCaLoginController extends AbstractController{
         return R.ok();
     }
 
-    private R mockLogin(Long userId){
-        R createResult = sysUserTokenService.createToken(userId.toString());
-        SysUserEntity sysUserEntity = new SysUserEntity();
-        sysUserEntity.setUserId(userId);
-        sysUserEntity.setUsername("mockUser");
-
+    private R mockLogin(SysUserEntity sysUserEntity){
+        R createResult = sysUserTokenService.createToken(sysUserEntity.getUserId().toString());
         ShiroUtils.setSessionAttribute("user", sysUserEntity);
-
         Subject subject = ShiroUtils.getSubject();
-        UsernamePasswordTokenEx token = new UsernamePasswordTokenEx(userId);
+        UsernamePasswordTokenEx token = new UsernamePasswordTokenEx(sysUserEntity.getUserId());
         subject.login(token);
         return createResult;
     }
