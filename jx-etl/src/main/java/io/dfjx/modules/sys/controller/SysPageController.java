@@ -16,13 +16,18 @@
 
 package io.dfjx.modules.sys.controller;
 
+import com.google.gson.Gson;
 import io.dfjx.common.config.SystemParams;
 import io.dfjx.common.synchrodata.Dom4jUtil;
 import io.dfjx.common.synchrodata.PortalFilter;
 import io.dfjx.common.synchrodata.SynchronizedDataConstants;
 import io.dfjx.common.synchrodata.WebClient;
+import io.dfjx.modules.etl.service.JobLogService;
+import io.dfjx.modules.etl.service.JobService;
+import io.dfjx.modules.etl.service.ScriptService;
 import io.dfjx.modules.sys.shiro.ShiroUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,9 +36,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 系统页面视图
@@ -47,6 +51,15 @@ public class SysPageController {
 
 	@Autowired
 	private SystemParams systemParams;
+
+	@Autowired
+	private JobService jobService;
+
+	@Autowired
+	private JobLogService jobLogService;
+
+	@Autowired
+	private ScriptService scriptService;
 
 	@RequestMapping("modules/{module}/{url}.html")
 	public String module(@PathVariable("module") String module, @PathVariable("url") String url){
@@ -74,7 +87,18 @@ public class SysPageController {
 	}
 
 	@RequestMapping("main.html")
-	public String main(){
+	public String main(Map<String, Object> map){
+		Date now = new Date();
+		Date preDate = DateUtils.addDays(now, -1);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+		int tasks = jobService.getCount(1);
+		int dispatchs = jobLogService.getCount(dateFormat.format(preDate));
+		int exes = scriptService.getCount();
+
+		map.put("tasks", tasks);
+		map.put("dispatchs", dispatchs);
+		map.put("exes", exes);
 		return "main";
 	}
 

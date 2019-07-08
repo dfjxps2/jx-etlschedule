@@ -17,4 +17,8 @@
 	<select id="getScripts" resultType="java.util.LinkedHashMap">
 	 select ScriptID code ,FileName name from etl_script where enable='1'
 	</select>
+
+	<select id="getCount" resultType="int">
+		select count(distinct ETL_Server) from etl_script
+	</select>
 </mapper>

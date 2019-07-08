@@ -1,22 +1,26 @@
 package io.dfjx.modules.etl.service.impl;
 
-import io.dfjx.modules.etl.entity.JobEntity;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Service;
-import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import io.dfjx.common.utils.PageUtils;
 import io.dfjx.common.utils.Query;
-
 import io.dfjx.modules.etl.dao.JobLogDao;
 import io.dfjx.modules.etl.entity.JobLogEntity;
 import io.dfjx.modules.etl.service.JobLogService;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 
 @Service("jobLogService")
 public class JobLogServiceImpl extends ServiceImpl<JobLogDao, JobLogEntity> implements JobLogService {
+
+    @Autowired
+    private JobLogDao jobLogDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -84,5 +88,53 @@ public class JobLogServiceImpl extends ServiceImpl<JobLogDao, JobLogEntity> impl
         }
     }
 
+    @Override
+    public int getCount(String txdate) {
+        return super.baseMapper.selectCount(new EntityWrapper<JobLogEntity>().addFilter("txdate='" + txdate + "'"));
+    }
 
+    @Override
+    public Map queryLineChartData(String fromDate, String toDate) {
+        List<Map> list = jobLogDao.queryLineChartData(fromDate, toDate);
+
+        return getChartData(list);
+    }
+
+    @Override
+    public Map queryPieChartData(String fromDate, String toDate) {
+        List<Map> list = jobLogDao.queryPieChartData(fromDate, toDate);
+
+        return getChartData(list);
+    }
+
+    private Map getChartData(List<Map> list) {
+        int triggerCountFailTotal = 0;
+        int triggerCountSucTotal = 0;
+        List triggerDayCountFailList = new ArrayList();
+        List triggerDayCountSucList = new ArrayList();
+        List<Date> triggerDayList = new ArrayList();
+
+
+        for (int i = 0; i < list.size(); i++) {
+            Map map = list.get(i);
+            Integer err_cnt = ((BigDecimal) map.get("err_cnt")).intValue();
+            Integer success_cnt = ((BigDecimal) map.get("success_cnt")).intValue();
+
+            triggerCountFailTotal += err_cnt;
+            triggerCountSucTotal += success_cnt;
+
+            triggerDayCountFailList.add(err_cnt);
+            triggerDayCountSucList.add(success_cnt);
+            triggerDayList.add((Date) map.get("txdate"));
+        }
+
+        Map data = new HashMap();
+        data.put("triggerCountFailTotal", triggerCountFailTotal);
+        data.put("triggerDayList", triggerDayList);
+        data.put("triggerCountSucTotal", triggerCountSucTotal);
+        data.put("triggerDayCountFailList", triggerDayCountFailList);
+        data.put("triggerDayCountSucList", triggerDayCountSucList);
+
+        return data;
+    }
 }

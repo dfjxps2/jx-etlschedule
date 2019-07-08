@@ -16,5 +16,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface ScriptDao extends BaseMapper<ScriptEntity> {
 	public List<Map<String,Object>> getScripts();
-	
+
+
+	int getCount();
 }

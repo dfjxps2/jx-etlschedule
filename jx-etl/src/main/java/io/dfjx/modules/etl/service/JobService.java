@@ -63,5 +63,7 @@ public interface JobService extends IService<JobEntity> {
 	List<ExlJobDependency> expJobDependency();
 
 	String expJobConfigFile();
+
+	int getCount(Integer enable);
 }
 

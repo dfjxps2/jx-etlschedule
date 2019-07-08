@@ -52,7 +52,7 @@
           <div class="info-box bg-aqua">
             <span class="info-box-icon"><i class="fa fa-flag-o"></i></span>
             <div class="info-box-content">
-              <span class="info-box-text">任务数量</span> <span class="info-box-number">2</span>
+              <span class="info-box-text">任务数量</span> <span class="info-box-number">${tasks}</span>
               <div class="progress">
                 <div class="progress-bar" style="width: 100%"></div>
               </div>
@@ -64,7 +64,7 @@
           <div class="info-box bg-yellow">
             <span class="info-box-icon"><i class="fa fa-calendar"></i></span>
             <div class="info-box-content">
-              <span class="info-box-text">调度次数</span> <span class="info-box-number">518</span>
+              <span class="info-box-text">调度次数</span> <span class="info-box-number">${dispatchs}</span>
               <div class="progress">
                 <div class="progress-bar" style="width: 100%"></div>
               </div>
@@ -76,7 +76,7 @@
           <div class="info-box bg-green">
             <span class="info-box-icon"><i class="fa fa-sliders"></i></span>
             <div class="info-box-content">
-              <span class="info-box-text">执行器数量</span> <span class="info-box-number">1</span>
+              <span class="info-box-text">执行器数量</span> <span class="info-box-number">${exes}</span>
               <div class="progress">
                 <div class="progress-bar" style="width: 100%"></div>
               </div>
@@ -187,20 +187,18 @@
     				"triggerDayCountSucList": [243, 458]
     			}
     		}
-    	   lineChartInit(data)
-           pieChartInit(data);
- /*          $.ajax({
-              type : 'POST',
-              url : base_url + '/triggerChartDate',
-              data : {
-                  'startDate':startDate.format('YYYY-MM-DD HH:mm:ss'),
-                  'endDate':endDate.format('YYYY-MM-DD HH:mm:ss')
-              },
+        // lineChartInit(data)
+        // pieChartInit(data);
+           $.ajax({
+              type : 'GET',
+              url : 'etl/joblog/triggerChartDate',
+              data : {},
               dataType : "json",
               success : function(data){
-                  if (data.code == 200) {
-                      lineChartInit(data)
-                      pieChartInit(data);
+                console.info(data)
+                  if (data.code == 0) {
+                      lineChartInit(data.lineChartData)
+                      pieChartInit(data.pieChartData);
                   } else {
                       layer.open({
                           title: '系统提示',
@@ -209,7 +207,7 @@
                       });
                   }
               }
-          }); */
+          });
       }
 
       /**
@@ -247,7 +245,7 @@
                      {
                          type : 'category',
                          boundaryGap : false,
-                         data : data.content.triggerDayList
+                         data : data.triggerDayList
                      }
                  ],
                  yAxis : [
@@ -261,7 +259,7 @@
                          type:'line',
                          stack: '总量',
                          areaStyle: {normal: {}},
-                         data: data.content.triggerDayCountSucList
+                         data: data.triggerDayCountSucList
                      },
                      {
                          name:'失败调度次数',
@@ -274,7 +272,7 @@
                              }
                          },
                          areaStyle: {normal: {}},
-                         data: data.content.triggerDayCountFailList
+                         data: data.triggerDayCountFailList
                      }
                  ],
                   color:['#00A65A', '#F39C12']
@@ -311,11 +309,11 @@
                       center: ['50%', '60%'],
                       data:[
                           {
-                              value:data.content.triggerCountSucTotal,
+                              value:data.triggerCountSucTotal,
                               name:'成功调度次数'
                           },
                           {
-                              value:data.content.triggerCountFailTotal,
+                              value:data.triggerCountFailTotal,
                               name:'失败调度次数'
                           }
                       ],

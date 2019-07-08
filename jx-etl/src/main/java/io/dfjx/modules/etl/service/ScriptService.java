@@ -19,5 +19,7 @@ public interface ScriptService extends IService<ScriptEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     public List<Map<String,Object>> getScripts();
+
+    int getCount();
 }
 

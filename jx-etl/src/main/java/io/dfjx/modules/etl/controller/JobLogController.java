@@ -1,8 +1,8 @@
 package io.dfjx.modules.etl.controller;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import io.dfjx.common.config.SystemParams;
 import io.dfjx.common.exception.RRException;
@@ -11,17 +11,14 @@ import io.dfjx.modules.etl.util.DownLoadFileUtil;
 import io.dfjx.modules.etl.util.ReadFileUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.dfjx.modules.etl.entity.JobLogEntity;
 import io.dfjx.modules.etl.service.JobLogService;
@@ -205,6 +202,17 @@ public class JobLogController {
     }
 
 
+    @GetMapping("/triggerChartDate")
+    public R triggerChartDate() {
+        Date now = new Date();
+        Date preDate = DateUtils.addDays(now, -1);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date fromDate = DateUtils.addDays(now, -6);
+        Map lineChartData = jobLogService.queryLineChartData(dateFormat.format(fromDate), dateFormat.format(preDate));
+        Map pieChartData = jobLogService.queryPieChartData(dateFormat.format(fromDate), dateFormat.format(preDate));
+
+        return R.ok().put("lineChartData", lineChartData).put("pieChartData", pieChartData);
+    }
 
     public static void main(String[] args) {
         JobLogController jobLogController = new JobLogController();

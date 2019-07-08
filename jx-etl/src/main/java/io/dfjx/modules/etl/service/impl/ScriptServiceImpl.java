@@ -46,4 +46,9 @@ public class ScriptServiceImpl extends ServiceImpl<ScriptDao, ScriptEntity> impl
 		
 		return scriptDao.getScripts();
 	}
+
+    @Override
+    public int getCount() {
+        return scriptDao.getCount();
+    }
 }

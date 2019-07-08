@@ -1291,4 +1291,9 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 
 		return fileName;
 	}
+
+	@Override
+	public int getCount(Integer enable) {
+		return super.baseMapper.selectCount(new EntityWrapper<JobEntity>().addFilter("enable=" + enable));
+	}
 }
