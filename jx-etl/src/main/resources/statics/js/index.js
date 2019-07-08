@@ -72,6 +72,7 @@ var vm = new Vue({
 
         },
         menuClick : function(eventVal){
+            console.info('menuClick', eventVal)
             if(eventVal.url&&eventVal.url!=''&&eventVal.outLink=='Y'){
                 window.location.href = eventVal.url
             }else{
@@ -140,8 +141,8 @@ var vm = new Vue({
         this.getUser();
 
         var me = this;
-        $.getJSON("statics/js/taijiMenuMock.json?" + $.now(), function(taijiMenuResponse) {
-            if(taijiMenuResponse&&taijiMenuResponse.code==1){
+        $.getJSON("menu/top?" + $.now(), function(taijiMenuResponse) {
+            if(taijiMenuResponse&&taijiMenuResponse.code==0){
                 const taijiMenuArray = taijiMenuResponse.data
 
                 const fullMenuArrayList = JSON.parse(sessionStorage.getItem('menuList') || '[]')

@@ -550,7 +550,7 @@
         <li class="menu-root-item" @click="menuClick(headerMenu)"
             v-bind:class="{'menu-on':headerMenu.actived}">
           <!--<span class="navdot"></span>-->
-          <a href="#">
+          <a :href="headerMenu.url">
                                 <span class="el-dropdown-link">
                                     {{headerMenu.name}}
                                 </span>
@@ -562,10 +562,10 @@
                            slot="dropdown">
           <el-dropdown-item class="child-menu-gov-item" style="width:100%;"
                             v-for="(headerMenuChild,index) in headerMenu.children">
-            <div @click="menuClick(headerMenuChild)">
+            <a :href="headerMenuChild.url">
               <span v-if="index>0" class="line-bt"></span>
               {{headerMenuChild.name}}
-            </div>
+            </a>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
