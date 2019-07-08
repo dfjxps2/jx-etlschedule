@@ -78,3 +78,7 @@ logging:
   level.io.dfjx: debug
   path: logs/
   file: admin.log
+
+#启用CA登录配置
+ca:
+  valid: true
