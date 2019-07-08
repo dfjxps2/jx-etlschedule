@@ -139,7 +139,7 @@ var vm = new Vue({
         this.getMenuList();
         this.getUser();
 
-        let me = this;
+        var me = this;
         $.getJSON("statics/js/taijiMenuMock.json?" + $.now(), function(taijiMenuResponse) {
             if(taijiMenuResponse&&taijiMenuResponse.code==1){
                 const taijiMenuArray = taijiMenuResponse.data

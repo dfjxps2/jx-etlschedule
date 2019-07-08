@@ -36,7 +36,7 @@ import java.util.Map;
 
 /**
  * 系统页面视图
- * 
+ *
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年11月24日 下午11:05:27
@@ -46,17 +46,21 @@ public class SysPageController {
 
 	@Autowired
 	private SystemParams systemParams;
-	
+
 	@RequestMapping("modules/{module}/{url}.html")
 	public String module(@PathVariable("module") String module, @PathVariable("url") String url){
 		return "modules/" + module + "/" + url;
 	}
 
-//	@RequestMapping(value = {"/", "index.html"})
-//	public String index(HttpServletRequest request){
-//		return ssoLogin(request);
-//		//return "index";
-//	}
+	@RequestMapping("index.html")
+	public String index(HttpServletRequest request){
+        PortalFilter sso = new PortalFilter();
+        boolean isLogin = sso.doLogin(request);
+        if(!isLogin){
+            return "redirect:"+systemParams.getPortalUrl();
+        }
+        return "index";
+	}
 
 	@RequestMapping("index1.html")
 	public String index1(){
@@ -81,15 +85,5 @@ public class SysPageController {
 	@RequestMapping("logincas")
 	public String logincas(){
 		return "redirect:"+systemParams.getPortalUrl();
-	}
-
-	public String ssoLogin(HttpServletRequest request){
-		String main = "index";
-		PortalFilter sso = new PortalFilter();
-		boolean isLogin = sso.doLogin(request);
-		if(!isLogin){
-			return "redirect:"+systemParams.getPortalUrl();
-		}
-		return main;
 	}
 }
