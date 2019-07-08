@@ -16,20 +16,20 @@
 
 package io.dfjx.modules.sys.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import io.dfjx.common.annotation.SysLog;
 import io.dfjx.common.exception.RRException;
 import io.dfjx.common.utils.Constant;
 import io.dfjx.common.utils.R;
+import io.dfjx.common.utils.WebClient;
 import io.dfjx.modules.sys.entity.SysMenuEntity;
 import io.dfjx.modules.sys.service.SysMenuService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -44,6 +44,23 @@ import java.util.List;
 public class SysMenuController extends AbstractController {
 	@Autowired
 	private SysMenuService sysMenuService;
+
+	/**
+	 * 太极顶部菜单
+	 * @return
+	 */
+	@GetMapping("top")
+	public R top() {
+		String url = "http://172.26.60.219:8081/app/api_v1/getMenuUrlsByCaId";
+		WebClient client = new WebClient();
+		JSONObject json = client.post3(url, new HashMap(){{
+			put("models", "{\"caId\":\"7ac39c275b1e7f3b744eb4e5e4257c61\"}");
+		}});
+
+		return R.ok(new HashMap() {{
+			put("data", json.getJSONArray("data"));
+		}});
+	}
 
 	/**
 	 * 导航菜单

@@ -6,17 +6,17 @@ var menuItem = Vue
                 item : {}
             },
             template : [
-                    '<li>',
+                    '<li class="active">',
                     '	<a v-if="item.type === 0" href="javascript:;" class="nav-top-item">',
                     '		<i v-if="item.icon != null" :class="item.icon"></i>',
                     '		<span>{{item.name}}</span>',
                     '	</a>',
-                    '	<ul v-if="item.type === 0" class="treeview-menu secondary-menu ">',
+                    '	<ul v-if="item.type === 0" class="treeview-menu secondary-menu " style="display: block">',
                     '		<menu-item :item="item" v-for="item in item.list"></menu-item>',
                     '	</ul>',
 
                     '	<a v-if="item.type === 1 && item.parentId === 0" :href="\'#\'+item.url" class="nav-top-item non-pic">',
-                    '		<i v-if="item.icon != null" :class="item.icon"></i>',
+                    '		 ',
                     '		<span>{{item.name}}</span>',
                     '	</a>',
 
@@ -56,7 +56,22 @@ var vm = new Vue({
     methods : {
         getMenuList : function(event) {
             $.getJSON("sys/menu/nav?_" + $.now(), function(r) {
-                vm.menuList = r.menuList;
+                var root = {
+                    menuId: 42,
+                    parentId: 0,
+                    parentName: null,
+                    name: "批量数据处理系统",
+                    url: "",
+                    perms: null,
+                    type: 0,
+                    icon: "fa fa-database",
+                    orderNum: 4,
+                    open: null,
+                    list: r.menuList
+                }
+                vm.menuList = [root]
+
+                console.log('get_menu_nav', vm.menuList)
             });
         },
         getUser : function() {
@@ -141,7 +156,7 @@ var vm = new Vue({
         this.getUser();
 
         var me = this;
-        $.getJSON("menu/top?" + $.now(), function(taijiMenuResponse) {
+        $.getJSON("sys/menu/top?" + $.now(), function(taijiMenuResponse) {
             if(taijiMenuResponse&&taijiMenuResponse.code==0){
                 const taijiMenuArray = taijiMenuResponse.data
 
