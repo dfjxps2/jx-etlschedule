@@ -6,7 +6,7 @@ var menuItem = Vue
                 item : {}
             },
             template : [
-                    '<li class="active">',
+                    '<li class="active" v-if="item.id != 1">',
                     '	<a v-if="item.type === 0" href="javascript:;" class="nav-top-item">',
                     '		<i v-if="item.icon != null" :class="item.icon"></i>',
                     '		<span>{{item.name}}</span>',
@@ -56,6 +56,7 @@ var vm = new Vue({
     methods : {
         getMenuList : function(event) {
             $.getJSON("sys/menu/nav?_" + $.now(), function(r) {
+
                 var root = {
                     menuId: 42,
                     parentId: 0,
