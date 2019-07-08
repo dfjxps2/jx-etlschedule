@@ -18,6 +18,7 @@ package io.dfjx.modules.sys.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import io.dfjx.common.annotation.SysLog;
+import io.dfjx.common.config.SystemParams;
 import io.dfjx.common.exception.RRException;
 import io.dfjx.common.utils.Constant;
 import io.dfjx.common.utils.R;
@@ -45,15 +46,17 @@ public class SysMenuController extends AbstractController {
 	@Autowired
 	private SysMenuService sysMenuService;
 
+	@Autowired
+	private SystemParams systemParams;
+
 	/**
 	 * 太极顶部菜单
 	 * @return
 	 */
 	@GetMapping("top")
 	public R top() {
-		String url = "http://172.26.60.219:8081/app/api_v1/getMenuUrlsByCaId";
 		WebClient client = new WebClient();
-		JSONObject json = client.post3(url, new HashMap(){{
+		JSONObject json = client.post3(systemParams.getTopMenuUrl(), new HashMap(){{
 			put("models", "{\"caId\":\"7ac39c275b1e7f3b744eb4e5e4257c61\"}");
 		}});
 

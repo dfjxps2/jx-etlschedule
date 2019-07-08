@@ -69,3 +69,4 @@ system-params:
   soap_url: http://172.26.52.167:18001/portal/intlDataSynchronizedService?wsdl
   cas_server_url_prefix: http://172.26.52.167:17001/cas
   project_url: http://172.26.52.168:9095/jx-etl/
+  top_menu_url: http://192.166.162.181:8081/app/api_v1/getMenuUrlsByCaId

@@ -68,3 +68,4 @@ system-params:
   soap_url: http://127.0.0.1:18001/portal/intlDataSynchronizedService?wsdl
   cas_server_url_prefix: https://127.0.0.1:8443/cas
   project_url: http://localhost:7202/
+  top_menu_url: http://172.26.60.219:8081/app/api_v1/getMenuUrlsByCaId

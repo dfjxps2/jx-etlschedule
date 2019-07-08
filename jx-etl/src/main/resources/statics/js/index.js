@@ -6,7 +6,7 @@ var menuItem = Vue
                 item : {}
             },
             template : [
-                    '<li class="active" v-if="item.id != 1">',
+                    '<li class="active" v-if="item.menuId != 1">',
                     '	<a v-if="item.type === 0" href="javascript:;" class="nav-top-item">',
                     '		<i v-if="item.icon != null" :class="item.icon"></i>',
                     '		<span>{{item.name}}</span>',

@@ -18,6 +18,7 @@ public class SystemParams {
 	private String portalUrl;
 	private String portalApp;
 	private String soapUrl;
+	private String topMenuUrl;
 
 	public String getFileDownloadDir() {
 		return fileDownloadDir;
@@ -105,5 +106,13 @@ public class SystemParams {
 
 	public void setSoapUrl(String soapUrl) {
 		this.soapUrl = soapUrl;
+	}
+
+	public String getTopMenuUrl() {
+		return topMenuUrl;
+	}
+
+	public void setTopMenuUrl(String topMenuUrl) {
+		this.topMenuUrl = topMenuUrl;
 	}
 }
