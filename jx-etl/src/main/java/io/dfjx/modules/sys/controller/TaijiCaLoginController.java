@@ -51,8 +51,9 @@ public class TaijiCaLoginController extends AbstractController{
         form.setBjcaTargetUrl(request.getParameter("BJCA_TARGET_URL"));
         form.setBjcaServerCert(request.getParameter("BJCA_SERVER_CERT"));
 
+        logger.info("BJCA_TICKET => " + request.getParameter("BJCA_TICKET"));
+
         R loginResult = this.login(form, null);
-//
 
         if(loginResult.containsKey("code")&&!"0".equals(String.valueOf(loginResult.get("code")))){
 

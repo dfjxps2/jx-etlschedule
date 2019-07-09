@@ -64,7 +64,7 @@ public class FilterConfig {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setDispatcherTypes(DispatcherType.REQUEST);
         registration.setFilter(new GovCaFilter());
-        registration.addUrlPatterns("/jx-etl");
+        registration.addUrlPatterns("/");
         registration.setName("jxetlFilter");
         registration.setOrder(Integer.MIN_VALUE);
         return registration;

@@ -48,6 +48,7 @@ public class SysUserEntity implements Serializable {
 	@TableId
 	private Long userId;
 
+	@TableField(exist = false)
 	private String caUserId;
 
 	/**
