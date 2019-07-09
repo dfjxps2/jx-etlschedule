@@ -1,30 +1,30 @@
-    <html>
-    <head><meta http-equiv="Content-type" content="text/html; charset=utf-8" /></head>
-    <body>
-	 模拟太极登录功能<br/>
-	 这个页面是模拟 点击 <a href="http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=gydsj_sjpcl&sid=871b412eab6ea3e7b21cb2dfa4b64c58">http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=gydsj_sjpcl&sid=871b412eab6ea3e7b21cb2dfa4b64c58</a>
-	 后产生的请求
-    <form name="form1" method="post"  action="http://127.0.0.1:7202/jx-etl/"> 
- 
-    <input type="text" name="BJCA_TOKEN" value=""/>
+<html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+模拟太极登录功能<br/>
+这个页面是模拟 点击 <a
+    href="http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=gydsj_sjpcl&sid=871b412eab6ea3e7b21cb2dfa4b64c58">http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=gydsj_sjpcl&sid=871b412eab6ea3e7b21cb2dfa4b64c58</a>
+后产生的请求
+<form name="ticket" id="ticket" method="post" action="http://127.0.0.1:7202/jx-etl/">
 
-	<br/>
-	<input type="text" name="BJCA_SERVER_CERT" value=""/>
-	
-	<br/> 
-	<textarea name="BJCA_TICKET"><?xml version="1.0" encoding="GB2312"?><uams-ticket><valid-date><BeginTime>20190708133600</BeginTime><EndTime>20190708140600</EndTime></valid-date><base-info><UserID>871b412eab6ea3e7b21cb2dfa4b64c58</UserID><UserType>0</UserType><CredenceType>CREDENCE_00002</CredenceType><DepartCode>110000C005039</DepartCode><SystemCode>gydsj_sjpcl</SystemCode></base-info><role-infos><role-info><RoleName>???д?????ƽ̨???쵼??ʻ?ս?ɫ</RoleName><RoleCode>csdsjyldjsc</RoleCode></role-info><role-info><RoleName>???д?????_??????ݴ???ϵͳ??ɫ</RoleName><RoleCode>gydsj_sjpcl</RoleCode></role-info></role-infos><append-info><userLoginName>bd_zyzx</userLoginName><userLoginPwd>bd_zyzx</userLoginPwd><departName>??Ϣ??Դ????</departName><userName>????Ϣ??Դ????????</userName></append-info></uams-ticket></textarea>
-	
-	<br/>
-	<input type="text" name="BJCA_TICKET_TYPE" value="2"/>
-	
-	<br/>
-	<input type="text" name="BJCA_TARGET_URL" value=""/>
-	
-	<br/>
-	<input type="text" name="BJCA_TARGET_INFO" value="%B3%C7%CA%D0%B4%F3%CA%FD%BE%DD_%C5%FA%C1%BF%CA%FD%BE%DD%B4%A6%C0%ED%CF%B5%CD%B3"/>
+  <input type="text" name="BJCA_TOKEN" value=''><br/>
+  <input type="text" name="BJCA_SERVER_CERT" value=''><br/>
+  <input type="text" name="BJCA_TICKET" value=''><br/>
+  <input type="text" name="BJCA_TICKET_TYPE" value='2'><br/>
+  <input type="text" name="BJCA_TARGET_URL" value='null'><br/>
+  <input type="text" name="BJCA_TARGET_INFO" value='城市大数据_批量数据处理系统'>
 
-	<br/>
-	<input type="submit" value="登录"/>
-    </form>
-    </body>
-    </html>
+  <input type="text" name="BJCA_TOKEN" value=""/>
+  <input type="button" onclick="login()" value="登录"/>
+</form>
+<script language="javascript">
+  var login = function() {
+    ticket.BJCA_TICKET.value='<?xml version="1.0" encoding="GB2312"?><uams-ticket><valid-date><BeginTime>20190709125437</BeginTime><EndTime>20190709132437</EndTime></valid-date><base-info><UserID>871b412eab6ea3e7b21cb2dfa4b64c58</UserID><UserType>0</UserType><CredenceType>CREDENCE_00002</CredenceType><DepartCode>110000C005039</DepartCode><SystemCode>gydsj_sjpcl</SystemCode></base-info><role-infos><role-info><RoleName>城市大数据平台与领导驾驶舱角色</RoleName><RoleCode>csdsjyldjsc</RoleCode></role-info><role-info><RoleName>城市大数据_批量数据处理系统角色</RoleName><RoleCode>gydsj_sjpcl</RoleCode></role-info></role-infos><append-info><userLoginName>bd_zyzx</userLoginName><userLoginPwd>bd_zyzx</userLoginPwd><departName>信息资源中心</departName><userName>市信息资源管理中心</userName></append-info></uams-ticket>';
+    ticket.submit();
+  }
+
+</script>
+</body>
+</html>

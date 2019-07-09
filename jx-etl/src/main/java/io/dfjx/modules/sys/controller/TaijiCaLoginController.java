@@ -5,6 +5,7 @@ import com.bjca.sso.processor.TicketManager;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import io.dfjx.common.config.GovRedirectConfig;
+import io.dfjx.common.utils.GovCaTicketManager;
 import io.dfjx.common.utils.R;
 import io.dfjx.modules.etl.entity.GovCaUserForm;
 import io.dfjx.modules.sys.entity.SysUserEntity;
@@ -113,7 +114,7 @@ public class TaijiCaLoginController extends AbstractController{
 
         logger.info("Send to Ca =========== /n {}",new Gson().toJson(form));
 
-        TicketManager ticketmag = new TicketManager();
+        GovCaTicketManager ticketmag = new GovCaTicketManager();
 
         String BJCA_TICKET = form.getBjcaTicket();
         String BJCA_TICKET_TYPE = form.getBjcaTicketType();
