@@ -61,7 +61,7 @@ var vm = new Vue({
                     menuId: 42,
                     parentId: 0,
                     parentName: null,
-                    name: "批量数据处理系统",
+                    name: "批量数据处理",
                     url: "",
                     perms: null,
                     type: 0,

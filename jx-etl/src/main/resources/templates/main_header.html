@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="${request.contextPath}/statics/css/all-skins.min.css">
   <link rel="stylesheet" href="${request.contextPath}/statics/css/main.css">
   <link rel="stylesheet" href="${request.contextPath}/statics/js/element-ui/index.css">
+
+  <link rel="icon" href="${request.contextPath}/statics/img/favicon.ico" type="image/x-icon">
   <style type="text/css">
     .main-header .logo {
       text-align: left;padding: 0px 0px 0px 60px;
@@ -45,7 +47,7 @@
     .skin-blue .sidebar-menu > li:hover > a, .skin-blue .sidebar-menu > li.active > a{
       color: #fff;  background: #448aff;border-left-color: #fff;
     }
-    .skin-blue .sidebar a,.skin-blue .treeview-menu>li>a{color:#d4d6dc;}
+    .skin-blue .sidebar a,.skin-blue .treeview-menu>li>a{color:#FFF;}
     .skin-blue .treeview-menu>li>a:hover{background: #448aff;}
     .skin-blue .treeview-menu>li.active>a{color:#fff;background: #448aff;}
 
@@ -318,9 +320,11 @@
       padding:0 0 0 0;
     }
 
-    /* 未选中 一级主菜单样式 */
-    .non-pic{
+    .treeview-menu .active .non-pic {
       background: #0051ad !important;
+    }
+      .non-pic{
+      background: #0b204b !important;
     }
 
     .nav-top-item{
@@ -505,6 +509,17 @@
       cursor: pointer;
     }
 
+    .personal-center {
+      line-height: 32px;
+      margin: 0 20px 0 0;
+      font-size: 14px;
+      letter-spacing: 1px;
+      color: #319af8;
+      float: left;
+      display: inline-block;
+      cursor: pointer;
+    }
+
     .el-dropdown-menu a {color: #FFF;}
   </style>
 </head>
@@ -523,6 +538,8 @@
     <div class="top-rt">
       <div class="myctrip-name">${sysUser.username}，欢迎您访问！</div>
       <div class="topweek">星期五  AM 09:30  2019-06-14  </div>
+      <a class="personal-center" v-for="headerMenu in headerMenus" :href="headerMenu.url"
+         v-if="headerMenu.id == '80000' || headerMenu.id == 'A0000'">{{headerMenu.name}}</a>
       <button class="quit" @click="logout()">退出</button>
     </div>
   </div>
@@ -530,18 +547,14 @@
   <div class="m-nav fn-clear">
     <ul class="menu-root">
 
-      <el-dropdown v-bind:style="{width:1230/headerMenus.length+'px'}" @visible-change="menuHoverOrClick(headerMenu)"
+      <el-dropdown v-bind:style="{width:(1230/(headerMenus.length-2)-1)+'px'}" @visible-change="menuHoverOrClick(headerMenu)"
                    v-for="headerMenu in headerMenus"
                    placement="bottom-end"
-                   trigger="hover" class="el-dropdown-cust">
-        <li class="menu-root-item" @click="menuClick(headerMenu)"
-            v-bind:class="{'menu-on':headerMenu.actived}">
+                   trigger="hover" class="el-dropdown-cust" v-if="headerMenu.id != '80000' && headerMenu.id != 'A0000'">
+        <li class="menu-root-item" @click="menuClick(headerMenu)" v-bind:class="{'menu-on':headerMenu.actived}">
           <!--<span class="navdot"></span>-->
-          <a :href="headerMenu.url">
-                                <span class="el-dropdown-link">
-                                    {{headerMenu.name}}
-                                </span>
-          </a>
+          <a :href="headerMenu.url" v-if="headerMenu.url != ''"><span class="el-dropdown-link">{{headerMenu.name}}</span></a>
+          <a v-else><span class="el-dropdown-link">{{headerMenu.name}}</span></a>
         </li>
 
         <el-dropdown-menu  class="child-menu-gov" v-bind:style="{width:1230/headerMenus.length+'px'}"
@@ -572,3 +585,8 @@
     </section>
     <!-- /.sidebar -->
   </aside>
+  <script>
+    if(top.location != location){
+      top.location.href= location.href;
+    }
+  </script>
