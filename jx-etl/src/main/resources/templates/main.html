@@ -100,10 +100,10 @@
             </div>
             <div class="box-body">
               <div class="row">
-                <div class="col-md-8">
+                <div class="col-sm-8">
                   <div id="lineChart" style="height: 295px;"></div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-sm-4">
                   <div id="pieChart" style="height: 295px;"></div>
                 </div>
               </div>
@@ -248,6 +248,14 @@
                          data : data.triggerDayList
                      }
                  ],
+                axisLabel: {
+                  interval: 0,
+                  rotate:40,
+                  formatter:function(value)
+                  {
+                    return value + "       ";
+                  },
+                },
                  yAxis : [
                      {
                          type : 'value'
@@ -290,7 +298,7 @@
               title : {
                   text: '成功比例图',
                   /*subtext: 'subtext',*/
-                  x:'center'
+                  x:'right',
               },
               tooltip : {
                   trigger: 'item',
