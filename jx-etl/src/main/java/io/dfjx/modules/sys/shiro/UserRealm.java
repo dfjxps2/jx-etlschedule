@@ -17,21 +17,12 @@
 package io.dfjx.modules.sys.shiro;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import io.dfjx.common.utils.Constant;
-import io.dfjx.modules.sys.entity.SysUserEntity;
 import io.dfjx.modules.sys.dao.SysMenuDao;
 import io.dfjx.modules.sys.dao.SysUserDao;
-import io.dfjx.modules.sys.entity.SysMenuEntity;
+import io.dfjx.modules.sys.entity.SysUserEntity;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -39,6 +30,11 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 认证
@@ -98,17 +94,11 @@ public class UserRealm extends AuthorizingRealm {
 		UsernamePasswordTokenEx token = (UsernamePasswordTokenEx) authcToken;
 
 		//查询用户信息
-		SysUserEntity user = sysUserDao.selectById(token.getUserId());
+		SysUserEntity user = token.getSysUser();
 		//账号不存在
 		if(user == null) {
 			throw new UnknownAccountException("账号或密码不正确");
 		}
-
-		//账号锁定
-		if(user.getStatus() == 0){
-			throw new LockedAccountException("账号已被锁定,请联系管理员");
-		}
-
 		SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, user.getPassword(), ByteSource.Util.bytes(user.getSalt()), getName());
 		return info;
 	}

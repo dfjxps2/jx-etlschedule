@@ -1,16 +1,17 @@
 package io.dfjx.modules.sys.shiro;
 
+import io.dfjx.modules.sys.entity.SysUserEntity;
 import org.apache.shiro.authc.UsernamePasswordToken;
 
 public class UsernamePasswordTokenEx extends UsernamePasswordToken {
 
-    private Long userId;
+    private SysUserEntity sysUser;
 
-    public UsernamePasswordTokenEx(Long userId) {
-        this.userId = userId;
+    public UsernamePasswordTokenEx(SysUserEntity sysUser) {
+        this.sysUser = sysUser;
     }
 
-    public Long getUserId() {
-        return userId;
+    public SysUserEntity getSysUser() {
+        return sysUser;
     }
 }

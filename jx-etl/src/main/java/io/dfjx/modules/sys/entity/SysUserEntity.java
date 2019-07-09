@@ -48,6 +48,8 @@ public class SysUserEntity implements Serializable {
 	@TableId
 	private Long userId;
 
+	private String caUserId;
+
 	/**
 	 * 用户名
 	 */
@@ -261,5 +263,13 @@ public class SysUserEntity implements Serializable {
 
 	public void setUserRealName(String userRealName) {
 		this.userRealName = userRealName;
+	}
+
+	public String getCaUserId() {
+		return caUserId;
+	}
+
+	public void setCaUserId(String caUserId) {
+		this.caUserId = caUserId;
 	}
 }

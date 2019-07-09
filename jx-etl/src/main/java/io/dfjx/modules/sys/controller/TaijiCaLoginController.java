@@ -106,6 +106,8 @@ public class TaijiCaLoginController extends AbstractController{
             SysUserEntity sysUserEntity = new SysUserEntity();
             sysUserEntity.setUserId(Long.parseLong(mockUserId));
             sysUserEntity.setUsername("mockUser");
+            sysUserEntity.setSalt("");
+            sysUserEntity.setCaUserId("");
             return this.mockLogin(sysUserEntity);
         }
 
@@ -127,9 +129,11 @@ public class TaijiCaLoginController extends AbstractController{
             String username = userticket.getUserName();//这个是由“BJCA公司” 配置的选项，如果没有值需要告知“BJCA公司”。
 
             SysUserEntity sysUserEntity = new SysUserEntity();
+            sysUserEntity.setCaUserId(userticket.getUserUniqueID());
             sysUserEntity.setUserId(1l);
             sysUserEntity.setUsername(username);
-
+            sysUserEntity.setDeptName(userticket.getUserDepartName());
+            sysUserEntity.setSalt("");
             return this.mockLogin(sysUserEntity);
 
         }else{
@@ -158,7 +162,7 @@ public class TaijiCaLoginController extends AbstractController{
         R createResult = sysUserTokenService.createToken(sysUserEntity.getUserId().toString());
         ShiroUtils.setSessionAttribute("user", sysUserEntity);
         Subject subject = ShiroUtils.getSubject();
-        UsernamePasswordTokenEx token = new UsernamePasswordTokenEx(sysUserEntity.getUserId());
+        UsernamePasswordTokenEx token = new UsernamePasswordTokenEx(sysUserEntity);
         subject.login(token);
         return createResult;
     }
