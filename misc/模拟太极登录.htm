@@ -1,12 +1,12 @@
 <html>
 <head>
-  <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+  <meta http-equiv="Content-type" content="text/html; charset=gbk"/>
 </head>
 <body>
-æ¨¡æ‹Ÿå¤ªæç™»å½•åŠŸèƒ½<br/>
-è¿™ä¸ªé¡µé¢æ˜¯æ¨¡æ‹Ÿ ç‚¹å‡» <a
+Ä£ÄâÌ«¼«µÇÂ¼¹¦ÄÜ<br/>
+Õâ¸öÒ³ÃæÊÇÄ£Äâ µã»÷ <a
     href="http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=gydsj_sjpcl&sid=871b412eab6ea3e7b21cb2dfa4b64c58">http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=gydsj_sjpcl&sid=871b412eab6ea3e7b21cb2dfa4b64c58</a>
-åäº§ç”Ÿçš„è¯·æ±‚
+ºó²úÉúµÄÇëÇó
 <form name="ticket" id="ticket" method="post" action="http://127.0.0.1:7202/jx-etl/">
 
   <input type="text" name="BJCA_TOKEN" value=''><br/>
@@ -14,14 +14,14 @@
   <input type="text" name="BJCA_TICKET" value=''><br/>
   <input type="text" name="BJCA_TICKET_TYPE" value='2'><br/>
   <input type="text" name="BJCA_TARGET_URL" value='null'><br/>
-  <input type="text" name="BJCA_TARGET_INFO" value='åŸå¸‚å¤§æ•°æ®_æ‰¹é‡æ•°æ®å¤„ç†ç³»ç»Ÿ'>
+  <input type="text" name="BJCA_TARGET_INFO" value='³ÇÊĞ´óÊı¾İ_ÅúÁ¿Êı¾İ´¦ÀíÏµÍ³'>
 
   <input type="text" name="BJCA_TOKEN" value=""/>
-  <input type="button" onclick="login()" value="ç™»å½•"/>
+  <input type="button" onclick="login()" value="µÇÂ¼"/>
 </form>
 <script language="javascript">
   var login = function() {
-    ticket.BJCA_TICKET.value='<?xml version="1.0" encoding="GB2312"?><uams-ticket><valid-date><BeginTime>20190709125437</BeginTime><EndTime>20190709132437</EndTime></valid-date><base-info><UserID>871b412eab6ea3e7b21cb2dfa4b64c58</UserID><UserType>0</UserType><CredenceType>CREDENCE_00002</CredenceType><DepartCode>110000C005039</DepartCode><SystemCode>gydsj_sjpcl</SystemCode></base-info><role-infos><role-info><RoleName>åŸå¸‚å¤§æ•°æ®å¹³å°ä¸é¢†å¯¼é©¾é©¶èˆ±è§’è‰²</RoleName><RoleCode>csdsjyldjsc</RoleCode></role-info><role-info><RoleName>åŸå¸‚å¤§æ•°æ®_æ‰¹é‡æ•°æ®å¤„ç†ç³»ç»Ÿè§’è‰²</RoleName><RoleCode>gydsj_sjpcl</RoleCode></role-info></role-infos><append-info><userLoginName>bd_zyzx</userLoginName><userLoginPwd>bd_zyzx</userLoginPwd><departName>ä¿¡æ¯èµ„æºä¸­å¿ƒ</departName><userName>å¸‚ä¿¡æ¯èµ„æºç®¡ç†ä¸­å¿ƒ</userName></append-info></uams-ticket>';
+    ticket.BJCA_TICKET.value='<?xml version="1.0" encoding="GB2312"?><uams-ticket><valid-date><BeginTime>20190709125437</BeginTime><EndTime>20190709132437</EndTime></valid-date><base-info><UserID>871b412eab6ea3e7b21cb2dfa4b64c58</UserID><UserType>0</UserType><CredenceType>CREDENCE_00002</CredenceType><DepartCode>110000C005039</DepartCode><SystemCode>gydsj_sjpcl</SystemCode></base-info><role-infos><role-info><RoleName>³ÇÊĞ´óÊı¾İÆ½Ì¨ÓëÁìµ¼¼İÊ»²Õ½ÇÉ«</RoleName><RoleCode>csdsjyldjsc</RoleCode></role-info><role-info><RoleName>³ÇÊĞ´óÊı¾İ_ÅúÁ¿Êı¾İ´¦ÀíÏµÍ³½ÇÉ«</RoleName><RoleCode>gydsj_sjpcl</RoleCode></role-info></role-infos><append-info><userLoginName>bd_zyzx</userLoginName><userLoginPwd>bd_zyzx</userLoginPwd><departName>ĞÅÏ¢×ÊÔ´ÖĞĞÄ</departName><userName>ÊĞĞÅÏ¢×ÊÔ´¹ÜÀíÖĞĞÄ</userName></append-info></uams-ticket>';
     ticket.submit();
   }
 
