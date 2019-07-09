@@ -109,7 +109,7 @@ public class TaijiCaLoginController extends AbstractController{
             sysUserEntity.setUserId(Long.parseLong(mockUserId));
             sysUserEntity.setUsername("mockUser");
             sysUserEntity.setSalt("");
-            sysUserEntity.setCaUserId("");
+            sysUserEntity.setCaUserId("871b412eab6ea3e7b21cb2dfa4b64c58");
             return this.mockLogin(sysUserEntity);
         }
 
