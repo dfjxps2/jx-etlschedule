@@ -203,13 +203,25 @@ public class JobLogController {
 
 
     @GetMapping("/triggerChartDate")
-    public R triggerChartDate() {
-        Date now = new Date();
-        Date preDate = DateUtils.addDays(now, -1);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date fromDate = DateUtils.addDays(now, -6);
-        Map lineChartData = jobLogService.queryLineChartData(dateFormat.format(fromDate), dateFormat.format(preDate));
-        Map pieChartData = jobLogService.queryPieChartData(dateFormat.format(fromDate), dateFormat.format(preDate));
+    public R triggerChartDate(@RequestParam(value = "startDate", required = false) String startDate,
+                              @RequestParam(value = "endDate", required = false) String endDate) {
+        Date now = null;
+        Date preDate = null;
+        SimpleDateFormat dateFormat = null;
+        Date fromDate = null;
+
+        if (startDate == null || endDate == null) {
+            now = new Date();
+            preDate = DateUtils.addDays(now, -1);
+            fromDate = DateUtils.addDays(now, -6);
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            startDate = dateFormat.format(fromDate);
+            endDate = dateFormat.format(preDate);
+        }
+
+        Map lineChartData = jobLogService.queryLineChartData(startDate, endDate);
+        Map pieChartData = jobLogService.queryPieChartData(startDate, endDate);
 
         return R.ok().put("lineChartData", lineChartData).put("pieChartData", pieChartData);
     }

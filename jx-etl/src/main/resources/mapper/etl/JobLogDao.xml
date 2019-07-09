@@ -24,7 +24,7 @@
         sum(case when returncode = 0 then 1 else 0 end) as success_cnt,
         sum(case when returncode > 0 then 1 else 0 end) as err_cnt
         from etl_job_log
-        where txdate > #{fromDate} and txdate &lt;= #{toDate}
+        where txdate >= #{fromDate} and txdate &lt;= #{toDate}
         group by txdate
         order by txdate
 	</select>
@@ -34,7 +34,7 @@
        sum(case when returncode > 0 then 1 else 0 end) as err_cnt,
        count(1)
         from etl_job_log
-        where txdate > #{fromDate} and txdate &lt;= #{toDate}
+        where txdate >= #{fromDate} and txdate &lt;= #{toDate}
         group by txdate
         order by txdate
     </select>
