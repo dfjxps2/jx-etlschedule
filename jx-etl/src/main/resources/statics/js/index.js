@@ -65,7 +65,7 @@ var vm = new Vue({
                     url: "",
                     perms: null,
                     type: 0,
-                    icon: "fa fa-database",
+                    icon: "icon1",
                     orderNum: 4,
                     open: null,
                     list: r.menuList
@@ -136,14 +136,14 @@ var vm = new Vue({
             });
         },
         logout: function() {
-            if (confirm('确定要删除选中的记录？') ) {
+            if (confirm('确定要退出？') ) {
                 $.ajax({
                     type: "GET",
                     url: "ca/logout/",
                     dataType: "json",
                     success: function(result){
                         if(result.code == 0){//登录成功
-                            parent.location.href ='/jx-etl/login.html';
+                            parent.location.href ='http://172.26.60.219/zyzx/logout?remPath=/zyzx/portal/index.htm';
                         }else{
                         }
                     }
