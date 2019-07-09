@@ -17,6 +17,7 @@
 package io.dfjx.modules.sys.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 import io.dfjx.common.annotation.SysLog;
 import io.dfjx.common.config.SystemParams;
 import io.dfjx.common.exception.RRException;
@@ -24,14 +25,17 @@ import io.dfjx.common.utils.Constant;
 import io.dfjx.common.utils.R;
 import io.dfjx.common.utils.WebClient;
 import io.dfjx.modules.sys.entity.SysMenuEntity;
+import io.dfjx.modules.sys.entity.SysUserEntity;
 import io.dfjx.modules.sys.service.SysMenuService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 系统菜单
@@ -55,9 +59,10 @@ public class SysMenuController extends AbstractController {
 	 */
 	@GetMapping("top")
 	public R top() {
+		SysUserEntity sysUser = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
 		WebClient client = new WebClient();
 		JSONObject json = client.post3(systemParams.getTopMenuUrl(), new HashMap(){{
-			put("models", "{\"caId\":\"7ac39c275b1e7f3b744eb4e5e4257c61\"}");
+			put("models", "{\"caId\":\"" + sysUser.getCaUserId() + "\"}");
 		}});
 
 		return R.ok(new HashMap() {{

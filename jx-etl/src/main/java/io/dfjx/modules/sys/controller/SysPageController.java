@@ -25,9 +25,11 @@ import io.dfjx.common.synchrodata.WebClient;
 import io.dfjx.modules.etl.service.JobLogService;
 import io.dfjx.modules.etl.service.JobService;
 import io.dfjx.modules.etl.service.ScriptService;
+import io.dfjx.modules.sys.entity.SysUserEntity;
 import io.dfjx.modules.sys.shiro.ShiroUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,12 +69,15 @@ public class SysPageController {
 	}
 
 	@GetMapping(value = {"/", "index.html"})
-	public String index(HttpServletRequest request){
+	public String index(HttpServletRequest request, Map<String, Object> map){
         PortalFilter sso = new PortalFilter();
         boolean isLogin = sso.doLogin(request);
         if(!isLogin){
             return "redirect:"+systemParams.getPortalUrl();
         }
+
+		SysUserEntity sysUser = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+		map.put("sysUser", sysUser);
         return "index";
 	}
 
@@ -99,6 +104,7 @@ public class SysPageController {
 		map.put("tasks", tasks);
 		map.put("dispatchs", dispatchs);
 		map.put("exes", exes);
+
 		return "main";
 	}
 

@@ -192,6 +192,7 @@
     .m-nav {
       width: 1230px;
       height: 56px;
+      margin: 0 auto;
     }
     .m-nav ul li {
       display: inline-block;
@@ -273,10 +274,10 @@
       background-color: #0051ad;
       border-bottom: solid 1px #0b204b;
     }
-    .left-tit .icon1{
-      width: 40px;
+    .nav-top-item .icon1{
+      width: 20px;
       height: 40px;
-      margin-left: 10px;
+      margin-left: 30px;
       background: url(${request.contextPath}/statics/img/mainImgs/icon1.png) no-repeat center;
       display: block;
       float: left;
@@ -341,7 +342,7 @@
     }
 
     .main-nav .active .nav-top-item {
-      background: #0051ad url(${request.contextPath}/statics/img/mainImgs/up.png) no-repeat;
+      background: #0051ad;
       background-position: 220px 18px;
     }
 
@@ -520,7 +521,7 @@
       <img src="${request.contextPath}/statics/img/mainImgs/logo.png" />
     </div>
     <div class="top-rt">
-      <div class="myctrip-name">某某某，欢迎您访问！</div>
+      <div class="myctrip-name">${sysUser.username}，欢迎您访问！</div>
       <div class="topweek">星期五  AM 09:30  2019-06-14  </div>
       <button class="quit" @click="logout()">退出</button>
     </div>
