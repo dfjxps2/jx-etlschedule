@@ -19,7 +19,7 @@ $(function () {
             //     }},
         ],
 		viewrecords: true,
-    /*    height: 385,*/
+        height: 385,
         rowNum: 10,
 		rowList : [10,30,50],
         rownumbers: true, 
@@ -44,7 +44,7 @@ $(function () {
         }
     });
     //初始化表格高度
-    initGridHeight("rrapp","jqGrid");
+    //initGridHeight("rrapp","jqGrid");
     vm.loadsys("etlSystemSelect");
 });
 

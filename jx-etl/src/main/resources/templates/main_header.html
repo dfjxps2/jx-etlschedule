@@ -535,7 +535,7 @@
     </div>
     <div class="top-rt">
       <div class="myctrip-name">${sysUser.username}，欢迎您访问！</div>
-      <div class="topweek">星期五  AM 09:30  2019-06-14  </div>
+      <div class="topweek"></div>
       <a class="personal-center" v-for="headerMenu in headerMenus" :href="headerMenu.url"
          v-if="headerMenu.id == '80000' || headerMenu.id == 'A0000'">{{headerMenu.name}}</a>
       <button class="quit" @click="logout()">退出</button>

@@ -28,7 +28,8 @@ var menuItem = Vue
 // iframe自适应
 $(window).on('resize', function() {
     var $content = $('.content');
-    $content.height($(this).height() - 99);//143
+    console.info('resize:' + ($(this).height()))
+    $content.height($(this).height() + 20);//143
     // $content.height($(this).height());
     $content.find('iframe').each(function() {
         $(this).height($content.height());
@@ -142,7 +143,9 @@ var vm = new Vue({
                     url: "ca/logout/",
                     dataType: "json",
                     success: function(result){
-                        if(result.code == 0){//登录成功
+                        if(result.code == 0){//成功
+                            Cookies.remove('authList');
+                            Cookies.remove('user');
                             parent.location.href ='http://172.26.60.219/zyzx/logout?remPath=/zyzx/portal/index.htm';
                         }else{
                         }
