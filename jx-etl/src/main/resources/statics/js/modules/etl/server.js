@@ -74,7 +74,15 @@ var vm = new Vue({
             
             vm.getInfo(etlServer)
 		},
+		checkIP: function(ip) {
+			var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+			return reg.test(ip);
+		},
 		saveOrUpdate: function (event) {
+			if (this.checkIP(vm.server.ipaddress) == false) {
+				alert('IP格式不正确');
+				return;
+			}
 			var url = vm.server.id == null ? "etl/server/save" : "etl/server/update";
 			$.ajax({
 				type: "POST",
