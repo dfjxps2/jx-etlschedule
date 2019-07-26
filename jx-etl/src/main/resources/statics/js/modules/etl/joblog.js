@@ -240,11 +240,12 @@ var vm = new Vue({
                 contentType: "application/json",
                 data:{'etlJob': row.etlJob,'etlSystem':row.etlSystem,'txdate':''},
                 success: function(data){
+                  console.info('timeline resp', data);
                     if(data.code != 0){
                         alert(data.msg);
                         return;
                     }
-                    $(".grid-btn").parent().parent().hide();
+                    $("#tableLayout").hide();
                     $("#timelineLayer").show();
                     timelineChart(data.page.list);
                     timelineClick();
@@ -254,7 +255,7 @@ var vm = new Vue({
         },
         backlist:function(){
             $("#timelineLayer").hide();
-            $(".grid-btn").parent().parent().show();
+            $("#tableLayout").show();
             $("#btnlog1").show();
             $("#btnlog2").hide();
         },
