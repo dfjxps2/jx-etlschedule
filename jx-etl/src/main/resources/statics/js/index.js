@@ -53,6 +53,7 @@ var vm = new Vue({
         navTitle : "控制台",
         localMenu:[],
         headerMenus: [],
+        headerMenus2: [],
     },
     methods : {
         getMenuList : function(event) {
@@ -247,7 +248,13 @@ var vm = new Vue({
                     }
                 }
                 me.headerMenus = parseTaijiMenu(taijiMenuArray)
-                console.info(me.headerMenus)
+                for (var i = 0; i < me.headerMenus.length; i++) {
+                    if (me.headerMenus[i].id == '80000' || me.headerMenus[i].id == 'A0000') {
+                        me.headerMenus2.push(me.headerMenus[i])
+                        me.headerMenus.splice(i, 1)
+                    }
+                }
+                console.info('topmenu', me.headerMenus)
                 // console.log(fullMenuArrayList)
                 const localShowMenus = localMenuFilter(fullMenuArrayList)
                 // console.log(localShowMenus)
