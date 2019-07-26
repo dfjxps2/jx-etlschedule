@@ -73,6 +73,7 @@ var vm = new Vue({
             vm.getInfo(etlSystem)
 		},
 		saveOrUpdate: function (event) {
+			console.info('saveorUpdate', vm.sys)
 			var url = vm.sys.id == null ? "etl/sys/save" : "etl/sys/update";
 			$.ajax({
 				type: "POST",
