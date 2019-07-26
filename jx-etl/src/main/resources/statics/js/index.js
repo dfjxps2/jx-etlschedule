@@ -82,9 +82,12 @@ var vm = new Vue({
             });
         },
         menuHoverOrClick : function(eventVal){
-            this.headerMenus.forEach(headerMenu=>{
-                headerMenu.actived = false
-            })
+            // this.headerMenus.forEach(headerMenu=>{
+            //     headerMenu.actived = false
+            // })
+            for(var i=0; i<this.headerMenus.length; i++) {
+                this.headerMenus[i].actived = false;
+            }
             eventVal.actived = !eventVal.actived
 
         },
@@ -171,7 +174,27 @@ var vm = new Vue({
                 function parseTaijiMenu(menuArrayParam){
                     const parseResultMenu = []
                     if(menuArrayParam&&menuArrayParam.length>0){
-                        menuArrayParam.forEach(taijiMenuData=>{
+                        // debugger
+                        // menuArrayParam.forEach(taijiMenuData=>{
+                        //     const menuCode = taijiMenuData.code
+                        //     const menuName = taijiMenuData.name
+                        //     const menuUrl = taijiMenuData.url
+                        //     const children = taijiMenuData.subMenu
+                        //
+                        //     taijiAuthMenuMapTMp[menuName] = true
+                        //
+                        //     parseResultMenu.push({
+                        //         id:menuCode,
+                        //         name:menuName,
+                        //         actived:menuName=='数据处理'?true:false,
+                        //         url:menuUrl,
+                        //         outLink:me.localMenu[menuName]?'Y':'N',
+                        //         children:parseTaijiMenu(children)
+                        //     })
+                        // })
+                        for (var i = 0; i < menuArrayParam.length; i++) {
+                            var taijiMenuData = menuArrayParam[i];
+
                             const menuCode = taijiMenuData.code
                             const menuName = taijiMenuData.name
                             const menuUrl = taijiMenuData.url
@@ -187,7 +210,7 @@ var vm = new Vue({
                                 outLink:me.localMenu[menuName]?'Y':'N',
                                 children:parseTaijiMenu(children)
                             })
-                        })
+                        }
                     }
                     return parseResultMenu
                 }
@@ -195,18 +218,31 @@ var vm = new Vue({
                 function localMenuFilter(menuList){
                     if(menuList&&menuList.length>0){
                         const resultFilterMenu = new Array()
-                        menuList.forEach(localMenuTmp=>{
+                    //     menuList.forEach(localMenuTmp=>{
+                    //         const localMenuTmpName = localMenuTmp.name
+                    //         if(taijiAuthMenuMapTMp[localMenuTmpName]){
+                    //         const localMenuTmpParse = JSON.parse(JSON.stringify(localMenuTmp))
+                    //         localMenuTmpParse.list=[]
+                    //         resultFilterMenu.push(localMenuTmpParse)
+                    //         // console.log(localMenuTmp)
+                    //         if(localMenuTmp.list&&localMenuTmp.list.length>0){
+                    //             localMenuTmpParse.list = localMenuFilter(localMenuTmp.list)
+                    //         }
+                    //     }
+                    // })
+                        for (var i = 0; i < menuList.length; i++) {
+                            var localMenuTmp = menuList[i];
                             const localMenuTmpName = localMenuTmp.name
-                            if(taijiAuthMenuMapTMp[localMenuTmpName]){
-                            const localMenuTmpParse = JSON.parse(JSON.stringify(localMenuTmp))
-                            localMenuTmpParse.list=[]
-                            resultFilterMenu.push(localMenuTmpParse)
-                            // console.log(localMenuTmp)
-                            if(localMenuTmp.list&&localMenuTmp.list.length>0){
-                                localMenuTmpParse.list = localMenuFilter(localMenuTmp.list)
+                            if (taijiAuthMenuMapTMp[localMenuTmpName]) {
+                                const localMenuTmpParse = JSON.parse(JSON.stringify(localMenuTmp))
+                                localMenuTmpParse.list = []
+                                resultFilterMenu.push(localMenuTmpParse)
+                                // console.log(localMenuTmp)
+                                if (localMenuTmp.list && localMenuTmp.list.length > 0) {
+                                    localMenuTmpParse.list = localMenuFilter(localMenuTmp.list)
+                                }
                             }
                         }
-                    })
                         return resultFilterMenu
                     }
                 }
