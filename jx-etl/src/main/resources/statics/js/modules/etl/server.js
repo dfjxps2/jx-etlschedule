@@ -83,6 +83,10 @@ var vm = new Vue({
 				alert('IP格式不正确');
 				return;
 			}
+			if (vm.server.livecount == null) {
+				alert('请选择是否有效');
+				return;
+			}
 			var url = vm.server.id == null ? "etl/server/save" : "etl/server/update";
 			$.ajax({
 				type: "POST",
