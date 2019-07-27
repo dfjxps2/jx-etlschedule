@@ -194,7 +194,7 @@ var vm = new Vue({
 			if(ids == null){
 				return ;
 			}
-			
+
 			confirm('确定要删除选中的记录？', function(){
 				$.ajax({
 					type: "POST",
@@ -204,6 +204,11 @@ var vm = new Vue({
 				    success: function(r){
 						if(r.code == 0){
 							alert('操作成功', function(index){
+                if ($("#jqGrid").getGridParam("reccount") == ids.length) {
+                  $("#jqGrid").jqGrid('setGridParam',{
+                    page:1
+                  })
+                }
 								$("#jqGrid").trigger("reloadGrid");
 							});
 						}else{
