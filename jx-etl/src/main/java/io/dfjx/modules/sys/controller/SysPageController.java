@@ -21,8 +21,10 @@ import io.dfjx.common.synchrodata.Dom4jUtil;
 import io.dfjx.common.synchrodata.PortalFilter;
 import io.dfjx.common.synchrodata.SynchronizedDataConstants;
 import io.dfjx.common.synchrodata.WebClient;
+import io.dfjx.modules.sys.entity.SysUserEntity;
 import io.dfjx.modules.sys.shiro.ShiroUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,7 +55,7 @@ public class SysPageController {
 	}
 
 	@RequestMapping(value = {"/", "index.html"})
-	public String index(HttpServletRequest request){
+	public String index(HttpServletRequest request, Map<String, Object> map){
 		return ssoLogin(request);
 		//return "index";
 	}
@@ -83,13 +85,16 @@ public class SysPageController {
 		return "redirect:"+systemParams.getPortalUrl();
 	}
 
-	public String ssoLogin(HttpServletRequest request){
+	public String ssoLogin(HttpServletRequest request, Map<String, Object> map){
 		String main = "index";
 		PortalFilter sso = new PortalFilter();
 		boolean isLogin = sso.doLogin(request);
 		if(!isLogin){
 			return "redirect:"+systemParams.getPortalUrl();
 		}
+
+		SysUserEntity sysUser = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+		map.put("sysUser", sysUser);
 		return main;
 	}
 }

@@ -84,6 +84,7 @@ public class PortalFilter /*extends AccessControlFilter*/ {
             entity.setDeptId(1L);   //默认部门1
             entity.setStatus(1);
             entity.setPassword("etl123"); //默认密码
+            entity.setUserRealName(mod1.get("user_real_name").toString());
             List<Long> roles = new ArrayList<>();
             roles.add(1L);   //默认访问者，最小权限
             entity.setRoleIdList(roles);
