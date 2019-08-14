@@ -90,6 +90,18 @@ var vm = new Vue({
 				alert('请选择是否有效');
 				return;
 			}
+			if (vm.server.etlServer == null || vm.server.etlServer.trim() == '') {
+				alert('服务器名称 不能为空');
+				return;
+			}
+			if (vm.server.agentport == null || vm.server.agentport.trim() == '') {
+				alert('服务器端口 不能为空');
+				return;
+			}
+			if (vm.server.agentport <= 0 || vm.server.agentport > 65535) {
+				alert('服务器端口 值不正确');
+				return;
+			}
 			var url = vm.server.id == null ? "etl/server/save" : "etl/server/update";
 			$.ajax({
 				type: "POST",

@@ -76,6 +76,18 @@ var vm = new Vue({
             vm.getInfo(etlSystem)
 		},
 		saveOrUpdate: function (event) {
+			if (vm.sys.etlSystem == null || vm.sys.etlSystem.trim() == '') {
+				alert('作业系统名称 不能为空');
+				return;
+			}
+			if (vm.sys.priority == null) {
+				alert('优先级 不能为空');
+				return;
+			}
+			if (vm.sys.concurrent == null || vm.sys.concurrent.trim() == '') {
+				alert('并发数 不能为空');
+				return;
+			}
 			console.info('saveorUpdate', vm.sys)
 			var url = vm.sys.id == null ? "etl/sys/save" : "etl/sys/update";
 			$.ajax({
