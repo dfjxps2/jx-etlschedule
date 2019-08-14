@@ -763,6 +763,7 @@ var vm = new Vue({
 		},
 		//添加日志下载
 		logdload:function(){
+			console.info('--- logdload  ---')
 			$.ajax({
 				type: "GET",
 				url: baseURL + "etl/joblog/loadLast",
