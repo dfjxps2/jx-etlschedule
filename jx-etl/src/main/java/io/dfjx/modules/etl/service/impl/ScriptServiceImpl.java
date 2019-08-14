@@ -34,7 +34,7 @@ public class ScriptServiceImpl extends ServiceImpl<ScriptDao, ScriptEntity> impl
         Page<ScriptEntity> page = this.selectPage(
                 new Query<ScriptEntity>(params).getPage(),
                 new EntityWrapper<ScriptEntity>().like(StringUtils.isNotBlank(filename),"filename", filename)
-                    .where(StringUtils.isNotBlank(shareflag), "Username={0}", username)
+                        .where(StringUtils.isNotBlank(shareflag), "((Username={0}) or ShareFlag='1')", username)
         );
     	for(ScriptEntity scriptEntity : page.getRecords()){
     		scriptEntity.setEtlServerName(scriptEntity.getEtlServer());

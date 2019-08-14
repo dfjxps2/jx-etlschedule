@@ -105,6 +105,16 @@ var vm = new Vue({
 			vm.getInfo(scriptid)
 		},
 		saveOrUpdate: function (event) {
+			console.info(vm.script)
+			if (vm.script.etlServer == null || vm.script.etlServer.trim() == ''){
+				alert('请选择服务器名称');
+				return;
+			}
+
+			if (vm.script.filename == null || vm.script.filename.trim() == '') {
+				alert('请导入模板');
+				return;
+			}
 			if(vm.script.scriptid == null && vm.isChange==true){
 				ajaxupload.submit();
 			}else if(vm.script.scriptid != null  && vm.isChange==true){
