@@ -60,7 +60,7 @@ public class    ReadFileUtil {
 //            return new String(sb.toString().getBytes(),encoding);
             logger.info("sb.toString()=====" + sb.toString());
             if(sb.length()==0){
-                return "-1";
+                return "";
             } else {
                 String result_tmp = sb.toString().replaceAll("\t","&nbsp;&nbsp;&nbsp;&nbsp;");
                 return new String(result_tmp.getBytes(),encoding);
