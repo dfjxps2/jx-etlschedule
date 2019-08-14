@@ -95,7 +95,7 @@ var vm = new Vue({
 				return;
 			}
 			if (vm.server.agentport == null || vm.server.agentport.trim() == '') {
-				alert('服务器端口 不能为空');
+				alert('请正确输入 服务器端口内容');
 				return;
 			}
 			if (vm.server.agentport <= 0 || vm.server.agentport > 65535) {

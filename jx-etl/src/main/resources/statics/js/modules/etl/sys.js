@@ -80,12 +80,20 @@ var vm = new Vue({
 				alert('作业系统名称 不能为空');
 				return;
 			}
-			if (vm.sys.priority == null) {
-				alert('优先级 不能为空');
+			if (!/^[A-Z]{3,3}$$/.test(vm.sys.etlSystem)) {
+				alert('作业系统名称 只能输入三个英文大写字母');
 				return;
 			}
-			if (vm.sys.concurrent == null || vm.sys.concurrent.trim() == '') {
-				alert('并发数 不能为空');
+			if (vm.sys.priority == null || (vm.sys.priority + "").trim() == '') {
+				alert('请正确输入 优先级');
+				return;
+			}
+			if(vm.sys.logkeepperiod == null || (vm.sys.logkeepperiod + "").trim() == '') {
+				alert('请正确输入 日志保存周期');
+				return;
+			}
+			if (vm.sys.concurrent == null || (vm.sys.concurrent + "").trim() == '') {
+				alert('请正确输入 并发数');
 				return;
 			}
 			console.info('saveorUpdate', vm.sys)

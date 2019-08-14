@@ -51,30 +51,35 @@
                         <div class="col-sm-2 control-label">数据保存周期</div>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" v-model="sys.datakeepperiod" placeholder="10" value="10" readonly />
+                          <span style="color:#FF0000">请输入数字</span>
                         </div>
                     </div>
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">日志保存周期</div>
                         <div class="col-sm-10">
                             <input type="number" class="form-control" v-model="sys.logkeepperiod" placeholder="日志保存周期，只能输入数字" value="10"/>
+                            <span style="color:#FF0000">只能输入数字</span>
                         </div>
                     </div>
 											                    <div class="form-group" style="display:none">
                         <div class="col-sm-2 control-label">记录保存周期</div>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" v-model="sys.recordkeepperiod" placeholder="10" value="10" readonly />
+                            <span style="color:#FF0000">只能输入数字</span>
                         </div>
                     </div>
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">优先级</div>
                         <div class="col-sm-10">
                             <input type="number" class="form-control" v-model="sys.priority" placeholder="优先级，只能输入数字"/>
+                          <span style="color:#FF0000">只能输入数字</span>
                         </div>
                     </div>
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">并发数</div>
                         <div class="col-sm-10">
                             <input type="number" class="form-control" v-model="sys.concurrent" placeholder="并发数，只能输入数字" />
+                            <span style="color:#FF0000">只能输入数字</span>
                         </div>
                     </div>
 							            <div class="form-group">
