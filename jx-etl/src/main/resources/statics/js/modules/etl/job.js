@@ -424,6 +424,10 @@ var vm = new Vue({
 			vm.q.dep_etlJob = rowdata.etlJob;
 			vm.q.reqDenpsType = true;
 			vm.q.reqAllDeps = false;
+
+			$("#jqGrid").jqGrid('setGridParam',{
+				page:1
+			})
 			vm.reload();
 		},
 		alldependency: function(){
@@ -436,6 +440,10 @@ var vm = new Vue({
 			vm.q.dep_etlJob = rowdata.etlJob;
 			vm.q.reqDenpsType = true;
 			vm.q.reqAllDeps = true;
+
+			$("#jqGrid").jqGrid('setGridParam',{
+				page:1
+			})
 			vm.reload();
 		},
 		reloadDependJobsSelect:function(){
