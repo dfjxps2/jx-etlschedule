@@ -1,22 +1,19 @@
 package io.dfjx.modules.etl.controller;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import io.dfjx.common.utils.PageUtils;
 import io.dfjx.common.utils.R;
 import io.dfjx.common.validator.ValidatorUtils;
 import io.dfjx.modules.etl.entity.ServerEntity;
 import io.dfjx.modules.etl.service.ServerService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 
@@ -30,6 +27,8 @@ import io.dfjx.modules.etl.service.ServerService;
 @RestController
 @RequestMapping("etl/server")
 public class ServerController {
+    private static Logger logger = LoggerFactory.getLogger(ServerController.class);
+
     @Autowired
     private ServerService serverService;
 
@@ -39,7 +38,7 @@ public class ServerController {
     @RequestMapping("/list")
     @RequiresPermissions("etl:server:list")
     public R list(@RequestParam Map<String, Object> params){
-        System.out.println("================"+params.toString());
+        logger.info("================"+params.toString());
         PageUtils page = serverService.queryPage(params);
         return R.ok().put("page", page);
     }
@@ -84,7 +83,7 @@ public class ServerController {
     @RequestMapping("/delete")
     @RequiresPermissions("etl:server:delete")
     public R delete(@RequestBody String[] etlServers){
-        System.out.println("==============" + etlServers.toString());
+        logger.info("==============" + etlServers.toString());
         serverService.deleteBatchIds(Arrays.asList(etlServers));
 
         return R.ok();

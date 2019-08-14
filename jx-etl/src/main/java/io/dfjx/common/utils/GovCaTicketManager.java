@@ -7,6 +7,8 @@ package io.dfjx.common.utils;
 
 import com.bjca.security.SecurityEngineDeal;
 import com.bjca.sso.bean.UserTicket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -17,6 +19,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 
 public class GovCaTicketManager {
+    private static Logger logger = LoggerFactory.getLogger(GovCaTicketManager.class);
+
     private UserTicket userticket = null;
     private String beginDate = null;
     private String endDate = null;
@@ -57,7 +61,7 @@ public class GovCaTicketManager {
         UserTicket result = govCaTicketManager.getTicket(ticket
                 , "2", null);
 
-        System.out.println(result);
+        logger.info("result {}", result);
 
     }
 
@@ -96,10 +100,10 @@ public class GovCaTicketManager {
         Object var3 = null;
 
         try {
-            System.out.println("ticket=" + this.safeengine.GetServerCertificate());
-            System.out.println("safe mi ticket=" + ticket);
+            logger.info("ticket=" + this.safeengine.GetServerCertificate());
+            logger.info("safe mi ticket=" + ticket);
             String i = this.safeengine.EnvelopedData_Decrypt(ticket);
-            System.out.println("i = " + i);
+            logger.info("i = " + i);
             if (i != null) {
                 return i;
             }

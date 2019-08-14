@@ -1,22 +1,17 @@
 package io.dfjx.common.synchrodata;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
-import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
-import org.dom4j.Attribute;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 
 
@@ -30,6 +25,8 @@ import org.dom4j.Attribute;
  * @修改备注:
  */
 public class Dom4jUtil {
+
+	private static Logger logger = LoggerFactory.getLogger(Dom4jUtil.class);
 
 	public static void main(String[] args) throws Exception {
 		/*
@@ -58,7 +55,7 @@ public class Dom4jUtil {
 		int a = 54;
 		int b = 10;
 		int c = a/b;
-		System.out.println("c ="+c);
+		logger.info("c ="+c);
 	}
 
 	/**
@@ -177,14 +174,14 @@ public class Dom4jUtil {
 	public static List<Map<String,Object>> parserNode(Element rootElt) {
 		List<Map<String,Object>> retList = new ArrayList<Map<String, Object>>();
 		Map<String,Object> dataMap = new HashMap<String, Object>();
-		System.out.println(rootElt.getName() + ":" + rootElt.getText().trim());
+		logger.info(rootElt.getName() + ":" + rootElt.getText().trim());
 		Iterator<Element> iter = rootElt.elementIterator("body"); // 获取根节点下的子节点head
 		while (iter.hasNext()) {
 			Element recordEle = (Element) iter.next();
 			String title = recordEle.elementTextTrim("status"); // 拿到head节点下的子节点title值
-			System.out.println("status:" + title);
+			logger.info("status:" + title);
 			String total = recordEle.elementTextTrim("total"); // 拿到head节点下的子节点title值
-			System.out.println("total:" + total);
+			logger.info("total:" + total);
 			Iterator<Element> iters = recordEle.elementIterator("items"); //
 			// 遍历Header节点
 			while (iters.hasNext()) {
@@ -199,8 +196,8 @@ public class Dom4jUtil {
 					if("USER_STATE".equals(fieldname) && "1".equals(fieldvale)){
 						 fieldvale = "00";
 					}
-					System.out.println("fieldname:" + fieldname);
-					System.out.println("fieldvale:" + fieldvale);
+					logger.info("fieldname:" + fieldname);
+					logger.info("fieldvale:" + fieldvale);
 					dataMap.put(fieldname.toLowerCase(),fieldvale);
 				}
 				retList.add(dataMap);

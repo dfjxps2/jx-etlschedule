@@ -10,6 +10,8 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.namespace.QName;
 import java.util.HashMap;
@@ -18,6 +20,8 @@ import java.util.Map;
 
 //调用WebService 适用于车源，货源的删除
 public class WebClient{
+
+	private static Logger logger = LoggerFactory.getLogger(WebClient.class);
 
 	/**
 	 * 设置发送请求的URL
@@ -35,11 +39,11 @@ public class WebClient{
 		  for (Map.Entry<String, Object> entry : mp.entrySet()) {
 			 OMElement inner = fac.createOMElement(new QName(entry.getKey()));      //获得该方法名要调用的参数名
 			 val = entry.getValue() ==null ||"".equals(entry.getValue())? "":entry.getValue().toString();
-			 System.out.println("-----------------val"+val);
+			 logger.info("-----------------val"+val);
 			 inner.setText(val);             //输入参数
 			 data.addChild(inner);             //将该参数加入要调用的方法节点
 		  }
-		  System.out.println("-----------------data111"+data);
+		  logger.info("-----------------data111"+data);
 		  return data;
 	 }
  
@@ -72,13 +76,13 @@ public class WebClient{
 			ServiceClient sender = new ServiceClient();
 			sender.setOptions(buildWsdlOptions());
 			OMElement result = sender.sendReceive(buildWsdlParam(mp,operationName));
-			System.out.println("-----------------result"+result);
+			logger.info("-----------------result"+result);
 			String str = result.getFirstElement().getText();
-			System.out.println("解析之前的数据："+str.toString());
+			logger.info("解析之前的数据："+str.toString());
 			return str;
 		  } catch(Exception e){
 			e.printStackTrace();
-			System.out.println("调用出错！");
+			logger.info("调用出错！");
 			return "调用出错！";
 		  }
 	 }
@@ -100,7 +104,7 @@ public class WebClient{
 		  } catch (Exception e) {
 		   // TODO Auto-generated catch block
 		   e.printStackTrace();
-		   System.out.println("解析出错！");
+		   logger.info("解析出错！");
 		  }
 		 return retList;
 
@@ -125,7 +129,7 @@ public class WebClient{
 	//	 mp.put(GET_ONEUSER_WSDL_OPERATION_NAME_KEY,GET_ONEUSER_WSDL_OPERATION_NAME);
 		 String retXml = web.getWsdlResultByCode(mp,operationName); //传入参数名，参数值，方法名
 		 List<Map<String,Object>> retList = Dom4jUtil.readDom4jXml(retXml);
-		 System.out.println(retList.size());
+		 logger.info("retList size:{}", retList.size());
 	 }
 
 	public static Options buildWsdlOptions(String soapUrl){
@@ -141,13 +145,13 @@ public class WebClient{
 			ServiceClient sender = new ServiceClient();
 			sender.setOptions(buildWsdlOptions(soapUrl));
 			OMElement result = sender.sendReceive(buildWsdlParam(mp,operationName));
-			System.out.println("-----------------result"+result);
+			logger.info("-----------------result"+result);
 			String str = result.getFirstElement().getText();
-			System.out.println("解析之前的数据："+str.toString());
+			logger.info("解析之前的数据："+str.toString());
 			return str;
 		} catch(Exception e){
 			e.printStackTrace();
-			System.out.println("调用出错！");
+			logger.info("调用出错！");
 			return "调用出错！";
 		}
 	}

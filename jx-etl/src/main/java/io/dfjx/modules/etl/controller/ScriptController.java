@@ -17,6 +17,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,6 +47,8 @@ import org.springframework.util.FileCopyUtils;
 @RestController
 @RequestMapping("etl/script")
 public class ScriptController {
+	private static Logger logger = LoggerFactory.getLogger(ScriptController.class);
+
 	@Autowired
 	private ScriptService scriptService;
 	@Autowired
@@ -172,7 +176,7 @@ public class ScriptController {
 		String fileName = script.getFilename();
 
 		filePath=filePath+fileName;
-		System.out.println("readScript-filePath==============" + filePath);
+		logger.info("readScript-filePath==============" + filePath);
 		String logresult = ReadFileUtil.readToString(filePath);
 		if(logresult == "-1"){
 			return R.error("该脚本不存在");

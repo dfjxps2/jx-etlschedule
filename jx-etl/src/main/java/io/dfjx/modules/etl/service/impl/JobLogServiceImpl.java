@@ -9,6 +9,8 @@ import io.dfjx.modules.etl.dao.JobLogDao;
 import io.dfjx.modules.etl.entity.JobLogEntity;
 import io.dfjx.modules.etl.service.JobLogService;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +21,15 @@ import java.util.*;
 @Service("jobLogService")
 public class JobLogServiceImpl extends ServiceImpl<JobLogDao, JobLogEntity> implements JobLogService {
 
+    private static Logger logger = LoggerFactory.getLogger(JobLogServiceImpl.class);
+
     @Autowired
     private JobLogDao jobLogDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
 
-        System.out.println("===================" + params.toString());
+        logger.info("===================" + params.toString());
         Page<JobLogEntity> page = new Page<JobLogEntity>();
         if(!params.containsKey("etlJob")){
             page = this.selectPage(

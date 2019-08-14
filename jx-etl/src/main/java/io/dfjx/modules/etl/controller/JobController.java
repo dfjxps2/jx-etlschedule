@@ -65,13 +65,13 @@ public class JobController {
 	public R list(@RequestParam Map<String, Object> params) {
 		PageUtils page;
 		if (params.containsKey("reqDenpsType") && "true".equals(params.get("reqDenpsType")) && ("false".equals(params.get("reqAllDeps")) || params.get("reqAllDeps")==null )) {
-			System.out.println("进入作业单层依赖查询方法");
+			logger.info("进入作业单层依赖查询方法");
 			page = jobService.getDependencyJobs(params);
 		} else if (params.containsKey("reqDenpsType") && "true".equals(params.get("reqDenpsType")) && "true".equals(params.get("reqAllDeps"))){
-			System.out.println("进入作业所有依赖查询方法");
+			logger.info("进入作业所有依赖查询方法");
 			page = jobService.getAllDependencyJobs3(params);
 		} else {
-			System.out.println("进入作业普通查询方法");
+			logger.info("进入作业普通查询方法");
 			page = jobService.queryPage(params);
 		}
 
@@ -141,7 +141,7 @@ public class JobController {
 	@RequiresPermissions("etl:job:rerun")
 	public R rerun(@RequestParam Map<String, Object> params) {
 
-		System.out.println("rerun-params==========" + params.toString());
+		logger.info("rerun-params==========" + params.toString());
 		if (params.containsKey("etlSystem") == false ||
 				params.containsKey("etlJob") == false ||
 				params.containsKey("lastTxDate") == false) {
@@ -238,7 +238,7 @@ public class JobController {
 	@RequestMapping("/rerunmulti")
 	@RequiresPermissions("etl:job:rerunmulti")
 	public R rerunMulti(@RequestParam Map<String, Object> params) {
-		System.out.println("rerunmulti params==="+params);
+		logger.info("rerunmulti params==="+params);
 		if(!params.containsKey("rerunjobids") || !params.containsKey("lastTxDate")){
 			return R.error("请求参数不正确!");
 
@@ -254,7 +254,7 @@ public class JobController {
 	@RequestMapping("/upbatchstatus")
 	@RequiresPermissions("etl:job:upbatchstatus")
 	public R updateBatchStatus(@RequestParam Map<String, Object> params) {
-		System.out.println("进入批量更新作业状态方法updateBatchStatus params==="+params);
+		logger.info("进入批量更新作业状态方法updateBatchStatus params==="+params);
 		if(!params.containsKey("upids") || !params.containsKey("newJobStatus")){
 			return R.error("请求参数不正确!");
 		}
@@ -274,7 +274,7 @@ public class JobController {
 	@RequestMapping("/upbatchtxdate")
 	@RequiresPermissions("etl:job:upbatchtxdate")
 	public R updateBatchJobTxDate(@RequestParam Map<String, Object> params) {
-		System.out.println("进入批量更新作业数据日期方法 updateBatchJobTxDate params==="+params);
+		logger.info("进入批量更新作业数据日期方法 updateBatchJobTxDate params==="+params);
 		if(!params.containsKey("upids") || !params.containsKey("newJobTxdate")){
 			return R.error("请求参数不正确!");
 		}
@@ -312,7 +312,7 @@ public class JobController {
 	 */
 	@RequestMapping("/upload")
 	public R upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
-		System.out.println("开始进入文件上传方法");
+		logger.info("开始进入文件上传方法");
 		if (!file.isEmpty()) {
 			String saveFileName = file.getOriginalFilename();
 			String fileUploadDir =  systemParams.getPublicScriptUploadDir();

@@ -49,7 +49,7 @@ public class TestTask {
 		}
 		
 		SysUserEntity user = sysUserService.selectById(1L);
-		System.out.println(ToStringBuilder.reflectionToString(user));
+		logger.info(ToStringBuilder.reflectionToString(user));
 		
 	}
 	

@@ -13,6 +13,6 @@ public class Test {
 			put("models", "{\"caId\":\"7ac39c275b1e7f3b744eb4e5e4257c61\"}");
 		}});
 
-		System.out.println(json.getJSONArray("data").toString());
+		logger.info(json.getJSONArray("data").toString());
 	}
 }

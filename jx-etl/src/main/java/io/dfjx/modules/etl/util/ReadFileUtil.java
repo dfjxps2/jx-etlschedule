@@ -1,9 +1,13 @@
 package io.dfjx.modules.etl.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 
 public class    ReadFileUtil {
 
+    private static Logger logger = LoggerFactory.getLogger(ReadFileUtil.class);
 //    public  static String readToString(String fileName) {
 //        String encoding = "UTF-8";
 //        File file = new File(fileName);
@@ -54,7 +58,7 @@ public class    ReadFileUtil {
             br.close();
             reader.close();
 //            return new String(sb.toString().getBytes(),encoding);
-            System.out.println("sb.toString()=====" + sb.toString());
+            logger.info("sb.toString()=====" + sb.toString());
             if(sb.length()==0){
                 return "-1";
             } else {

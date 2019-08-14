@@ -41,7 +41,7 @@ public class PortalFilter /*extends AccessControlFilter*/ {
 //    @Override
 //    public boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object object) throws Exception{
 //        String url = getPathWithinApplication(servletRequest);
-//        System.out.println(url);
+//        logger.info(url);
 //        return false;
 //    }
 
@@ -131,6 +131,6 @@ public class PortalFilter /*extends AccessControlFilter*/ {
     }
     private void warn(String msg){
         log.warn(msg);
-        //System.out.println(msg);
+        //logger.info(msg);
     }
 }

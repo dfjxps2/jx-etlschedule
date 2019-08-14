@@ -21,7 +21,7 @@ public class CookieUtil {
             return null;
         Cookie cookie = null;
         for (int i = 0; i < cookies.length; i++) {
-        	//System.out.println("-------------------------------"+cookies[i].getName().toString());
+        	//logger.info("-------------------------------"+cookies[i].getName().toString());
             if (!cookies[i].getName().equals(name))
                 continue;
             cookie = cookies[i];

@@ -1,30 +1,27 @@
 package io.dfjx.modules.etl.util;
 
 
-import java.io.*;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import io.dfjx.modules.etl.service.JobService;
-import io.dfjx.modules.etl.service.impl.JobServiceImpl;
 import org.apache.commons.compress.utils.IOUtils;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 解析excel 上传数据
  *
  */
 public class ExcelData {
+
+    private static Logger logger = LoggerFactory.getLogger(ExcelData.class);
+
 
     public static List<String[]> getSheetDataBySheetName(File file,String sheetName){
 
@@ -104,13 +101,13 @@ public class ExcelData {
     public static  void checkFile(MultipartFile file) throws IOException{
         //判断文件是否存在
         if(null == file){
-            System.out.println("文件不存在！");
+            logger.info("文件不存在！");
         }
         //获得文件名
         String fileName = file.getOriginalFilename();
         //判断文件是否是excel文件
         if(!fileName.endsWith("xls") && !fileName.endsWith("xlsx")){
-            System.out.println(fileName + "不是excel文件");
+            logger.info(fileName + "不是excel文件");
         }
     }
 
@@ -132,7 +129,7 @@ public class ExcelData {
                 workbook = new XSSFWorkbook(is);
             }
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            logger.info(e.getMessage());
         }
         return workbook;
     }
@@ -291,11 +288,11 @@ public class ExcelData {
 //        }
 //
 //        for(String[] strings : list){
-//            System.out.println("--------------"+strings[1]);
+//            logger.info("--------------"+strings[1]);
 //        }
 
 //        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        System.out.println(dateFormat.format(new Date()));
+//        logger.info(dateFormat.format(new Date()));
 
     }
 

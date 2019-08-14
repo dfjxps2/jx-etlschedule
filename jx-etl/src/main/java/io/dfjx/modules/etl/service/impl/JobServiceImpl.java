@@ -1,42 +1,40 @@
 package io.dfjx.modules.etl.service.impl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import io.dfjx.modules.etl.entity.*;
-import io.dfjx.modules.etl.service.*;
-import io.dfjx.modules.etl.util.CreateFileUtil;
-import io.dfjx.modules.etl.util.DownLoadFileUtil;
-import io.dfjx.modules.etl.util.ExcelData;
-import io.dfjx.modules.etl.util.ExcelTool;
-import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-
 import io.dfjx.common.config.SystemParams;
 import io.dfjx.common.utils.PageUtils;
 import io.dfjx.common.utils.Query;
 import io.dfjx.modules.etl.dao.JobDao;
 import io.dfjx.modules.etl.dao.JobDependencyDao;
+import io.dfjx.modules.etl.entity.*;
+import io.dfjx.modules.etl.service.*;
+import io.dfjx.modules.etl.util.CreateFileUtil;
+import io.dfjx.modules.etl.util.ExcelData;
+import io.dfjx.modules.etl.util.ExcelTool;
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 @Service("jobService")
 public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements JobService {
+
+	private static Logger logger = LoggerFactory.getLogger(JobServiceImpl.class);
+
 
 	@Autowired
 	private JobDao jobDao;
@@ -70,7 +68,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
 		Page<JobEntity> page = new Page<JobEntity>();
-		System.out.println("===================" + params.toString());
+		logger.info("===================" + params.toString());
 		if(params.containsKey("etlJob")){
 			String etlJob = params.get("etlJob")!=null? params.get("etlJob").toString().toLowerCase():null;
 			String etlSystem = params.get("etlSystem")!=null? params.get("etlSystem").toString():null;
@@ -126,7 +124,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 
 	@Override
 	public int updateJobStatus(String etlSystem,String etlJob,String lastTxDate){
-		System.out.println("jobserviceimpl.lastTxDate=============="+ lastTxDate);
+		logger.info("jobserviceimpl.lastTxDate=============="+ lastTxDate);
 		return jobDao.updateJobStatus(etlSystem,etlJob,lastTxDate);
 	};
 
@@ -137,7 +135,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	 * @return
 	 */
 	public PageUtils getDependencyJobs(Map<String, Object> params){
-		System.out.println("service-params======" + params.toString());
+		logger.info("service-params======" + params.toString());
 		String etlSystem = params.get("dep_etlSystem").toString();
 		String etlJob = params.get("dep_etlJob").toString();
 		List<JobDependencyEntity> delist = jobDependencyDao.selectDependencyJobs(etlSystem,etlJob);
@@ -201,7 +199,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	@Override
 	@Transactional
 	public void updateExt(JobEntity job) {
-		//System.out.println(job);
+		//logger.info(job);
 		jobDao.updateById(job);
 		saveDependencyJob(job);
 		saveTriggerJob(job);
@@ -402,7 +400,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
      * @return
      */
     public PageUtils getAllDependencyJobs(Map<String, Object> params){
-        System.out.println("getAllDependencyJobs-params======" + params.toString());
+        logger.info("getAllDependencyJobs-params======" + params.toString());
         String etlSystem = params.get("dep_etlSystem").toString();
         String etlJob = params.get("dep_etlJob").toString();
         List<String> deplist = new ArrayList<String>();
@@ -437,7 +435,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	 */
 	public  Map<Integer,List<String>> getAllDependencyJobsFunc2(Integer level,String etlSystem,String etlJob,Map<Integer,List<String>> list) {
 
-		System.out.println("level=============" + level);
+		logger.info("level=============" + level);
 
 		if(level<1){
 			return list;
@@ -477,7 +475,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	 * @return
 	 */
 	public PageUtils getAllDependencyJobs2(Map<String, Object> params){
-		System.out.println("getAllDependencyJobs2-params======" + params.toString());
+		logger.info("getAllDependencyJobs2-params======" + params.toString());
 		String etlSystem = params.get("dep_etlSystem").toString();
 		String etlJob = params.get("dep_etlJob").toString();
 		Integer level;
@@ -498,7 +496,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 //		while (size>0 && deplist.get(size) != null){
 		while (size>0){
 			List<String>  tmplist = deplist.get(size);
-			System.out.println("tmplist===========" + tmplist.toString());
+			logger.info("tmplist===========" + tmplist.toString());
 			for(String str : tmplist){
 				String etlSystemTmp = str.split(",")[0];
 				String etlJobTmp = str.split(",")[1];
@@ -998,7 +996,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
         List<JobEntity> jobEntities= new ArrayList<JobEntity>();
         while(it.hasNext()){
 			String etlsysjob = it.next().toString();
-			System.out.println("========etlsysjob=====" + etlsysjob);
+			logger.info("========etlsysjob=====" + etlsysjob);
 			String etlsystem = etlsysjob.split("\\.")[0].toUpperCase();
 			String etljob = etlsysjob.split("\\.")[1].toUpperCase();
 
