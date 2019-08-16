@@ -4,7 +4,7 @@ $(function () {
 		datatype: "json",
 		colModel: [
 		           { label: '序号', name: 'id', index: 'ID', width: 120, key: true,hidden:true},
-		           { label: '作业系统', name: 'etlSystem', index: 'ETL_System', width: 50},
+		           { label: '作业系统名称', name: 'etlSystem', index: 'ETL_System', width: 50},
 		           { label: '作业名称', name: 'etlJob', index: 'ETL_Job', width: 60  },
 		           { label: '服务器', name: 'etlServer', index: 'ETL_Server', width: 40,hidden:true },
 		           { label: '描述', name: 'description', index: 'Description', width: 55 },
@@ -65,7 +65,7 @@ $(function () {
 		           rowList : [10,30,50],
 		           rownumbers: true, 
 		           rownumWidth: 40,
-		           autowidth:true,
+		           autowidth: true,
 		           multiselect: true,
 		           pager: "#jqGridPager",
 		           jsonReader : {
@@ -383,9 +383,13 @@ var vm = new Vue({
 					data: JSON.stringify(etlSystems),
 					success: function(r){
 						if(r.code == 0){
-							alert('操作成功', function(index){
-								$("#jqGrid").trigger("reloadGrid");
-							});
+							if ($("#jqGrid").getGridParam("reccount") == ids.length) {
+								$("#jqGrid").jqGrid('setGridParam',{
+									page:1
+								})
+							}
+							$("#jqGrid").trigger("reloadGrid");
+							alert('操作成功', function(index){});
 						}else{
 							alert(r.msg);
 						}
@@ -749,6 +753,7 @@ var vm = new Vue({
 			clearState();
 			$("#analysisLayer").hide();
 			$(".grid-btn").parent().show();
+			window.dispatchEvent(new Event('resize'));
 		},
 		//添加loadlog方法加载作业日志详情
 		loadlog: function(){
@@ -949,6 +954,7 @@ function auto_refresh(){
 }
 //设置画布大小
 function initSize(data){
+	console.info('initSize')
 	var w = $("#analysisLayer").width(), h = $("#analysisLayer").height() - 40, lr = 0, lc = 0, lr0 = 2, xx = 160, yy = 100, yy0 = 80;
 	var sta = 0, end = 0, i = 0;
 	for(var n in data) {

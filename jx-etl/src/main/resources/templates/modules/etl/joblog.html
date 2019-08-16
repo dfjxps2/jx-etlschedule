@@ -19,7 +19,7 @@
     <div v-show="showList" class="grid-btn">
       <div class="row">
             <div class="col-xs-4">
-                <select id="etlSystemSelect" class="selectpicker selectCus" v-model="q.etlSystem"  data-live-search="true" title="系统名称" onchange="getSelectd();">
+                <select id="etlSystemSelect" class="selectpicker selectCus" v-model="q.etlSystem"  data-live-search="true" title="作业系统名称" onchange="getSelectd();">
                     <option selected value="">全部</option>
                     <option v-for="item in allsys" :value="item.code">{{item.name}}</option>
                 </select>

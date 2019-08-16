@@ -4,7 +4,7 @@ $(function () {
 		datatype: "json",
 		colModel: [
 		           { label: '序号', name: 'id', index: 'ID', width: 120, key: true,hidden:true},
-		           { label: '作业系统', name: 'etlSystem', index: 'ETL_System', width: 50},
+		           { label: '作业系统名称', name: 'etlSystem', index: 'ETL_System', width: 50},
 		           { label: '作业名称', name: 'etlJob', index: 'ETL_Job', width: 60  },
 		           { label: '服务器', name: 'etlServer', index: 'ETL_Server', width: 40,hidden:true },
 		           { label: '描述', name: 'description', index: 'Description', width: 55 },
@@ -136,6 +136,7 @@ var vm = new Vue({
 	},
 	methods: {
 		query: function () {
+			console.info('query')
 			$("#jqGrid").jqGrid('setGridParam',{
 				page:1
 			})
@@ -328,9 +329,13 @@ var vm = new Vue({
 					data: JSON.stringify(etlSystems),
 					success: function(r){
 						if(r.code == 0){
-							alert('操作成功', function(index){
-								$("#jqGrid").trigger("reloadGrid");
-							});
+							if ($("#jqGrid").getGridParam("reccount") == ids.length) {
+								$("#jqGrid").jqGrid('setGridParam',{
+									page:1
+								})
+							}
+							$("#jqGrid").trigger("reloadGrid");
+							alert('操作成功', function(index){});
 						}else{
 							alert(r.msg);
 						}
@@ -347,6 +352,11 @@ var vm = new Vue({
 
 
 		reload: function (event) {
+			console.info('-- reload --', vm.q.lastTxDateStart, vm.q.lastTxDateEnd)
+			if (vm.q.lastTxDateStart > vm.q.lastTxDateEnd) {
+				alert('结束时间不能小于开始时间')
+				return false;
+			}
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam', {

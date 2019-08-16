@@ -94,7 +94,7 @@ var vm = new Vue({
 				alert('服务器名称 不能为空');
 				return;
 			}
-			if (vm.server.agentport == null || vm.server.agentport.trim() == '') {
+			if (vm.server.agentport == null || (vm.server.agentport + "").trim() == '') {
 				alert('请正确输入 服务器端口内容');
 				return;
 			}
@@ -133,14 +133,13 @@ var vm = new Vue({
 				    data: JSON.stringify(etlServers),
 				    success: function(r){
 						if(r.code == 0){
-							alert('操作成功', function(index){
-								if ($("#jqGrid").getGridParam("reccount") == etlServers.length) {
-									$("#jqGrid").jqGrid('setGridParam',{
-										page:1
-									})
-								}
-								$("#jqGrid").trigger("reloadGrid");
-							});
+							if ($("#jqGrid").getGridParam("reccount") == etlServers.length) {
+								$("#jqGrid").jqGrid('setGridParam',{
+									page:1
+								})
+							}
+							$("#jqGrid").trigger("reloadGrid");
+							alert('操作成功', function(index){});
 						}else{
 							alert(r.msg);
 						}

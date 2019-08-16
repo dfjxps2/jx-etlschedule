@@ -128,14 +128,13 @@ var vm = new Vue({
 				    data: JSON.stringify(etlSystems),
 				    success: function(r){
 						if(r.code == 0){
-							alert('操作成功', function(index){
-								if ($("#jqGrid").getGridParam("reccount") == etlSystems.length) {
-									$("#jqGrid").jqGrid('setGridParam',{
-										page:1
-									})
-								}
-								$("#jqGrid").trigger("reloadGrid");
-							});
+							if ($("#jqGrid").getGridParam("reccount") == etlSystems.length) {
+								$("#jqGrid").jqGrid('setGridParam',{
+									page:1
+								})
+							}
+							$("#jqGrid").trigger("reloadGrid");
+							alert('操作成功', function(index){});
 						}else{
 							alert(r.msg);
 						}

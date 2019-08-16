@@ -3,7 +3,7 @@ $(function () {
         url: baseURL + 'etl/joblog/list',
         datatype: "json",
         colModel: [
-			{ label: '作业系统', name: 'etlSystem', index: 'ETL_System', width: 40},
+			{ label: '作业系统名称', name: 'etlSystem', index: 'ETL_System', width: 40},
 			{ label: '作业名称', name: 'etlJob', index: 'ETL_Job', width: 40 },
 			{ label: '会话ID', name: 'jobsessionid', index: 'JobSessionID', width: 40},
 			{ label: '步骤ID', name: 'jobstepid', index: 'JobStepID', width: 80 ,hidden:true },
@@ -206,14 +206,13 @@ var vm = new Vue({
 				    data: JSON.stringify(ids),
 				    success: function(r){
 						if(r.code == 0){
-							alert('操作成功', function(index){
-                if ($("#jqGrid").getGridParam("reccount") == ids.length) {
-                  $("#jqGrid").jqGrid('setGridParam',{
-                    page:1
-                  })
-                }
-								$("#jqGrid").trigger("reloadGrid");
-							});
+              if ($("#jqGrid").getGridParam("reccount") == ids.length) {
+                $("#jqGrid").jqGrid('setGridParam',{
+                  page:1
+                })
+              }
+              $("#jqGrid").trigger("reloadGrid");
+							alert('操作成功', function(index){});
 						}else{
 							alert(r.msg);
 						}

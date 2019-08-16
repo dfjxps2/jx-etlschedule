@@ -4,7 +4,7 @@ $(function () {
 		datatype: "json",
 		colModel: [			
 		           { label: '模板ID', name: 'scriptid', index: 'ScriptID', width: 50, key: true},
-		           { label: '服务器名称', name: 'etlServerName', index: 'EtlServerName', width: 80 },
+		           { label: '服务器名称', name: 'etlServerName', index: 'etlServer', width: 80 },
 		           { label: '模板名称', name: 'filename', index: 'FileName', width: 80 },
 		           { label: '模板类型', name: 'scripttype', index: 'ScriptType', width: 80 },
 		           { label: '模板描述', name: 'description', index: 'Description', width: 80 },
@@ -156,9 +156,13 @@ var vm = new Vue({
 					data: JSON.stringify(scriptids),
 					success: function(r){
 						if(r.code == 0){
-							doSuccess('操作成功', function(index) {
-								$("#jqGrid").trigger("reloadGrid");
-							});
+							if ($("#jqGrid").getGridParam("reccount") == ids.length) {
+								$("#jqGrid").jqGrid('setGridParam',{
+									page:1
+								})
+							}
+							$("#jqGrid").trigger("reloadGrid");
+							alert('操作成功', function(index){});
 						}else{
 							alert(r.msg);
 						}
