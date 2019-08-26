@@ -544,7 +544,7 @@
   <div class="m-nav fn-clear">
     <ul class="menu-root">
 
-      <el-dropdown v-bind:style="{width:(1230/(headerMenus.length)-1)+'px'}" @visible-change="menuHoverOrClick(headerMenu)"
+      <el-dropdown v-bind:style="{width:'170px'}" @visible-change="menuHoverOrClick(headerMenu)"
                    v-for="headerMenu in headerMenus" placement="bottom-end"
                    trigger="hover" class="el-dropdown-cust">
         <li class="menu-root-item" @click="menuClick(headerMenu)" v-bind:class="{'menu-on':headerMenu.actived}">
@@ -553,7 +553,7 @@
           <a v-else><span class="el-dropdown-link">{{headerMenu.name}}</span></a>
         </li>
 
-        <el-dropdown-menu  class="child-menu-gov" v-bind:style="{width:1230/headerMenus.length+'px'}"
+        <el-dropdown-menu  class="child-menu-gov"
                            v-show="headerMenu.children!=null&&headerMenu.children.length>0"
                            slot="dropdown">
           <el-dropdown-item class="child-menu-gov-item" style="width:100%;"
