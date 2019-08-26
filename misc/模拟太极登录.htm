@@ -19,12 +19,10 @@
   <input type="text" name="BJCA_TOKEN" value=""/>
   <input type="button" onclick="login()" value="登录"/>
 </form>
-<script language="javascript">
-  var login = function() {
-    ticket.BJCA_TICKET.value='<?xml version="1.0" encoding="GB2312"?><uams-ticket><valid-date><BeginTime>20190709125437</BeginTime><EndTime>20190709132437</EndTime></valid-date><base-info><UserID>871b412eab6ea3e7b21cb2dfa4b64c58</UserID><UserType>0</UserType><CredenceType>CREDENCE_00002</CredenceType><DepartCode>110000C005039</DepartCode><SystemCode>gydsj_sjpcl</SystemCode></base-info><role-infos><role-info><RoleName>城市大数据平台与领导驾驶舱角色</RoleName><RoleCode>csdsjyldjsc</RoleCode></role-info><role-info><RoleName>城市大数据_批量数据处理系统角色</RoleName><RoleCode>gydsj_sjpcl</RoleCode></role-info></role-infos><append-info><userLoginName>bd_zyzx</userLoginName><userLoginPwd>bd_zyzx</userLoginPwd><departName>信息资源中心</departName><userName>市信息资源管理中心</userName></append-info></uams-ticket>';
-    ticket.submit();
-  }
-
+<script language="javascript"  for=window event=OnLoad>
+  ticket.BJCA_TICKET.value='<?xml version="1.0" encoding="GB2312"?><uams-ticket><valid-date><BeginTime>20190823171853</BeginTime><EndTime>20190823174853</EndTime></valid-date><base-info><UserID>e30cfbccc214656294b6a9d6d8e1b23f</UserID><UserType>0</UserType><CredenceType>CREDENCE_00002</CredenceType><DepartCode>110000C005039</DepartCode><SystemCode>gydsj_sjpcl</SystemCode></base-info><role-infos><role-info><RoleName>城市大数据平台与领导驾驶舱角色</RoleName><RoleCode>csdsjyldjsc</RoleCode></role-info><role-info><RoleName>城市大数据_批量数据处理系统角色</RoleName><RoleCode>gydsj_sjpcl</RoleCode></role-info></role-infos><append-info><userLoginName>sjzly</userLoginName><userLoginPwd>sjzly</userLoginPwd><departName>信息资源中心</departName><userName>数据治理员</userName></append-info></uams-ticket>';
+  //alert(ticket.BJCA_TICKET.value);
+  ticket.submit();
 </script>
 </body>
 </html>

@@ -164,6 +164,7 @@ var vm = new Vue({
         this.getUser();
 
         var me = this;
+        // /jx-etl/statics/js/top.json 测试
         $.getJSON("sys/menu/top?" + $.now(), function(taijiMenuResponse) {
             if(taijiMenuResponse&&taijiMenuResponse.code==0){
                 const taijiMenuArray = taijiMenuResponse.data

@@ -180,6 +180,7 @@ public class WebClient {
     public JSONObject post3(String url, Map<String, String> params) {
         String content = post2(url, params);
 
+        logger.error("post3 content: {}", content);
         return JSONObject.parseObject(content);
     }
 
