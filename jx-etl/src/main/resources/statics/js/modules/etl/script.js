@@ -1,63 +1,9 @@
 $(function () {
-	$("#jqGrid").jqGrid({
-		url: baseURL + 'etl/script/list',
-		datatype: "json",
-		colModel: [			
-		           { label: '模板ID', name: 'scriptid', index: 'ScriptID', width: 50, key: true},
-		           { label: '服务器名称', name: 'etlServerName', index: 'etlServer', width: 80 },
-		           { label: '模板名称', name: 'filename', index: 'FileName', width: 80 },
-		           { label: '模板类型', name: 'scripttype', index: 'ScriptType', width: 80 },
-		           { label: '模板描述', name: 'description', index: 'Description', width: 80 },
-		           { label: '是否有效', name: 'enable', index: 'Enable', width: 60,formatter: function (value, options, row) {
-						if(value == "1"){
-							return  '<span class="label label-success">有效模板</span>'
-						} else if (value == "0") {
-							return  '<span class="label label-default">无效模板</span>'
-						} else {
-							return '<span class="label label-default">未知状态</span>'
-						};
-					}},
-			       { label: '是否共享', name: 'shareflag', index: 'ShareFlag', width: 60,formatter: function (value, options, row) {
-						if(value == "1"){
-							return  '<span class="label label-success">共享</span>'
-						} else if (value == "0") {
-							return  '<span class="label label-default">私有</span>'
-						} else {
-							return '<span class="label label-default">未知状态</span>'
-						};
-					}},
-		           { label: '创建人', name: 'username', index: 'Username', width: 60 }
-		           ],
-		           viewrecords: true,
-		           height: 385,
-		           rowNum: 10,
-		           rowList : [10,30,50],
-		           rownumbers: true, 
-		           rownumWidth: 25, 
-		           autowidth:true,
-		           multiselect: true,
-		           pager: "#jqGridPager",
-		           jsonReader : {
-		        	   root: "page.list",
-		        	   page: "page.currPage",
-		        	   total: "page.totalPage",
-		        	   records: "page.totalCount"
-		           },
-		           prmNames : {
-		        	   page:"page", 
-		        	   rows:"limit", 
-		        	   order: "order"
-		           },
-		           gridComplete:function(){
-		        	   //隐藏grid底部滚动条
-		        	   $("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
-		           }
-	});
 	//初始系统
 	vm.loadServer();
 	//初始化导入
 	uploadScript();
-	
+
 });
 
 var vm = new Vue({
@@ -73,32 +19,71 @@ var vm = new Vue({
 		etlServerTxt:null,
 		allServers:null,
 		script: {
-		}
+		},
+		dataPage: {},
+		multipleSelection:[],
+		myModal:false
+	},
+	mounted(){
+		this.query(true);
 	},
 	methods: {
-		query: function () {
-			$("#jqGrid").jqGrid('setGridParam',{
-				page:1
-			})
-			vm.reload();
+		initPage(){
+			this.dataPage = {
+				list: [],
+				currPage: 1,
+				pageSize: 10,
+				totalCount: 0
+			}
+		},
+		query: function (init) {
+			if (init) {
+				this.initPage();
+			}
+			var url = "etl/script/list";
+			$.ajax({
+				type: "POST",
+				url: baseURL + url,
+				dataType:'json',
+				data: {page:this.dataPage.currPage, limit:this.dataPage.pageSize, filename:this.q.filename},
+				success: function(r){
+					if(r.code === 0){
+						vm.dataPage = r.page;
+					}
+				}
+			});
 		},
 		add: function(){
 			vm.showList = false;
 			vm.isChange=false
 			vm.title = "新增";
 			vm.script = {
-					filename:"",
-					scripttype:"",
-					filepath:"/app"
-					// filepath:"/home/etl/ETLAuto/app/"
+				filename:"",
+				scripttype:"",
+				filepath:"/app"
+				// filepath:"/home/etl/ETLAuto/app/"
 			};
+			console.log('===',url)
 			$.ajax({ url: baseURL + url, success: function(r){ vm.script.filepath=r.filePath}});
 		},
 		update: function (event) {
-			var scriptid = getSelectedRow();
-			if(scriptid == null){
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return ;
 			}
+			if(vm.multipleSelection.length > 1){
+				vm.$alert('只能选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			var scriptid = vm.multipleSelection[0].scriptid;
 			vm.isChange=false
 			vm.showList = false;
 			vm.title = "修改";
@@ -107,12 +92,20 @@ var vm = new Vue({
 		saveOrUpdate: function (event) {
 			console.info(vm.script)
 			if (vm.script.etlServer == null || vm.script.etlServer.trim() == ''){
-				alert('请选择服务器名称');
+				vm.$alert('请选择服务器名称', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return;
 			}
 
 			if (vm.script.filename == null || vm.script.filename.trim() == '') {
-				alert('请导入模板');
+				vm.$alert('请导入模板', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return;
 			}
 			if(vm.script.scriptid == null && vm.isChange==true){
@@ -133,22 +126,39 @@ var vm = new Vue({
 				data: JSON.stringify(vm.script),
 				success: function(r){
 					if(r.code === 0){
-						doSuccess('操作成功', function(index) {
-							vm.reload();
-							vm.isChange=false
+						vm.reBack();
+						vm.query();
+						vm.isChange=false
+						vm.$message({
+							message: '操作成功',
+							type: 'success'
 						});
 					}else{
-						alert(r.msg);
+						vm.$alert(r.msg, '系统提示', {
+							confirmButtonText: '确定',
+							callback: action => {
+							}
+						});
 					}
 				}
 			});
 		},
 		del: function (event) {
-			var scriptids = getSelectedRows();
-			if(scriptids == null){
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return ;
 			}
-			confirm('确定要删除选中的记录？', function(){
+
+			var scriptids = vm.multipleSelection.map(x=>{return x.scriptid})
+			vm.$confirm('确定要删除选中的记录?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
 				$.ajax({
 					type: "POST",
 					url: baseURL + "etl/script/delete",
@@ -156,18 +166,21 @@ var vm = new Vue({
 					data: JSON.stringify(scriptids),
 					success: function(r){
 						if(r.code == 0){
-							if ($("#jqGrid").getGridParam("reccount") == ids.length) {
-								$("#jqGrid").jqGrid('setGridParam',{
-									page:1
-								})
-							}
-							$("#jqGrid").trigger("reloadGrid");
-							alert('操作成功', function(index){});
+							vm.query(true);
+							vm.$message({
+								message: '操作成功',
+								type: 'success'
+							});
 						}else{
-							alert(r.msg);
+							vm.$alert(r.msg, '系统提示', {
+								confirmButtonText: '确定',
+								callback: action => {
+								}
+							});
 						}
 					}
 				});
+			}).catch(() => {
 			});
 		},
 		getInfo: function(scriptid){
@@ -178,13 +191,20 @@ var vm = new Vue({
 				$('#shareflagid').selectpicker('val', vm.script.shareflag);
 			});
 		},
-		reload: function (event) {
-			vm.showList = true;
-			var page = $("#jqGrid").jqGrid('getGridParam','page');
-			$("#jqGrid").jqGrid('setGridParam',{
-				postData:{'filename': vm.q.filename},
-				page:page
-			}).trigger("reloadGrid");
+		handleSizeChange(val) {
+			vm.dataPage.pageSize = val
+			vm.dataPage.currPage = 1;
+			vm.query();
+		},
+		handleCurrentChange(val) {
+			vm.dataPage.currPage = val;
+			vm.query();
+		},
+		handleSelectionChange(val) {
+			vm.multipleSelection = val;
+		},
+		colIndex(row, column, cellValue, index) {
+			return (vm.dataPage.currPage - 1) * vm.dataPage.pageSize + index + 1
 		},
 		reBack: function () {
 			vm.showList = true;
@@ -198,11 +218,16 @@ var vm = new Vue({
 				success: function(data){
 					if(data.code == 0){
 						vm.allServers = data.allServers;
+						console.log(vm.allServers)
 						window.setTimeout(function(){
 							$('#etlServerSelect').selectpicker('refresh');
-						},1000); 
+						},1000);
 					}else{
-						alert(data.msg);
+						vm.$alert(data.msg, '系统提示', {
+							confirmButtonText: '确定',
+							callback: action => {
+							}
+						});
 					}
 				}
 
@@ -212,16 +237,28 @@ var vm = new Vue({
 			vm.editScripts(true);
 		},
 		editScripts:function(isRead){
-			var scriptid = getSelectedRow();
-			if(scriptid == null){
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});				return ;
+			}
+			if(vm.multipleSelection.length > 1){
+				vm.$alert('只能选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return ;
 			}
+			var scriptid = vm.multipleSelection[0].scriptid;
 			if(isRead===true){
 				$("#showSaveScript").hide();
 			}else{
 				$("#showSaveScript").show();
 			}
-			$("#myModal").modal('show');
+			// $("#myModal").modal('show');
 			$.ajax({
 				type: "GET",
 				url: baseURL + "etl/script/readScripts/"+scriptid,
@@ -232,36 +269,60 @@ var vm = new Vue({
 						str = data.scriptDetail.replace(/<br>/g, '\n');
 						$("#scriptDetail").empty();
 						$("#scriptDetail").text(str);
+						vm.myModal = true
 					}else{
-						alert(data.msg);
+						vm.$alert(data.msg, '系统提示', {
+							confirmButtonText: '确定',
+							callback: action => {
+							}
+						});
 						return;
 					}
-					if(!editor){
-						editor = CodeMirror.fromTextArea(document.getElementById("scriptDetail"), {
-							lineNumbers: true,
-							lineWrapping: true,
-							theme:'dracula',
-							autofocus:true,
-							mode: getMode(data.type)
-						});
-					}else{
-						editor.setOption('mode', getMode(data.type));
-					}
-					editor.setValue(str);
-					editor_refresh();
+					vm.$nextTick(()=>{
+						if(!editor){
+							editor = CodeMirror.fromTextArea(vm.$refs.scriptDetail, {
+								lineNumbers: true,
+								lineWrapping: true,
+								theme:'dracula',
+								autofocus:true,
+								mode: getMode(data.type)
+							});
+						}else{
+							editor.setOption('mode', getMode(data.type));
+						}
+						editor.setValue(str);
+						editor_refresh();
+					})
 				}
 			});
 		},
 		saveScripts:function(){
 			var scriptDetail = editor.getValue();
 			if(!scriptDetail){
-				alert("脚本内容不能为空");
+				vm.$alert("脚本内容不能为空", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return;
 			}
-			var scriptid = getSelectedRow();
-			if(scriptid == null){
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return ;
 			}
+			if(vm.multipleSelection.length > 1){
+				vm.$alert('只能选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			var scriptid = vm.multipleSelection[0].scriptid;
 			scriptDetail = base64(scriptDetail);
 			$.ajax({
 				type: "POST",
@@ -270,21 +331,43 @@ var vm = new Vue({
 				contentType: "application/json",
 				success: function(data){
 					if(data.code == 0){
-						alert("操作成功");
+						vm.$message({
+							message: '操作成功',
+							type: 'success'
+						});
+						vm.myModal = false;
 					}else{
-						alert("操作失败，"+data.msg);
+						vm.$alert(data.msg, '系统提示', {
+							confirmButtonText: '确定',
+							callback: action => {
+							}
+						});
 					}
 				}
 			});
 		},
 		closeScripts:function(){
 			vm.scriptDetail = null;
+			vm.myModal = false;
 		},
 		goScriptLog:function(){
-			var scriptid = getSelectedRow();
-			if(scriptid == null){
+			if(vm.multipleSelection.length == 0){
+				vm.$alert("请选择一条记录", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return ;
 			}
+			if(vm.multipleSelection.length > 1){
+				vm.$alert("只能选择一条记录", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			var scriptid = vm.multipleSelection[0].scriptid;
 			window.location.href = 'script_log.html?scriptid=' + scriptid;
 		}
 	}
@@ -304,21 +387,33 @@ function uploadScript() {
 		onSubmit : function(file, extension) {
 			//alert(file);
 			if (!(extension && /^(py|sh|java|perl)$/.test(extension.toLowerCase()))) {
-				alert("模板必须是py、sh、java、perl类型!");
+				vm.$alert("模板必须是py、sh、java、perl类型!", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return false;
 			}
 			this.setData({"filepath":vm.script.filepath});
 		},
 		onComplete : function(file, m) {
 			if(m.code==1){
-				alert("脚本已存在");
+				vm.$alert("脚本已存在", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 			}else{
 				vm.doSaveOrUpdate();
 			}
 		},
 		onChange:function(file, extension){
 			if (!(extension && /^(py|sh|java|perl)$/.test(extension.toLowerCase()))) {
-				alert("模板必须是py、sh、java、perl类型");
+				vm.$alert("模板必须是py、sh、java、perl类型", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return false;
 			}
 			vm.isChange=true;

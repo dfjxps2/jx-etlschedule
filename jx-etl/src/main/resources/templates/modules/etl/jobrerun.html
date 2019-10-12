@@ -21,36 +21,28 @@
       <div class="grid-btn">
         <div class="row">
           <div class="col-xs-4">
-            <select id="etlSystemSelect" class="selectpicker selectCus" style="" v-model="q.etlSystem" data-live-search="true" title="请选择作业系统名称" onchange="getSelectd(); ">
-              <option selected value="">全部</option>
-              <option v-for="option in allsys" :value="option.code">{{ option.name }}</option>
-            </select>
+            <el-select size="small" style="width: 100%" v-model="q.etlSystem" placeholder="请选择作业系统名称" clearable>
+              <el-option v-for="option in allsys" :key="option.code" :label="option.name" :value="option.code"></el-option>
+            </el-select>
           </div>
           <div class="col-xs-4">
-            <select id="etlStatusSelect" class="selectpicker  selectCus" v-model="q.lastJobStatus" data-live-search="true" title="请选择作业状态" onchange="getSelectStatus();">
-              <option selected value="">全部</option>
-              <option v-for="item in allstatus" :value=item.status>{{item.status_desc}}</option>
-            </select>
+            <el-select size="small" style="width: 100%" v-model="q.lastJobStatus" placeholder="请选择作业状态" clearable>
+              <el-option v-for="item in allstatus" :key="item.status" :label="item.status_desc" :value="item.status"></el-option>
+            </el-select>
           </div>
           <div class="col-xs-4">
-            <div id="lastTxDateStart" class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-              <input class="form-control" size="16" type="text" value="" placeholder="起始数据日期" readonly onchange="getReqDateStart()">
-              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-            </div>
+            <el-input v-model="q.etlJob" size="small" placeholder="请输入要查询的作业名称" clearable></el-input>
           </div>
         </div>
         <div class="row">
           <div class="col-xs-4">
-            <div id="lastTxDateEnd" class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-              <input class="form-control" size="16" type="text" value="" placeholder="截止数据日期" readonly onchange="getReqDateEnd()">
-              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-            </div>
+            <el-date-picker v-model="q.lastTxDateStart" size="small" style="width: 100%" type="date" placeholder="起始数据日期" value-format="yyyy-MM-dd"></el-date-picker>
           </div>
           <div class="col-xs-4">
-            <input type="text" class="form-control selectCus" v-model="q.etlJob" @keyup.enter="query" placeholder="请输入要查询的作业名称">
+            <el-date-picker v-model="q.lastTxDateEnd" size="small" style="width: 100%" type="date" placeholder="起始截止日期" value-format="yyyy-MM-dd"></el-date-picker>
           </div>
           <div class="col-xs-4">
-            <a class=" btn btn-primary btn-sm" @click="query"><span class="glyphicon glyphicon-search"></span>&nbsp; 查询 </a>
+            <a class=" btn btn-primary btn-sm" @click="query(true)"><span class="glyphicon glyphicon-search"></span>&nbsp; 查询 </a>
           </div>
         </div>
         <div class="row">
@@ -63,14 +55,14 @@
             <a class="btn btn-warning btn-sm" @click="openUpdateTxDate"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业数据日期 </a>
             <a class="btn btn-warning btn-sm" @click="openUpdateEnable"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业有效性 </a>
 
-            <label><input type="checkbox" v-model="refresh_auto" />自动刷新</label>
-            <select v-model="refresh_freq"  data-live-search="true" title="请选择刷新时间">
-              <option value="10000">10</option>
-              <option selected value="20000">20</option>
-              <option value="30000">30</option>
-              <option value="60000">60</option>
-              <option value="120000">120</option>
-            </select>
+            <el-checkbox v-model="refresh_auto">自动刷新</el-checkbox>
+            <el-select size="mini" style="width: 100px" v-model="refresh_freq" placeholder="请选择刷新时间">
+              <el-option key="10000" label="10" value="10000"></el-option>
+              <el-option :key="20000" label="20" :value="20000"></el-option>
+              <el-option :key="30000" label="30" :value="30000"></el-option>
+              <el-option :key="60000" label="60" :value="60000"></el-option>
+              <el-option :key="120000" label="120" :value="120000"></el-option>
+            </el-select>
 
           </div>
 
@@ -81,117 +73,150 @@
         <div style="clear:both;"></div>
       </div>
     <div class="ml-15 mr-15">
-      <table id="jqGrid"></table>
-      <div id="jqGridPager"></div>
-    </div>
-    </div>
-    <div v-show="showQueryData" class='cus-p-diag'>
-    <div class="panel panel-primary  cusdialog">
-      <div class="panel-heading">{{title}}</div>
-      <div class="form-horizontal">
-        <div id="rerundateid" style='margin-left: 150px; margin-bottom: 30px; width: 300px;' class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2"
-             data-link-format="yyyy-mm-dd">
-          <input class="form-control" size="16" type="text" value="" placeholder="重跑数据日期" readonly onchange="getRerunDate()">
-          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-        </div>
+      <div>
+        <el-table
+                :data="dataPage.list"
+                border
+                size="small"
+                height="452"
+                :stripe="true"
+                style="width: 100%"
+                @selection-change="handleSelectionChange">
+          <el-table-column
+                  type="selection"
+                  width="50">
+          </el-table-column>
+          <el-table-column
+                  label="序号"
+                  :formatter="colIndex"
+                  width="50"
+                  align="center">
+          </el-table-column>
+          <el-table-column
+                  prop="etlSystem"
+                  label="作业系统名称"
+                  :show-overflow-tooltip="true"
+                  align="center">
+          </el-table-column>
+          <el-table-column
+                  prop="etlJob"
+                  label="作业名称"
+                  :show-overflow-tooltip="true"
+                  align="center">
+          </el-table-column>
+          <el-table-column
+                  prop="description"
+                  label="描述"
+                  :show-overflow-tooltip="true"
+                  align="center">
+          </el-table-column>
+          <el-table-column
+                  prop="frequency"
+                  label="作业周期"
+                  :show-overflow-tooltip="true"
+                  align="center">
+            <template slot-scope="scope">
+              <span v-if="scope.row.frequency == '0'" class="table-label-gb label-primary">日作业</span>
+              <span v-else="" class="table-label-gb label-info">月作业</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+                  prop="enable"
+                  label="是否有效"
+                  :show-overflow-tooltip="true"
+                  align="center">
+            <template slot-scope="scope">
+              <span v-if="scope.row.enable == 1" class="table-label-gb label-success">有效作业</span>
+              <span v-else-if="scope.row.enable == 0" class="table-label-gb label-default">无效作业</span>
+              <span v-else="" class="table-label-gb label-default">未知状态</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+                  prop="lastStarttime"
+                  label="开始时间"
+                  :show-overflow-tooltip="true"
+                  align="center">
+          </el-table-column>
+          <el-table-column
+                  prop="lastEndtime"
+                  label="结束时间"
+                  :show-overflow-tooltip="true"
+                  align="center">
+          </el-table-column>
+          <el-table-column
+                  prop="lastJobstatus"
+                  label="运行状态"
+                  :show-overflow-tooltip="true"
+                  align="center">
+            <template slot-scope="scope">
+              <span v-if="scope.row.lastJobstatus == 'Done'" class="table-label-gb label-success">执行成功</span>
+              <span v-else-if="scope.row.lastJobstatus == 'Pending'" class="table-label-gb label-default">即将执行</span>
+              <span v-else-if="scope.row.lastJobstatus == 'Ready'" class="table-label-gb label-info">准备执行</span>
+              <span v-else-if="scope.row.lastJobstatus == 'Running'" class="table-label-gb label-primary">正在执行</span>
+              <span v-else-if="scope.row.lastJobstatus == 'Failed'" class="table-label-gb label-danger">运行失败</span>
+              <span v-else="" class="table-label-gb label-default"></span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="dataPage.currPage"
+                :page-size="dataPage.pageSize"
+                :page-sizes="[10, 20, 30]"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="dataPage.totalCount">
+        </el-pagination>
       </div>
-      <div class="form-group">
-        <div class="col-sm-2 control-label"></div>
-        <!--<input type="button" class="btn btn-primary" @click="rerun" value="确定" />-->
-        <input type="button" class="btn btn-primary" @click="rerunmulti" value="确定" />
-        &nbsp;&nbsp;
-        <input type="button" class="btn btn-warning" @click="reBack" value="返回" />
-      </div>
     </div>
-  </div>
+    </div>
+
+  <el-dialog :title="title" :visible="showQueryData" :close-on-click-modal="false" :show-close="false">
+    <el-date-picker v-model="q.rerun_data_date" size="small" style="width: 100%" type="date" placeholder="重跑数据日期" value-format="yyyy-MM-dd"></el-date-picker>
+    <div slot="footer" class="dialog-footer">
+      <a class="btn btn-primary btn-sm" @click="rerunmulti">确定</a>
+      <a class="btn btn-warning btn-sm" @click="reBack">返回</a>
+    </div>
+  </el-dialog>
+
 
   <!--批量更新作业状态开始-->
-  <div v-show="showUpdateBatchStatus" class='cus-p-diag'>
-    <div class="panel panel-primary  cusdialog">
-      <div class="panel-heading">更新作业状态</div>
-      <div class="form-horizontal">
-        <div style='margin-left: 200px; margin-bottom: 150px; width: 300px;' class="input-group col-md-12" >
-          <select id="updateBatchStatusSelect" class="selectpicker  selectCus" v-model="q.newJobStatus" data-live-search="false" title="请选择作业状态" onchange="getSelectStatus2();">
-            <option v-for="item in allstatus" :value=item.status>{{item.status_desc}}</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-sm-2 control-label"></div>
-        <input type="button" class="btn btn-primary" @click="updateBatchStatus" value="确定" />
-        &nbsp;&nbsp;
-        <input type="button" class="btn btn-warning" @click="reBack2" value="返回" />
-      </div>
+  <el-dialog title="更新作业状态" :visible="showUpdateBatchStatus" :close-on-click-modal="false" :show-close="false">
+    <el-select size="small" style="width: 100%" v-model="q.newJobStatus" placeholder="请选择作业状态">
+      <el-option v-for="item in allstatus" :key="item.status" :label="item.status_desc" :value="item.status"></el-option>
+    </el-select>
+    <div slot="footer" class="dialog-footer">
+      <a class="btn btn-primary btn-sm" @click="updateBatchStatus">确定</a>
+      <a class="btn btn-warning btn-sm" @click="reBack2">返回</a>
     </div>
-  </div>
+  </el-dialog>
   <!--批量更新作业状态结束-->
 
   <!--批量更新作业数据日期开始-->
-  <div v-show="showUpdateBatchJobTxDate" class='cus-p-diag'>
-    <div class="panel panel-primary  cusdialog">
-      <div class="panel-heading">更新作业数据日期</div>
-      <div class="form-horizontal">
-        <div id="updateBatchJobTxDateSelect" style='margin-left: 150px; margin-bottom: 30px; width: 300px;' class="input-group date form_date col-md-12" data-date="" data-date-format="" data-link-field="dtp_input2"
-             data-link-format="yyyy-mm-dd">
-          <input class="form-control" size="16" type="text" value="" placeholder="请选择更新作业数据日期" readonly onchange="getNewTxDate()">
-          <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-sm-2 control-label"></div>
-        <input type="button" class="btn btn-primary" @click="updateBatchJobTxDate" value="确定" />
-        &nbsp;&nbsp;
-        <input type="button" class="btn btn-warning" @click="reBack3" value="返回" />
-      </div>
+  <el-dialog title="更新作业数据日期" :visible="showUpdateBatchJobTxDate" :close-on-click-modal="false" :show-close="false">
+    <el-date-picker v-model="q.newJobTxdate" size="small" style="width: 100%" type="date" placeholder="请选择更新作业数据日期" value-format="yyyy-MM-dd"></el-date-picker>
+    <div slot="footer" class="dialog-footer">
+      <a class="btn btn-primary btn-sm" @click="updateBatchJobTxDate">确定</a>
+      <a class="btn btn-warning btn-sm" @click="reBack3">返回</a>
     </div>
-  </div>
+  </el-dialog>
   <!--批量更新作业数据日期结束-->
 
   <!--批量更新作业有效性开始-->
-  <div v-show="showUpdateBatchEnable" class='cus-p-diag'>
-    <div class="panel panel-primary  cusdialog">
-      <div class="panel-heading">更新作业有效性</div>
-      <div class="form-horizontal">
-        <div style='margin-left: 200px; margin-bottom: 150px; width: 300px;' class="input-group col-md-12" >
-          <select id="updateBatchEnableSelect" class="selectpicker  selectCus" v-model="q.newEnableFlag" data-live-search="false" title="请选择作业有效性" onchange="getSelectEnable();">
-            <option value='1'>置为有效</option>
-            <option value='0'>置为无效</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-sm-2 control-label"></div>
-        <input type="button" class="btn btn-primary" @click="updateBatchEnable" value="确定" />
-        &nbsp;&nbsp;
-        <input type="button" class="btn btn-warning" @click="reBack4" value="返回" />
-      </div>
+  <el-dialog title="更新作业状态" :visible="showUpdateBatchEnable" :close-on-click-modal="false" :show-close="false">
+    <el-select size="small" style="width: 100%" v-model="q.newEnableFlag" placeholder="请选择作业有效性">
+      <el-option key="1" label="置为有效" value="1"></el-option>
+      <el-option key="0" label="置为无效" value="0"></el-option>
+    </el-select>
+    <div slot="footer" class="dialog-footer">
+      <a class="btn btn-primary btn-sm" @click="updateBatchEnable">确定</a>
+      <a class="btn btn-warning btn-sm" @click="reBack4">返回</a>
     </div>
-  </div>
+  </el-dialog>
   <!--批量更新作业有效性结束-->
 
+  </div>
 
-  </div>
-  <!-- 选择作业 -->
-  <div id="selectJobLayer" style="display: none; padding: 10px; height: 100%;">
-    <div class="row">
-      <form class="form-inline">
-        <div class="col-md-3">
-          <select id="dependEtlSystem" class="selectpicker" style="" v-model="dependQ.etlSystem" data-live-search="true" title="请系统名称" onchange="return false;">
-            <option selected value="">全部</option>
-            <option v-for="option in allsys" v-bind:value="option.code">{{ option.name }}</option>
-          </select>
-        </div>
-        <div class="col-md-3">
-          <input type="text" class="form-control" v-model="dependQ.etlJob" @keyup.enter="query" placeholder="作业名称">
-        </div>
-      </form>
-      <a class=" btn btn-primary" @click="query"> 查询 </a>
-    </div>
-    <div class="row" style="height: 90%;">
-      <table id="jqGridJob"></table>
-      <div id="jqGridPagerJob"></div>
-    </div>
-  </div>
   <script src="${request.contextPath}/statics/js/modules/etl/jobrerun.js"></script>
   <script>
 			$(document)
@@ -229,70 +254,6 @@
 
 							});
 
-			$('.form_date').datetimepicker({
-				format : 'yyyy-mm-dd',
-				language : 'zh-CN',
-				weekStart : 1,
-				todayBtn : 1,
-				autoclose : 1,
-				todayHighlight : 1,
-				startView : 2,
-				minView : 2,
-				forceParse : 0,
-				todayBtn : true,
-				todayHighlight : true,
-				startDate : 2018 - 01 - 01
-			});
-
-			function getReqDateStart() {
-				var dateval = $("#lastTxDateStart").find("input").val();
-				vm.q.lastTxDateStart = dateval;
-			}
-			function getReqDateEnd() {
-				var dateval = $("#lastTxDateEnd").find("input").val();
-				vm.q.lastTxDateEnd = dateval;
-			}
-
-			function getRerunDate() {
-				var dateval = $("#rerundateid").find("input").val();
-				vm.q.rerun_data_date = dateval;
-			}
-
-			function getSelectd() {
-				var etlSystemSelect_obj = document.getElementById("etlSystemSelect");
-				var index = etlSystemSelect_obj.selectedIndex;
-				var select_value = etlSystemSelect_obj.options[index].value;
-				vm.q.etlSystem = select_value;
-			}
-
-			function getSelectStatus() {
-				var etlStatusSelect_obj = document.getElementById("etlStatusSelect");
-				var index = etlStatusSelect_obj.selectedIndex;
-				var select_value = etlStatusSelect_obj.options[index].value;
-				vm.q.lastJobStatus = select_value;
-
-			}
-
-            function getSelectStatus2() {
-                var updateBatchStatusSelect_obj = document.getElementById("updateBatchStatusSelect");
-                var index = updateBatchStatusSelect_obj.selectedIndex;
-                var select_value = updateBatchStatusSelect_obj.options[index].value;
-                vm.q.newJobStatus = select_value;
-            }
-
-            function getNewTxDate() {
-                var dateval = $("#updateBatchJobTxDateSelect").find("input").val();
-                vm.q.newJobTxdate = dateval;
-            }
-
-
-            function getSelectEnable() {
-                var updateBatchEnableSelect_obj = document.getElementById("updateBatchEnableSelect");
-                var index = updateBatchEnableSelect_obj.selectedIndex;
-                var select_value = etlStatusSelect_obj.options[index].value;
-                vm.q.newEnableFlag = select_value;
-
-            }
 		</script>
 </body>
 </html>

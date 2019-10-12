@@ -414,8 +414,6 @@ a:hover, a:active, a:focus {
 
 .main-sidebar, .left-side {
     position: absolute;
-    top: 150px;
-    left: 40px;
     padding-top: 0px;
     z-index: 810;
     -webkit-transition: -webkit-transform .3s ease-in-out, width .3s ease-in-out;

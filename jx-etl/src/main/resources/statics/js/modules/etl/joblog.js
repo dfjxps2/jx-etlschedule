@@ -1,50 +1,5 @@
 $(function () {
-    $("#jqGrid").jqGrid({
-        url: baseURL + 'etl/joblog/list',
-        datatype: "json",
-        colModel: [
-			{ label: '作业系统名称', name: 'etlSystem', index: 'ETL_System', width: 40},
-			{ label: '作业名称', name: 'etlJob', index: 'ETL_Job', width: 40 },
-			{ label: '会话ID', name: 'jobsessionid', index: 'JobSessionID', width: 40},
-			{ label: '步骤ID', name: 'jobstepid', index: 'JobStepID', width: 80 ,hidden:true },
-			{ label: '脚本名称', name: 'scriptfile', index: 'ScriptFile', width: 80,hidden:true  },
-			{ label: '数据日期', name: 'txdate', index: 'TXDate', width: 40,formatter:"date"},
-			{ label: '开始时间', name: 'starttime', index: 'StartTime', width: 80 },
-			{ label: '结束时间', name: 'endtime', index: 'EndTime', width: 80 },
-			{ label: '', name: 'returncode', index: 'ReturnCode', width: 80 ,hidden:true },
-			{ label: '', name: 'seconds', index: 'Seconds', width: 80 ,hidden:true },
-            // { label: '操作', name: 'id', index: 'ID', width: 40, key: true,
-            //     formatter: function(value, options, row){
-            //         return "<a href='/crm/user/"+value+"'><i class='fa fa-search'></i>&nbsp;&nbsp;查看详细日志</a>&nbsp;&nbsp;";
-            //     }},
-        ],
-		viewrecords: true,
-        height: 385,
-        rowNum: 10,
-		rowList : [10,30,50],
-        rownumbers: true, 
-        rownumWidth: 25, 
-        autowidth:true,
-        multiselect: true,
-        pager: "#jqGridPager",
-        jsonReader : {
-            root: "page.list",
-            page: "page.currPage",
-            total: "page.totalPage",
-            records: "page.totalCount"
-        },
-        prmNames : {
-            page:"page", 
-            rows:"limit", 
-            order: "order"
-        },
-        gridComplete:function(){
-        	//隐藏grid底部滚动条
-        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
-        }
-    });
-    //初始化表格高度
-    //initGridHeight("rrapp","jqGrid");
+
     vm.loadsys("etlSystemSelect");
 });
 
@@ -63,28 +18,73 @@ var vm = new Vue({
         etlSystem:"",
         data_date:Date(),
 		allsys:null,
-        joblogdetail:null
-	},
-	methods: {
-		query: function () {
-      $("#jqGrid").jqGrid('setGridParam',{
-        page:1
-      })
-			vm.reload();
-		},
+        joblogdetail:null,
+        dataPage: {},
+        multipleSelection:[],
+        myModal:false
+    },
+    mounted(){
+        this.query(true);
+    },
+    methods: {
+        initPage(){
+            this.dataPage = {
+                list: [],
+                currPage: 1,
+                pageSize: 10,
+                totalCount: 0
+            }
+        },
+        query: function (init) {
+            if (init) {
+                this.initPage();
+            }
+            var postData = {
+                'etlJob': this.q.etlJob,
+                'etlSystem':this.q.etlSystem,
+                'txdate':this.q.data_date,
+                'page':this.dataPage.currPage,
+                'limit':this.dataPage.pageSize,
+            }
+            var url = "etl/joblog/list";
+            $.ajax({
+                type: "POST",
+                url: baseURL + url,
+                dataType:'json',
+                data: postData,
+                success: function(r){
+                    if(r.code === 0){
+                        vm.dataPage = r.page;
+                    }
+                }
+            });
+        },
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
 			vm.jobLog = {};
 		},
 		update: function (event) {
-			var id = getSelectedRow();
-			if(id == null){
-				return ;
-			}
+            if(vm.multipleSelection.length == 0){
+                vm.$alert("请选择一条记录", '系统提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                    }
+                });
+                return ;
+            }
+            if(vm.multipleSelection.length > 1){
+                vm.$alert("只能选择一条记录", '系统提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                    }
+                });
+                return ;
+            }
+            var id = vm.multipleSelection[0].id;
 			vm.showList = false;
             vm.title = "修改";
-            
+
             vm.getInfo(id)
 		},
 		saveOrUpdate: function (event) {
@@ -96,11 +96,18 @@ var vm = new Vue({
 			    data: JSON.stringify(vm.jobLog),
 			    success: function(r){
 			    	if(r.code === 0){
-						alert('操作成功', function(index){
-							vm.reload();
-						});
+                        vm.reBack();
+                        vm.query();
+                        vm.$message({
+                            message: '操作成功',
+                            type: 'success'
+                        });
 					}else{
-						alert(r.msg);
+                        vm.$alert(r.msg, '系统提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                            }
+                        });
 					}
 				}
 			});
@@ -121,7 +128,11 @@ var vm = new Vue({
                             $('#etlSystemSelect').selectpicker('refresh');
                         },1000);
                     }else{
-                        alert(data.msg);
+                        vm.$alert(data.msg, '系统提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                            }
+                        });
                     }
                 }
 
@@ -130,12 +141,23 @@ var vm = new Vue({
 
         //添加loadlog方法加载作业日志详情
         loadlog: function(){
-            // alert("loadlog被调用");
-            var id = getSelectedRow();
-            if(id == null){
+            if(vm.multipleSelection.length == 0){
+                vm.$alert("请选择一条记录", '系统提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                    }
+                });
                 return ;
             }
-            var rowdata = $("#jqGrid").jqGrid('getRowData',id);
+            if(vm.multipleSelection.length > 1){
+                vm.$alert("只能选择一条记录", '系统提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                    }
+                });
+                return ;
+            }
+            var rowdata = vm.multipleSelection[0];
             var etlSystem = rowdata.etlSystem;
             var jobsessionid = rowdata.jobsessionid;
             var scriptfile = rowdata.scriptfile;
@@ -148,11 +170,11 @@ var vm = new Vue({
                 contentType: "application/json",
                 data: {'etlSystem':etlSystem,'jobsessionid':jobsessionid,'scriptfile':scriptfile,'txdate':txdate},
                 success: function(data){
+                    vm.myModal = true;
                     if(data.code == 0){
-                        $("#joblogdetail").html(data.logresult);
-                        // vm.joblogdetail = data.logresult;
+                        vm.joblogdetail = data.logresult;
                     }else{
-                        $("#joblogdetail").html("该日志不存在或已被清理");
+                        vm.joblogdetail = data.msg
                     }
                 }
 
@@ -161,11 +183,23 @@ var vm = new Vue({
 
 		//添加日志下载
         logdload:function(){
-            var id = getSelectedRow();
-            if(id == null){
+            if(vm.multipleSelection.length == 0){
+                vm.$alert("请选择一条记录", '系统提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                    }
+                });
                 return ;
             }
-            var rowdata = $("#jqGrid").jqGrid('getRowData',id);
+            if(vm.multipleSelection.length > 1){
+                vm.$alert("只能选择一条记录", '系统提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                    }
+                });
+                return ;
+            }
+            var rowdata = vm.multipleSelection[0];
             var etlSystem = rowdata.etlSystem;
             var jobsessionid = rowdata.jobsessionid;
             var scriptfile = rowdata.scriptfile;
@@ -179,46 +213,59 @@ var vm = new Vue({
                     if(data.code == 0){
                         location.href = baseURL+"etl/joblog/logdload?etlSystem="+etlSystem+"&jobsessionid=" + jobsessionid +"&scriptfile="+scriptfile+"&txdate="+txdate;
                     }else{
-                        alert(data.msg);
+                        vm.$alert(data.msg, '系统提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                            }
+                        });
                     }
                 }
 
             });
-
-
-
 		},
 
         clearlog: function(){
             vm.joblogdetail = null;
         },
 		del: function (event) {
-			var ids = getSelectedRows();
-			if(ids == null){
-				return ;
-			}
+            if(vm.multipleSelection.length == 0){
+                vm.$alert('请选择一条记录', '系统提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                    }
+                });
+                return ;
+            }
 
-			confirm('确定要删除选中的记录？', function(){
-				$.ajax({
-					type: "POST",
-				    url: baseURL + "etl/joblog/delete",
+            var ids = vm.multipleSelection.map(x=>{return x.id})
+            vm.$confirm('确定要删除选中的记录?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + "etl/joblog/delete",
                     contentType: "application/json",
-				    data: JSON.stringify(ids),
-				    success: function(r){
-						if(r.code == 0){
-              if ($("#jqGrid").getGridParam("reccount") == ids.length) {
-                $("#jqGrid").jqGrid('setGridParam',{
-                  page:1
-                })
-              }
-              $("#jqGrid").trigger("reloadGrid");
-							alert('操作成功', function(index){});
-						}else{
-							alert(r.msg);
-						}
-					}
-				});
-			});
+                    data: JSON.stringify(ids),
+                    success: function(r){
+                        if(r.code == 0){
+                            vm.$message({
+                                message: '操作成功',
+                                type: 'success'
+                            });
+                            vm.query(true);
+                        }else{
+                            vm.$alert(r.msg, '系统提示', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                }
+                            });
+                        }
+                    }
+                });
+            }).catch(() => {
+            });
 		},
 		getInfo: function(id){
 			$.get(baseURL + "etl/joblog/info/"+id, function(r){
@@ -227,20 +274,24 @@ var vm = new Vue({
                 // alert(vm.jobLog.etlJob);
             });
 		},
-		reload: function (event) {
-			vm.showList = true;
-			var page = $("#jqGrid").jqGrid('getGridParam','page');
-			$("#jqGrid").jqGrid('setGridParam',{
-                postData:{'etlJob': vm.q.etlJob,'etlSystem':vm.q.etlSystem,'txdate':vm.q.data_date},
-                page:page
-            }).trigger("reloadGrid");
-		},
         timeline:function(){
-            var id = getSelectedRow();
-            if(id == null){
+            if(vm.multipleSelection.length == 0){
+                vm.$alert("请选择一条记录", '系统提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                    }
+                });
                 return ;
             }
-            var row = $('#jqGrid').jqGrid('getRowData',id);
+            if(vm.multipleSelection.length > 1){
+                vm.$alert("只能选择一条记录", '系统提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                    }
+                });
+                return ;
+            }
+            var row = vm.multipleSelection[0];
             $.ajax({
                 type: "GET",
                 url: baseURL + 'etl/joblog/list?&limit=100&page=1',
@@ -249,7 +300,11 @@ var vm = new Vue({
                 success: function(data){
                   console.info('timeline resp', data);
                     if(data.code != 0){
-                        alert(data.msg);
+                        vm.$alert(data.msg, '系统提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                            }
+                        });
                         return;
                     }
                     $("#tableLayout").hide();
@@ -268,7 +323,11 @@ var vm = new Vue({
         },
         logdload2:function(){
             if(_tllog.etlSystem == null){
-                alert("请先选择一条记录");
+                vm.$alert("只能选择一条记录", '系统提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                    }
+                });
                 return ;
             }
             var etlSystem = _tllog.etlSystem;
@@ -284,14 +343,30 @@ var vm = new Vue({
                     if(data.code == 0){
                         location.href = baseURL+"etl/joblog/logdload?etlSystem="+etlSystem+"&jobsessionid=" + jobsessionid +"&scriptfile="+scriptfile+"&txdate="+txdate;
                     }else{
-                        alert(data.msg);
+                        vm.$alert(data.msg, '系统提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                            }
+                        });
                     }
                 }
 
             });
-
-
-
+        },
+        handleSizeChange(val) {
+            vm.dataPage.pageSize = val
+            vm.dataPage.currPage = 1;
+            vm.query();
+        },
+        handleCurrentChange(val) {
+            vm.dataPage.currPage = val;
+            vm.query();
+        },
+        handleSelectionChange(val) {
+            vm.multipleSelection = val;
+        },
+        colIndex(row, column, cellValue, index) {
+            return (vm.dataPage.currPage - 1) * vm.dataPage.pageSize + index + 1
         },
 	}
 });
@@ -366,11 +441,13 @@ function showLog(etlSystem, jobsessionid, scriptfile, txdate){
         contentType: "application/json",
         data: _tllog,
         success: function(data){
-            $("#myModal").modal('show');
+            vm.myModal = true;
             if(data.code == 0){
-                $("#joblogdetail").html(data.logresult);
+                vm.joblogdetail = data.logresult;
+
             }else{
-                $("#joblogdetail").html("该日志不存在或已被清理");
+                vm.joblogdetail = data.logresult;
+
             }
         }
 

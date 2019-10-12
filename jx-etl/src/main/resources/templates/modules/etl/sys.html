@@ -3,6 +3,9 @@
 <head>
     <title></title>
 		<#include "/header.html">
+    <style>
+        .el-input-number .el-input__inner{text-align: left}
+    </style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -10,7 +13,7 @@
         <div class="grid-btn">
 
             <div class="form-group col-sm-2">
-                <input type="text" class="form-control" v-model="q.etlSystem" @keyup.enter="query" placeholder="作业系统名称">
+                <el-input v-model="q.etlSystem" size="small" @keyup.enter="query(true)" placeholder="作业系统名称"></el-input>
             </div>
             <a class="btn btn-default btn-sm" @click="query"><i class="fa fa-search"></i> 查询</a>
 			<#if shiro.hasPermission("etl:sys:save")>
@@ -23,10 +26,72 @@
             <a class="btn btn-primary btn-sm" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 			</#if>
         </div>
-<div class="ml-15 mr-15">
-        <table id="jqGrid"></table>
-        <div id="jqGridPager"></div>
-</div>
+        <div style="padding: 0 10px">
+            <el-table
+                    :data="dataPage.list"
+                    border
+                    size="small"
+                    height="452"
+                    :stripe="true"
+                    style="width: 100%"
+                    @selection-change="handleSelectionChange">
+                <el-table-column
+                        type="selection"
+                        width="50">
+                </el-table-column>
+                <el-table-column
+                        label="序号"
+                        :formatter="colIndex"
+                        width="50"
+                        align="center">
+                </el-table-column>
+<!--                <el-table-column-->
+<!--                        prop="id"-->
+<!--                        label="作业系统ID"-->
+<!--                        :show-overflow-tooltip="true"-->
+<!--                        align="center">-->
+<!--                </el-table-column>-->
+                <el-table-column
+                        prop="etlSystem"
+                        label="作业系统名称"
+                        :show-overflow-tooltip="true"
+                        align="center">
+                </el-table-column>
+                <el-table-column
+                        prop="description"
+                        label="作业系统描述"
+                        :show-overflow-tooltip="true"
+                        align="center">
+                </el-table-column>
+                <el-table-column
+                        prop="logkeepperiod"
+                        label="日志保存周期"
+                        :show-overflow-tooltip="true"
+                        align="center">
+                </el-table-column>
+                <el-table-column
+                        prop="priority"
+                        label="优先级"
+                        :show-overflow-tooltip="true"
+                        align="center">
+                </el-table-column>
+                <el-table-column
+                        prop="concurrent"
+                        label="并发数"
+                        :show-overflow-tooltip="true"
+                        align="center">
+                </el-table-column>
+            </el-table>
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="dataPage.currPage"
+                    :page-size="dataPage.pageSize"
+                    :page-sizes="[10, 20, 30]"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="dataPage.totalCount">
+            </el-pagination>
+        </div>
     </div>
 
     <div v-show="!showList" class="panel panel-default">
@@ -34,17 +99,16 @@
         <form class="form-horizontal">
 
                     <div class="form-group">
-                        <div class="col-sm-2 control-label">作业系统名称</div>
+                        <div class="col-sm-2 control-label"><span style="color:red;margin-right: 4px">*</span>作业系统名称</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="sys.etlSystem" placeholder="作业系统名称（要求大写且3个字符）" maxlength="3"/>
-                            <span style="color:#FF0000">*作业系统名称（要求大写且3个字符）</span>
+                            <el-input v-model="sys.etlSystem" size="small" placeholder="作业系统名称（要求大写且3个字符）" :maxlength="3"></el-input>
                         </div>
                     </div>
 
 					          <div class="form-group">
                         <div class="col-sm-2 control-label">作业系统描述</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="sys.description" placeholder="作业系统描述"/>
+                            <el-input v-model="sys.description" size="small" placeholder="作业系统描述"></el-input>
                         </div>
                     </div>
 											                    <div class="form-group" style="display:none">
@@ -57,8 +121,7 @@
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">日志保存周期</div>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" v-model="sys.logkeepperiod" placeholder="日志保存周期，只能输入数字" value="10"/>
-                            <span style="color:#FF0000">只能输入数字</span>
+                            <el-input-number v-model="sys.logkeepperiod" style="width: 100%" size="small" placeholder="日志保存周期，只能输入数字" :controls="false"></el-input-number>
                         </div>
                     </div>
 											                    <div class="form-group" style="display:none">
@@ -71,21 +134,19 @@
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">优先级</div>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" v-model="sys.priority" placeholder="优先级，只能输入数字"/>
-                          <span style="color:#FF0000">只能输入数字</span>
+                            <el-input-number v-model="sys.priority" style="width: 100%" size="small" placeholder="优先级，只能输入数字" :controls="false"></el-input-number>
                         </div>
                     </div>
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">并发数</div>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" v-model="sys.concurrent" placeholder="并发数，只能输入数字" />
-                            <span style="color:#FF0000">只能输入数字</span>
+                            <el-input-number v-model="sys.concurrent" style="width: 100%" size="small" placeholder="并发数，只能输入数字" :controls="false"></el-input-number>
                         </div>
                     </div>
 							            <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
-                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reBack" value="返回"/>
             </div>
         </form>
     </div>

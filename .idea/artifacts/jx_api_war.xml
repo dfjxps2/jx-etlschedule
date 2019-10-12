@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="jx-api:war">
+    <output-path>$PROJECT_DIR$/jx-api/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>jx-api</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="jx-api.war">
+      <element id="artifact" artifact-name="jx-api:war exploded" />
+    </root>
+  </artifact>
+</component>

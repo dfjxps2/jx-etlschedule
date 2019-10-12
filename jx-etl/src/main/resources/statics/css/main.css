@@ -60,7 +60,7 @@ tbody > tr > th {font-weight: normal; }
 .col-xs-6{padding-left: 0px;padding-right: 0px;}
 .form-horizontal .form-group {margin-left:0px;margin-right:0px;}
 .form-horizontal{
-	 width:550px; 
+	 width:550px;
 	padding-top:20px;
 }
 .form-horizontal_auto{
@@ -78,7 +78,7 @@ tbody > tr > th {font-weight: normal; }
 	font-weight: bold;
 	color: #000;
 	text-align: center;
-	
+
 }
 .layui-layer-content{
 	border:1px solid #dcd5d5;
@@ -119,4 +119,27 @@ tbody > tr > th {font-weight: normal; }
 	max-height: 400px;
 	overflow-y: auto;
 }
+.btn-primary{
+	background-color:#2F71F4;
+	border-color:transparent
+}
+
+.btn-primary:hover{
+	background-color:#409eff;
+	border-color:transparent
+}
+
+.table-label-gb{
+	 color: #ffffff;
+	 border-radius: 3px;
+	 padding: 3px 8px;
+	font-weight: bold;
+ }
+
+.el-checkbox:last-of-type{
+	margin-bottom: 0
+}
+
+
+
 

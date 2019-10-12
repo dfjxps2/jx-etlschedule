@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="jx-etl" />
+        <module name="jx-api" />
+        <module name="jx-generator" />
+        <module name="jx-common" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="jx-api" target="1.8" />
+      <module name="jx-common" target="1.8" />
+      <module name="jx-etl" target="1.8" />
+      <module name="jx-etlschedule" target="1.8" />
+      <module name="jx-generator" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="jx-api" options="-parameters" />
+      <module name="jx-common" options="-parameters" />
+      <module name="jx-etl" options="-parameters" />
+      <module name="jx-generator" options="-parameters" />
+    </option>
+  </component>
+</project>

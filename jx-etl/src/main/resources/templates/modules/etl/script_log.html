@@ -14,31 +14,79 @@
 		<a class="btn btn-default" @click="query">查询</a>-->
 		&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="back" value="返回"/>
 	</div>
-    <table id="jqGrid"></table>
-    <div id="jqGridPager"></div>
-	<!-- 模态框（Modal） -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document" style="width: 880px;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-						&times;
-					</button>
-					<h4 class="modal-title" id="myModalLabel" style="color: #0f6ab4"> <p><span class="glyphicon glyphicon-print">&nbsp;作业模板详情</span></p>
-
-					</h4>
-				</div>
-				<div class="modal-body">
-				  <textarea  id="scriptDetail" style="width:100%;">
-				  </textarea>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">关闭模板</button>
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal -->
+	<div style="padding: 0 10px">
+		<el-table
+				:data="dataPage.list"
+				border
+				size="small"
+				height="452"
+				:stripe="true"
+				style="width: 100%">
+			<el-table-column
+					label="序号"
+					:formatter="colIndex"
+					width="50"
+					align="center">
+			</el-table-column>
+<!--			<el-table-column-->
+<!--					prop="id"-->
+<!--					label="日志ID"-->
+<!--					:show-overflow-tooltip="true"-->
+<!--					align="center">-->
+<!--			</el-table-column>-->
+			<el-table-column
+					prop="actions"
+					label="修改类型"
+					:show-overflow-tooltip="true"
+					align="center">
+			</el-table-column>
+			<el-table-column
+					prop="message"
+					label="修改说明"
+					:show-overflow-tooltip="true"
+					align="center">
+			</el-table-column>
+			<el-table-column
+					prop="author"
+					label="修改人"
+					:show-overflow-tooltip="true"
+					align="center">
+			</el-table-column>
+			<el-table-column
+					prop="logdate"
+					label="修改时间"
+					:show-overflow-tooltip="true"
+					align="center">
+			</el-table-column>
+			<el-table-column
+					label="操作"
+					:show-overflow-tooltip="true"
+					align="center">
+				<template slot-scope="scope">
+					<a href="#" @click="read(scope.row.id)">查看</a>
+					<span>|</span>
+					<a href="#" @click="restore(scope.row.id)">还原</a>
+				</template>
+			</el-table-column>
+		</el-table>
+		<el-pagination
+				@size-change="handleSizeChange"
+				@current-change="handleCurrentChange"
+				:current-page="dataPage.currPage"
+				:page-size="dataPage.pageSize"
+				:page-sizes="[10, 20, 30]"
+				layout="total, sizes, prev, pager, next, jumper"
+				:total="dataPage.totalCount">
+		</el-pagination>
 	</div>
-	<!-------------------------------------------------------------------------->
+
+	<el-dialog title="作业模板详情" :visible="myModal" :close-on-click-modal="false" :show-close="false">
+		<textarea  ref="scriptDetail" style="width:100%;" value=""></textarea>
+		<div slot="footer" class="dialog-footer">
+			<a class="btn btn-default btn-sm" @click="myModal = false">关闭模板</a>
+		</div>
+	</el-dialog>
+
 </div>
 <link href="${request.contextPath}/statics/libs/codemirror/lib/codemirror.css" rel="stylesheet">
 <link href="${request.contextPath}/statics/libs/codemirror/theme/dracula.css" rel="stylesheet">

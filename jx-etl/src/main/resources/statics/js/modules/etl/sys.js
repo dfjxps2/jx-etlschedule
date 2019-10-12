@@ -1,47 +1,3 @@
-$(function () {
-    $("#jqGrid").jqGrid({
-        url: baseURL + 'etl/sys/list',
-        datatype: "json",
-        colModel: [
-            { label: '作业系统ID', name: 'id', index: 'ID', width: 50, key: true, hidden:true},
-			{ label: '作业系统名称', name: 'etlSystem', index: 'ETL_System', width: 50 },
-			{ label: '作业系统描述', name: 'description', index: 'Description', width: 80 },
-			{ label: '数据保存周期', name: 'datakeepperiod', index: 'DataKeepPeriod', width: 80, hidden:true },
-			{ label: '日志保存周期', name: 'logkeepperiod', index: 'LogKeepPeriod', width: 80 },
-			{ label: '记录保存周期', name: 'recordkeepperiod', index: 'RecordKeepPeriod', width: 80 , hidden:true},
-			{ label: '优先级', name: 'priority', index: 'Priority', width: 80 },
-			{ label: '并发数', name: 'concurrent', index: 'Concurrent', width: 80 }
-        ],
-		viewrecords: true,
-       /* height: 385,*/
-        rowNum: 10,
-		rowList : [10,30,50],
-        rownumbers: true, 
-        rownumWidth: 25, 
-        autowidth:true,
-        multiselect: true,
-        pager: "#jqGridPager",
-        jsonReader : {
-            root: "page.list",
-            page: "page.currPage",
-            total: "page.totalPage",
-            records: "page.totalCount"
-        },
-        prmNames : {
-            page:"page", 
-            rows:"limit", 
-            order: "order"
-        },
-        gridComplete:function(){
-        	//隐藏grid底部滚动条
-        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
-        }
-    });
-
-
-    //初始化表格高度
-    initGridHeight("rrapp","jqGrid");
-});
 
 var vm = new Vue({
 	el:'#rrapp',
@@ -51,14 +7,38 @@ var vm = new Vue({
 		},
 		showList: true,
 		title: null,
-		sys: {}
+		sys: {},
+		dataPage: {},
+		multipleSelection:[],
+	},
+	mounted(){
+		this.query(true);
 	},
 	methods: {
-		query: function () {
-			$("#jqGrid").jqGrid('setGridParam',{
-				page:1
-			})
-			vm.reload();
+		initPage(){
+			this.dataPage = {
+				list: [],
+				currPage: 1,
+				pageSize: 10,
+				totalCount: 0
+			}
+		},
+		query: function (init) {
+			if (init) {
+				this.initPage();
+			}
+			var url = "etl/sys/list";
+			$.ajax({
+				type: "POST",
+				url: baseURL + url,
+				dataType:'json',
+				data: {page:this.dataPage.currPage, limit:this.dataPage.pageSize, etlSystem:this.q.etlSystem},
+				success: function(r){
+					if(r.code === 0){
+						vm.dataPage = r.page;
+					}
+				}
+			});
 		},
 		add: function(){
 			vm.showList = false;
@@ -66,34 +46,68 @@ var vm = new Vue({
 			vm.sys = {logkeepperiod:10};
 		},
 		update: function (event) {
-			var etlSystem = getSelectedRow();
-			if(etlSystem == null){
+			if(vm.multipleSelection.length == 0){
+				vm.$alert("请选择一条记录", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return ;
 			}
+			if(vm.multipleSelection.length > 1){
+				vm.$alert("只能选择一条记录", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			var etlSystem = vm.multipleSelection[0].id;
+
 			vm.showList = false;
             vm.title = "修改";
-            
+
             vm.getInfo(etlSystem)
 		},
 		saveOrUpdate: function (event) {
 			if (vm.sys.etlSystem == null || vm.sys.etlSystem.trim() == '') {
-				alert('作业系统名称 不能为空');
+				vm.$alert("作业系统名称 不能为空", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return;
 			}
 			if (!/^[A-Z]{3,3}$$/.test(vm.sys.etlSystem)) {
-				alert('作业系统名称 只能输入三个英文大写字母');
+				vm.$alert("作业系统名称 只能输入三个英文大写字母", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return;
 			}
 			if (vm.sys.priority == null || (vm.sys.priority + "").trim() == '') {
-				alert('请正确输入 优先级');
+				vm.$alert("请正确输入 优先级", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return;
 			}
 			if(vm.sys.logkeepperiod == null || (vm.sys.logkeepperiod + "").trim() == '') {
-				alert('请正确输入 日志保存周期');
+				vm.$alert("请正确输入 日志保存周期", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return;
 			}
 			if (vm.sys.concurrent == null || (vm.sys.concurrent + "").trim() == '') {
-				alert('请正确输入 并发数');
+				vm.$alert("请正确输入 并发数", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return;
 			}
 			console.info('saveorUpdate', vm.sys)
@@ -105,41 +119,61 @@ var vm = new Vue({
 			    data: JSON.stringify(vm.sys),
 			    success: function(r){
 			    	if(r.code === 0){
-						alert('操作成功', function(index){
-							vm.reload();
+						vm.reBack();
+						vm.query();
+						vm.$message({
+							message: '操作成功',
+							type: 'success'
 						});
 					}else{
-						alert(r.msg);
+						vm.$alert(r.msg, '系统提示', {
+							confirmButtonText: '确定',
+							callback: action => {
+							}
+						});
 					}
 				}
 			});
 		},
 		del: function (event) {
-			var etlSystems = getSelectedRows();
-			if(etlSystems == null){
+			if(vm.multipleSelection.length == 0){
+				vm.$alert("请选择一条记录", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return ;
 			}
-			
-			confirm('确定要删除选中的记录？', function(){
+
+			var etlSystems = vm.multipleSelection.map(x=>{return x.id})
+
+			vm.$confirm('确定要删除选中的记录?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
 				$.ajax({
 					type: "POST",
-				    url: baseURL + "etl/sys/delete",
-                    contentType: "application/json",
-				    data: JSON.stringify(etlSystems),
-				    success: function(r){
+					url: baseURL + "etl/sys/delete",
+					contentType: "application/json",
+					data: JSON.stringify(etlSystems),
+					success: function(r){
 						if(r.code == 0){
-							if ($("#jqGrid").getGridParam("reccount") == etlSystems.length) {
-								$("#jqGrid").jqGrid('setGridParam',{
-									page:1
-								})
-							}
-							$("#jqGrid").trigger("reloadGrid");
-							alert('操作成功', function(index){});
+							vm.query(true);
+							vm.$message({
+								message: '操作成功',
+								type: 'success'
+							});
 						}else{
-							alert(r.msg);
+							vm.$alert(r.msg, '系统提示', {
+								confirmButtonText: '确定',
+								callback: action => {
+								}
+							});
 						}
 					}
 				});
+			}).catch(() => {
 			});
 		},
 		getInfo: function(etlSystem){
@@ -147,13 +181,23 @@ var vm = new Vue({
                 vm.sys = r.sys;
             });
 		},
-		reload: function (event) {
+		handleSizeChange(val) {
+			vm.dataPage.pageSize = val
+			vm.dataPage.currPage = 1;
+			vm.query();
+		},
+		handleCurrentChange(val) {
+			vm.dataPage.currPage = val;
+			vm.query();
+		},
+		handleSelectionChange(val) {
+			vm.multipleSelection = val;
+		},
+		colIndex(row, column, cellValue, index) {
+			return (vm.dataPage.currPage - 1) * vm.dataPage.pageSize + index + 1
+		},
+		reBack: function () {
 			vm.showList = true;
-			var page = $("#jqGrid").jqGrid('getGridParam','page');
-			$("#jqGrid").jqGrid('setGridParam',{
-                postData:{'etlSystem': vm.q.etlSystem},
-                page:page
-            }).trigger("reloadGrid");
 		}
 	}
 });

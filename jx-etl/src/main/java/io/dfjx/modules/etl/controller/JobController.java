@@ -36,7 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 /**
- * 
+ *
  *
  * @author lwq
  * @email 404461275@qq.com
@@ -88,7 +88,7 @@ public class JobController {
 	public R info(@PathVariable("etlSystem") String etlSystem) {
 		JobEntity job = jobService.selectById(etlSystem);
 		//加载触发作业
-		Map<String,Object> map=new HashMap<String,Object>();	
+		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("ETL_System", job.getEtlSystem());
 		map.put("ETL_Job", job.getEtlJob());
 		JobStepEntity jse= new JobStepEntity();
@@ -185,16 +185,16 @@ public class JobController {
 	 * @return
 	 */
 
-	@RequestMapping("/fileIsExists/{fileName}") 
-	@RequiresPermissions("etl:job:fileIsExists")
+	@RequestMapping("/fileIsExists/{fileName}")
+//	@RequiresPermissions("etl:job:fileIsExists")
 	public R fileIsExists(@PathVariable("fileName") String fileName){
 		fileName=fileName.toUpperCase();
 		String filePath= systemParams.getPublicScriptUploadDir();
 		filePath=filePath+fileName;
-		File targetFile = new File(filePath);  
-		if(targetFile.exists()){    
+		File targetFile = new File(filePath);
+		if(targetFile.exists()){
 			return R.error(1, "作业脚本已存在");
-		}  
+		}
 		return R.ok();
 	}
 
@@ -204,20 +204,20 @@ public class JobController {
 	 * @param
 	 * @return
 	 */
-	@RequestMapping("/jobIsExists") 
-	@RequiresPermissions("etl:job:jobIsExists")
+	@RequestMapping("/jobIsExists")
+//	@RequiresPermissions("etl:job:jobIsExists")
 	public R jobIsExists(@RequestBody JobEntity job){
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("ETL_Job", job.getEtlJob());
 		List<JobEntity> list=jobService.selectByMap(map);
-		if(list.size()>0 && StringUtils.isBlank(job.getId()+"")){    
+		if(list.size()>0 && StringUtils.isBlank(job.getId()+"")){
 			return R.error(1, "作业名称已存在");
-		} 
-		else if(list.size()>0 && StringUtils.isNotBlank(job.getId()+"")){   
+		}
+		else if(list.size()>0 && StringUtils.isNotBlank(job.getId()+"")){
 			if(list.get(0).getId()!=job.getId()){
 				return R.error(1, "作业名称已存在");
 			}
-		} 
+		}
 		return R.ok();
 	}
 

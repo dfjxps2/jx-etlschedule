@@ -141,7 +141,11 @@ var vm = new Vue({
             });
         },
         logout: function() {
-            if (confirm('确定要退出？') ) {
+            vm.$confirm('确定要退出?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
                 $.ajax({
                     type: "GET",
                     url: "ca/logout/",
@@ -155,7 +159,8 @@ var vm = new Vue({
                         }
                     }
                 });
-            }
+            }).catch(() => {
+            });
         },
 
     },

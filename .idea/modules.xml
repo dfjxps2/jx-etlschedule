@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/jx-api/jx-api.iml" filepath="$PROJECT_DIR$/jx-api/jx-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jx-common/jx-common.iml" filepath="$PROJECT_DIR$/jx-common/jx-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jx-etl/jx-etl.iml" filepath="$PROJECT_DIR$/jx-etl/jx-etl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jx-etlschedule.iml" filepath="$PROJECT_DIR$/jx-etlschedule.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jx-generator/jx-generator.iml" filepath="$PROJECT_DIR$/jx-generator/jx-generator.iml" />
+    </modules>
+  </component>
+</project>

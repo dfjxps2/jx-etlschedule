@@ -3,15 +3,18 @@
 <head>
     <title></title>
 		<#include "/header.html">
+    <style>
+        .el-input-number .el-input__inner{text-align: left}
+    </style>
 </head>
 <body>
 <div id="rrapp" v-cloak>
   <div v-show="showList">
     <div class="grid-btn">
       <div class="col-sm-2">
-        <input type="text" class="form-control" v-model="q.etlServer" @keyup.enter="query" placeholder="服务器名称">
+          <el-input v-model="q.etlServer" size="small" @keyup.enter="query(true)" placeholder="服务器名称" clearable></el-input>
       </div>
-      <a class="btn btn-default btn-sm" @click="query"><i class="fa fa-search"></i> 查询</a>
+        <a class="btn btn-default btn-sm" @click="query"><i class="fa fa-search"></i> 查询</a>
       <#if shiro.hasPermission("etl:server:save")>
       <a class="btn btn-primary btn-sm" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
       </#if>
@@ -22,9 +25,75 @@
       <a class="btn btn-primary btn-sm" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 			</#if>
     </div>
-    <div class="ml-15 mr-15">
-    <table id="jqGrid"></table>
-    <div id="jqGridPager"></div>
+    <div style="padding: 0 10px">
+        <el-table
+                :data="dataPage.list"
+                border
+                size="small"
+                height="452"
+                :stripe="true"
+                style="width: 100%"
+                @selection-change="handleSelectionChange">
+        <el-table-column
+                    type="selection"
+                    width="50">
+            </el-table-column>
+            <el-table-column
+                    label="序号"
+                    :formatter="colIndex"
+                    width="50"
+                    align="center">
+            </el-table-column>
+<!--            <el-table-column-->
+<!--                    prop="id"-->
+<!--                    label="服务器ID"-->
+<!--                    :show-overflow-tooltip="true"-->
+<!--                    align="center">-->
+<!--            </el-table-column>-->
+            <el-table-column
+                    prop="etlServer"
+                    label="服务器名称"
+                    :show-overflow-tooltip="true"
+                    align="center">
+            </el-table-column>
+            <el-table-column
+                    prop="description"
+                    label="服务器描述"
+                    :show-overflow-tooltip="true"
+                    align="center">
+            </el-table-column>
+            <el-table-column
+                    prop="ipaddress"
+                    label="服务器IP"
+                    :show-overflow-tooltip="true"
+                    align="center">
+            </el-table-column>
+            <el-table-column
+                    prop="agentport"
+                    label="服务器端口"
+                    :show-overflow-tooltip="true"
+                    align="center">
+            </el-table-column>
+            <el-table-column
+                    prop="livecount"
+                    label="是否有效"
+                    :show-overflow-tooltip="true"
+                    align="center">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.livecount == 1" class="table-label-gb label-success">有效服务器</span>
+                    <span v-else="" class="table-label-gb label-default">无效服务器</span>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="dataPage.currPage"
+                :page-size="dataPage.pageSize"
+                :page-sizes="[10, 20, 30]"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="dataPage.totalCount">
+        </el-pagination>
     </div>
   </div>
 
@@ -38,42 +107,42 @@
                 <!--</div>-->
             <!--</div>-->
             <div class="form-group">
-                <div class="col-sm-2 control-label">服务器名称<span style="color:red">*</span></div>
+                <div class="col-sm-2 control-label"><span style="color:red;margin-right: 4px">*</span>服务器名称</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="server.etlServer" placeholder="服务器名称"/>
+                    <el-input v-model="server.etlServer" size="small" placeholder="服务器名称"></el-input>
                 </div>
             </div>
              <div class="form-group">
                        <div class="col-sm-2 control-label">服务器描述</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="server.description" placeholder="服务器描述"/>
+                            <el-input v-model="server.description" size="small" placeholder="服务器描述"></el-input>
                         </div>
              </div>
              <div class="form-group">
-                        <div class="col-sm-2 control-label">服务器IP<span style="color:red">*</span></div>
+                        <div class="col-sm-2 control-label"><span style="color:red;margin-right: 4px">*</span>服务器IP</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="server.ipaddress" placeholder="服务器IP"/>
+                            <el-input v-model="server.ipaddress" size="small" placeholder="服务器IP"></el-input>
                         </div>
              </div>
              <div class="form-group">
-                        <div class="col-sm-2 control-label">服务器端口<span style="color:red">*</span></div>
+                        <div class="col-sm-2 control-label"><span style="color:red;margin-right: 4px">*</span>服务器端口</div>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" v-model="server.agentport" placeholder="服务器端口"/>
+                            <el-input-number v-model="server.agentport" style="width: 100%" size="small" placeholder="服务器端口" :controls="false"></el-input-number>
                         </div>
              </div>
 			 <div class="form-group">
-                        <div class="col-sm-2 control-label">是否有效<span style="color:red">*</span></div>
+                        <div class="col-sm-2 control-label"><span style="color:red;margin-right: 4px">*</span>是否有效</div>
                         <div class="col-sm-10">
-                            <select class="form-control" v-model="server.livecount">
-                              <option value="0" :selected="server.livecount == 0">无效</option>
-                              <option value="1" :selected="server.livecount == 1">有效</option>
-                            </select>
+                            <el-select size="small" style="width: 100%" v-model="server.livecount" placeholder="请选择">
+                                <el-option  :key="0" label="无效" :value="0"></el-option>
+                                <el-option  :key="1" label="有效" :value="1"></el-option>
+                            </el-select>
                         </div>
              </div>
              <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
-                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reBack" value="返回"/>
             </div>
         </form>
     </div>

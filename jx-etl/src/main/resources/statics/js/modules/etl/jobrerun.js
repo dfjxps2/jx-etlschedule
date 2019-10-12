@@ -1,101 +1,12 @@
 $(function () {
-	$("#jqGrid").jqGrid({
-		url: baseURL + 'etl/job/list',
-		datatype: "json",
-		colModel: [
-		           { label: '序号', name: 'id', index: 'ID', width: 120, key: true,hidden:true},
-		           { label: '作业系统名称', name: 'etlSystem', index: 'ETL_System', width: 50},
-		           { label: '作业名称', name: 'etlJob', index: 'ETL_Job', width: 60  },
-		           { label: '服务器', name: 'etlServer', index: 'ETL_Server', width: 40,hidden:true },
-		           { label: '描述', name: 'description', index: 'Description', width: 55 },
-		           { label: '作业周期', name: 'frequency', index: 'Frequency', width: 80 ,formatter: function (value, options, row) {
-                           if(value == "0"){
-                               return  '<span class="label label-primary">日作业</span>'
-                           } else {
-                               return  '<span class="label label-info">月作业</span>'
-                           };
-                       }},
-		           { label: '作业类型', name: 'jobtype', index: 'JobType', width: 50,hidden:true,},
-		           { label: '是否有效', name: 'enable', index: 'Enable', width: 60,formatter: function (value, options, row) {
-		        	   if(value == "1"){
-		        		   return  '<span class="label label-success">有效作业</span>'
-		        	   } else if (value == "0") {
-		        		   return  '<span class="label label-default">无效作业</span>'
-		        	   } else {
-		        		   return '<span class="label label-default">未知状态</span>'
-		        	   };
-		           }},
-		           { label: '开始时间', name: 'lastStarttime', index: 'Last_StartTime', width: 100 },
-		           { label: '结束时间', name: 'lastEndtime', index: 'Last_EndTime', width: 100 },
-		           { label: '运行状态', name: 'lastJobstatus', index: 'Last_JobStatus', width: 60,formatter: function(value, options, row){
 
-		        	   if(value == "Done"){
-		        		   return  '<span class="label label-success">执行成功</span>'
-		        	   } else if (value === "Pending") {
-		        		   return  '<span class="label label-default">即将执行</span>'
-		        	   } else if (value === "Ready") {
-		        		   return   '<span class="label label-info">准备执行</span>'
-		        	   } else if (value === "Running") {
-		        		   return   '<span class="label label-primary">正在执行</span>'
-		        	   } else if (value === "Failed") {
-		        		   return   '<span class="label label-danger">运行失败</span>'
-		        	   } else {};
-
-
-
-		           }},
-		           { label: '数据日期', name: 'lastTxdate', index: 'Last_TXDate', width: 60,formatter:"date",editable:true },
-		           { label: '', name: 'lastFilecnt', index: 'Last_FileCnt', width: 80 ,hidden:true},
-		           { label: '', name: 'lastCubestatus', index: 'Last_CubeStatus', width: 80 ,hidden:true},
-		           { label: '', name: 'cubeflag', index: 'CubeFlag', width: 80,hidden:true },
-		           { label: '', name: 'checkflag', index: 'CheckFlag', width: 80 ,hidden:true},
-		           { label: '', name: 'autooff', index: 'AutoOff', width: 80 ,hidden:true},
-		           { label: '', name: 'checkcalendar', index: 'CheckCalendar', width: 80 ,hidden:true},
-		           { label: '', name: 'calendarbu', index: 'CalendarBU', width: 80 ,hidden:true},
-		           { label: '', name: 'runningscript', index: 'RunningScript', width: 80,hidden:true },
-		           { label: '会话ID', name: 'jobsessionid', index: 'JobSessionID', width: 50 ,hidden:true},
-		           { label: '', name: 'expectedrecord', index: 'ExpectedRecord', width: 80,hidden:true },
-		           { label: '', name: 'checklaststatus', index: 'CheckLastStatus', width: 80,hidden:true },
-		           { label: '', name: 'timetrigger', index: 'TimeTrigger', width: 80,hidden:true },
-		           { label: '', name: 'priority', index: 'Priority', width: 80 ,hidden:true},
-		           // { label: '操作', name: 'id', index: 'ID', width: 120,key:true},
-		           // { label: '操作', name: 'id', index: 'ID', width: 120,key:true,formatter:jobOpFormate },
-
-		           ],
-		           viewrecords: true,
-		           height: 385,
-		           rowNum: 10,
-		           rowList : [10,30,50],
-		           rownumbers: true, 
-		           rownumWidth: 25, 
-		           autowidth:true,
-		           multiselect: true,
-		           pager: "#jqGridPager",
-		           jsonReader : {
-		        	   root: "page.list",
-		        	   page: "page.currPage",
-		        	   total: "page.totalPage",
-		        	   records: "page.totalCount"
-		           },
-		           prmNames : {
-		        	   page:"page", 
-		        	   rows:"limit", 
-		        	   order: "order"
-		           },
-		           // cellEdit:true,
-
-		           gridComplete:function(){
-		        	   //隐藏grid底部滚动条
-		        	   $("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
-		           }
-	});
 	vm.loadsys("etlSystemSelect");
 	vm.loadstatus("etlStatusSelect");
     vm.loadstatus("updateBatchStatusSelect");
 	setTimeout(refreshjoblist,vm.refresh_freq);
 	function refreshjoblist() {
 		if(vm.refresh_auto)
-			vm.reload();
+			vm.query();
 		console.log(new Date().toString());
 		setTimeout(refreshjoblist,vm.refresh_freq);
     }
@@ -133,14 +44,58 @@ var vm = new Vue({
 		allstatus:null,
 		refresh_freq:20000,
 		refresh_auto:true,
+		dataPage: {},
+		multipleSelection:[],
+	},
+	mounted(){
+		this.query(true);
 	},
 	methods: {
-		query: function () {
-			console.info('query')
-			$("#jqGrid").jqGrid('setGridParam',{
-				page:1
-			})
-			vm.reload();
+		initPage(){
+			this.dataPage = {
+				list: [],
+				currPage: 1,
+				pageSize: 10,
+				totalCount: 0
+			}
+		},
+		query: function (init) {
+			if (this.q.lastTxDateStart > this.q.lastTxDateEnd) {
+				this.$alert('结束时间不能小于开始时间', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return false;
+			}
+			if (init) {
+				this.initPage();
+			}
+			var postData = {
+				'dep_etlSystem': this.q.dep_etlSystem,
+				'dep_etlJob': this.q.dep_etlJob,
+				'reqDenpsType': this.q.reqDenpsType,
+				'reqAllDeps': this.q.reqAllDeps,
+				'etlJob': this.q.etlJob,
+				'etlSystem': this.q.etlSystem,
+				'lastTxDateStart': this.q.lastTxDateStart,
+				'lastTxDateEnd': this.q.lastTxDateEnd,
+				'lastJobStatus': this.q.lastJobStatus,
+				'page':this.dataPage.currPage,
+				'limit':this.dataPage.pageSize,
+			}
+				var url = "etl/job/list";
+			$.ajax({
+				type: "POST",
+				url: baseURL + url,
+				dataType:'json',
+				data: postData,
+				success: function(r){
+					if(r.code === 0){
+						vm.dataPage = r.page;
+					}
+				}
+			});
 		},
 		add: function(){
 			vm.showList = false;
@@ -148,10 +103,23 @@ var vm = new Vue({
 			vm.job = {};
 		},
 		update: function (event) {
-			var id = getSelectedRow();
-			if(id == null){
+			if(vm.multipleSelection.length == 0){
+				vm.$alert("请选择一条记录", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return ;
 			}
+			if(vm.multipleSelection.length > 1){
+				vm.$alert("只能选择一条记录", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			var id = vm.multipleSelection[0].id;
 			vm.showList = false;
 			vm.title = "修改";
 
@@ -166,84 +134,53 @@ var vm = new Vue({
 				data: JSON.stringify(vm.job),
 				success: function(r){
 					if(r.code === 0){
-						alert('操作成功', function(index){
-							vm.reload();
+						vm.reBack();
+						vm.query();
+						vm.$message({
+							message: '操作成功',
+							type: 'success'
 						});
 					}else{
-						alert(r.msg);
+						vm.$alert(r.msg, '系统提示', {
+							confirmButtonText: '确定',
+							callback: action => {
+							}
+						});
 					}
 				}
 			});
 		},
 		openRerun:function(){
-            var grid = $("#jqGrid");
-            var rowKey = grid.getGridParam("selrow");
-            if(!rowKey){
-                alert("请选择一条或多条记录");
-                return ;
-            }
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			var rowKey = vm.multipleSelection.map(x=>{return x.id})
 
 			vm.showQueryData = true;
 			vm.title = "重跑作业";
 			//vm.rerun();
 		},
-		// //检查重跑单个任务还是批量重跑
-		// checkRerun:function(){
-         //    var grid = $("#jqGrid");
-         //    var rowKey = grid.getGridParam("selrow");
-         //    if(!rowKey){
-         //        alert("请选择一条或多条记录");
-         //        return ;
-         //    }
-         //    var selectedIDs = grid.getGridParam("selarrrow");
-         //    if(selectedIDs.length === 1){
-         //    	vm.rerun();
-		// 	} else if (selectedIDs.length > 1){
-         //    	vm.rerunmulti();
-		// 	} else {
-         //    	return;
-		// 	}
-		// },
-		// //重跑单个任务
-		// rerun: function(){
-         //    alert("进入 rerun-js方法");
-		// 	var id = getSelectedRow();
-		// 	if (id == null){return};
-		// 	var rowdata = $("#jqGrid").jqGrid('getRowData',id);
-		// 	var etlSystem = rowdata.etlSystem;
-		// 	var etlJob = rowdata.etlJob;
-		// 	if(vm.q.rerun_data_date ==null){
-		// 		alert("请选择数据重跑日期");
-		// 		return;
-		// 	} else {
-		// 		var lastTxDate = vm.q.rerun_data_date;
-		// 		var url = "etl/job/rerun";
-		// 		$.ajax({
-		// 			type: "GET",
-		// 			url: baseURL + url,
-		// 			contentType: "application/json",
-		// 			data: {'etlSystem':etlSystem,'etlJob':etlJob,'lastTxDate':lastTxDate},
-		// 			// data: 'etlSystem=' + etlSystem + '&etlJob=' + etlJob + '&lastTxDate=' + lastTxDate,
-		// 			success: function(r){
-		// 				vm.q.rerun_data_date =null;
-		// 				if(r.code === 0){
-		// 					alert(r.msg, function(index){
-		// 						vm.reload();
-		// 						vm.reBack();
-		// 					});
-		// 				}else{
-		// 					alert(r.msg);
-		// 				}
-		// 			}
-		// 		});
-		// 	}
-		// 	return;
-		// },
         rerunmulti:function(){
-            var ids = getSelectedRows();
-            if (ids == null){return};
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			var ids = vm.multipleSelection.map(x=>{return x.id})
             if(vm.q.rerun_data_date ==null){
-                alert("请选择数据重跑日期");
+				vm.$alert('请选择数据重跑日期', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
                 return;
             } else {
                 var lastTxDate = vm.q.rerun_data_date;
@@ -256,19 +193,23 @@ var vm = new Vue({
                     success: function(r){
                         vm.q.rerun_data_date =null;
                         if(r.code === 0){
-                            alert(r.msg, function(index){
-                                vm.reload();
-                                vm.reBack();
-                            });
+							vm.reBack();
+							vm.query();
+							vm.$message({
+								message: '操作成功',
+								type: 'success'
+							});
                         }else{
-                            alert(r.msg);
+							vm.$alert(r.msg, '系统提示', {
+								confirmButtonText: '确定',
+								callback: action => {
+								}
+							});
                         }
                     }
                 });
             }
             return;
-
-
 		},
 
 		loadsys: function(componentId){
@@ -283,7 +224,11 @@ var vm = new Vue({
 							$('#etlSystemSelect').selectpicker('refresh');
 						},1000);
 					}else{
-						alert(data.msg);
+						vm.$alert(data.msg, '系统提示', {
+							confirmButtonText: '确定',
+							callback: action => {
+							}
+						});
 					}
 				}
 
@@ -292,14 +237,12 @@ var vm = new Vue({
 
 
 		loadstatus: function(componentId){
-			// alert("loadstatus 被调用");
 			$.ajax({
 				type: "GET",
 				url: baseURL + "etl/job/getstatus",
 				contentType: "application/json",
 				success: function(data){
 					if(data.code == 0){
-						// alert(JSON.stringify(data));
 						vm.allstatus = data.allstatus;
 						window.setTimeout(function(){
 							$('#etlStatusSelect').selectpicker('refresh');
@@ -307,7 +250,11 @@ var vm = new Vue({
 							// $(componentId).selectpicker('refresh');
 						},2000);
 					}else{
-						alert(data.msg);
+						vm.$alert(data.msg, '系统提示', {
+							confirmButtonText: '确定',
+							callback: action => {
+							}
+						});
 					}
 				}
 
@@ -316,12 +263,21 @@ var vm = new Vue({
 
 
 		del: function (event) {
-			var ids = getSelectedRows();
-			if(ids == null){
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
 				return ;
 			}
 
-			confirm('确定要删除选中的记录？', function(){
+			var etlSystems = vm.multipleSelection.map(x=>{return x.id})
+			vm.$confirm('确定要删除选中的记录?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
 				$.ajax({
 					type: "POST",
 					url: baseURL + "etl/job/delete",
@@ -329,18 +285,21 @@ var vm = new Vue({
 					data: JSON.stringify(etlSystems),
 					success: function(r){
 						if(r.code == 0){
-							if ($("#jqGrid").getGridParam("reccount") == ids.length) {
-								$("#jqGrid").jqGrid('setGridParam',{
-									page:1
-								})
-							}
-							$("#jqGrid").trigger("reloadGrid");
-							alert('操作成功', function(index){});
+							vm.$message({
+								message: '操作成功',
+								type: 'success'
+							});
+							vm.query(true);
 						}else{
-							alert(r.msg);
+							vm.$alert(r.msg, '系统提示', {
+								confirmButtonText: '确定',
+								callback: action => {
+								}
+							});
 						}
 					}
 				});
+			}).catch(() => {
 			});
 		},
 		getInfo: function(etlJob){
@@ -349,33 +308,20 @@ var vm = new Vue({
 			});
 		},
 
-
-
-		reload: function (event) {
-			console.info('-- reload --', vm.q.lastTxDateStart, vm.q.lastTxDateEnd)
-			if (vm.q.lastTxDateStart > vm.q.lastTxDateEnd) {
-				alert('结束时间不能小于开始时间')
-				return false;
-			}
-			vm.showList = true;
-			var page = $("#jqGrid").jqGrid('getGridParam','page');
-			$("#jqGrid").jqGrid('setGridParam', {
-				postData: {
-					'dep_etlSystem': vm.q.dep_etlSystem,
-					'dep_etlJob': vm.q.dep_etlJob,
-					'reqDenpsType': vm.q.reqDenpsType,
-					'reqAllDeps': vm.q.reqAllDeps,
-					'etlJob': vm.q.etlJob,
-					'etlSystem':vm.q.etlSystem,
-					'lastTxDateStart': vm.q.lastTxDateStart,
-					'lastTxDateEnd': vm.q.lastTxDateEnd,
-					'lastJobStatus': vm.q.lastJobStatus
-				},
-				page: page
-			}).trigger("reloadGrid");
-			vm.q.reqDenpsType=null;
-			vm.q.dep_etlSystem=null;
-			vm.q.dep_etlJob=null;
+		handleSizeChange(val) {
+			vm.dataPage.pageSize = val
+			vm.dataPage.currPage = 1;
+			vm.query();
+		},
+		handleCurrentChange(val) {
+			vm.dataPage.currPage = val;
+			vm.query();
+		},
+		handleSelectionChange(val) {
+			vm.multipleSelection = val;
+		},
+		colIndex(row, column, cellValue, index) {
+			return (vm.dataPage.currPage - 1) * vm.dataPage.pageSize + index + 1
 		},
 		reBack: function () {
 			vm.showList = true;
@@ -384,12 +330,15 @@ var vm = new Vue({
 
         openUpdateStatus: function () {
 
-            var grid = $("#jqGrid");
-            var rowKey = grid.getGridParam("selrow");
-            if(!rowKey){
-                alert("请选择一条或多条记录");
-                return ;
-            }
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			var rowKey = vm.multipleSelection.map(x=>{return x.id})
             vm.showUpdateBatchStatus = true;
             vm.title = "更新作业状态";
         },
@@ -400,10 +349,21 @@ var vm = new Vue({
         },
 
         updateBatchStatus: function () {
-            var ids = getSelectedRows();
-            if (ids == null){return};
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			var ids = vm.multipleSelection.map(x=>{return x.id})
             if(vm.q.newJobStatus ==null){
-                alert("请选择作业状态");
+				vm.$alert('请选择作业状态', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
                 return;
             }
             $.ajax({
@@ -414,25 +374,33 @@ var vm = new Vue({
                 success: function(r){
                     vm.q.newJobStatus =null;
                     if(r.code === 0){
-                        alert(r.msg, function(index){
-                            vm.reload();
-                            vm.reBack2();
-                        });
+						vm.reBack2();
+						vm.query();
+						vm.$message({
+							message: '操作成功',
+							type: 'success'
+						});
                     }else{
-                        alert(r.msg);
+						vm.$alert(r.msg, '系统提示', {
+							confirmButtonText: '确定',
+							callback: action => {
+							}
+						});
                     }
                 }
             });
         },
 
         openUpdateTxDate:function () {
-            var grid = $("#jqGrid");
-            var rowKey = grid.getGridParam("selrow");
-            if(!rowKey){
-                alert("请选择一条或多条记录");
-                return ;
-            }
-
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			var rowKey = vm.multipleSelection.map(x=>{return x.id})
             vm.showUpdateBatchJobTxDate = true;
             vm.title = "更新作业数据日期";
         },
@@ -443,10 +411,21 @@ var vm = new Vue({
         },
 
         updateBatchJobTxDate: function () {
-            var ids = getSelectedRows();
-            if (ids == null){return};
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			var ids = vm.multipleSelection.map(x=>{return x.id})
             if(vm.q.newJobTxdate ==null){
-                alert("请选择更新数据日期");
+				vm.$alert('请选择更新数据日期', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
                 return;
             }
             $.ajax({
@@ -457,24 +436,33 @@ var vm = new Vue({
                 success: function(r){
                     vm.q.newJobTxdate =null;
                     if(r.code === 0){
-                        alert(r.msg, function(index){
-                            vm.reload();
-                            vm.reBack3();
-                        });
+						vm.reBack3();
+						vm.query();
+						vm.$message({
+							message: '操作成功',
+							type: 'success'
+						});
                     }else{
-                        alert(r.msg);
+						vm.$alert(r.msg, '系统提示', {
+							confirmButtonText: '确定',
+							callback: action => {
+							}
+						});
                     }
                 }
             });
         },
 
         openUpdateEnable:function () {
-            var grid = $("#jqGrid");
-            var rowKey = grid.getGridParam("selrow");
-            if(!rowKey){
-                alert("请选择一条或多条记录");
-                return ;
-            }
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			var rowKey = vm.multipleSelection.map(x=>{return x.id})
             vm.showUpdateBatchEnable = true;
             vm.title = "更新作业有效性";
         },
@@ -485,10 +473,21 @@ var vm = new Vue({
         },
 
         updateBatchEnable: function () {
-            var ids = getSelectedRows();
-            if (ids == null){return};
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			var ids = vm.multipleSelection.map(x=>{return x.id})
             if(vm.q.newEnableFlag ==null){
-                alert("请选择作业状态");
+				vm.$alert('请选择作业状态', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
                 return;
             }
             $.ajax({
@@ -499,12 +498,18 @@ var vm = new Vue({
                 success: function(r){
                     vm.q.newEnableFlag =null;
                     if(r.code === 0){
-                        alert(r.msg, function(index){
-                            vm.reload();
-                            vm.reBack4();
-                        });
+						vm.reBack4();
+						vm.query();
+						vm.$message({
+							message: '操作成功',
+							type: 'success'
+						});
                     }else{
-                        alert(r.msg);
+						vm.$alert(r.msg, '系统提示', {
+							confirmButtonText: '确定',
+							callback: action => {
+							}
+						});
                     }
                 }
             });

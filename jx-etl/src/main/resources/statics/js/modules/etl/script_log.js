@@ -1,67 +1,55 @@
 var scriptid = req("scriptid");
 var editor=null;
-$(function () {
-    $("#jqGrid").jqGrid({
-        url: baseURL + 'etl/scriptlog/list?scriptid=' + scriptid,
-        datatype: "json",
-        colModel: [
-			{ label: '日志ID', name: 'id', index: 'ID', width: 50, key: true,hidden:true },
-			{ label: '修改类型', name: 'actions', index: 'Actions', width: 60 },
-			{ label: '修改说明', name: 'message', index: 'Message', width: 100 },
-			{ label: '修改人', name: 'author', index: 'Author', width: 80 },
-			{ label: '修改时间', name: 'logdate', index: 'LogDate', width: 80 },
-            { label: '操作', name: 'enable', index: 'Enable', width: 60,formatter: function (value, options, row) {
-                return "<a href='javascript:void(0);' onclick='read(\""+row.id+"\")'>查看</a> | "
-                    +"<a href='javascript:void(0);' onclick='restore(\""+row.id+"\")'>恢复</a>";
-            }},
-        ],
-		viewrecords: true,
-       /* height: 385,*/
-        rowNum: 10,
-		rowList : [10,30,50,100,200],
-        rownumbers: true, 
-        rownumWidth: 25, 
-        autowidth:true,
-        multiselect: false,
-        pager: "#jqGridPager",
-        jsonReader : {
-            root: "page.list",
-            page: "page.currPage",
-            total: "page.totalPage",
-            records: "page.totalCount"
-        },
-        prmNames : {
-            page:"page", 
-            rows:"limit", 
-            order: "order"
-        },
-        gridComplete:function(){
-        	//隐藏grid底部滚动条
-        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
-        }
-    });
 
-    initGridHeight("rrapp","jqGrid");
-});
 
 var vm = new Vue({
-	el:'#rrapp',
-	data:{
-		q:{
-			scriptId: scriptid
-		}
-	},
-	methods: {
-		query: function () {
-			$("#jqGrid").jqGrid('setGridParam',{ 
-                postData:{},
-                page:1 
-            }).trigger("reloadGrid");
-		},
-		back: function (event) {
-			history.go(-1);
-		}
-	}
+    el:'#rrapp',
+    data:{
+        q:{
+            scriptId: scriptid
+        },
+        dataPage: {
+            list: [],
+            currPage: 1,
+            pageSize: 10,
+            totalCount: 0
+        },
+        myModal:false
+    },
+    mounted(){
+        this.query();
+    },
+    methods: {
+        query: function (init) {
+            var url = "etl/scriptlog/list";
+            $.ajax({
+                type: "POST",
+                url: baseURL + url,
+                dataType:'json',
+                data: {page:this.dataPage.currPage, limit:this.dataPage.pageSize, scriptid:this.q.scriptId},
+                success: function(r){
+                    if(r.code === 0){
+                        vm.dataPage = r.page;
+                    }
+                }
+            });
+        },
+        back: function (event) {
+            history.go(-1);
+        },
+        handleSizeChange(val) {
+            vm.dataPage.pageSize = val
+            vm.dataPage.currPage = 1;
+            vm.query();
+        },
+        handleCurrentChange(val) {
+            vm.dataPage.currPage = val;
+            vm.query();
+        },
+        colIndex(row, column, cellValue, index) {
+            return (vm.dataPage.currPage - 1) * vm.dataPage.pageSize + index + 1
+        }
+    }
 });
 
 function req(name){
@@ -72,7 +60,7 @@ function req(name){
 	return null;
 }
 function read(id){
-    $("#myModal").modal('show');
+    vm.myModal = true
     $.ajax({
         type: "GET",
         url: baseURL + "etl/scriptlog/readScripts/"+id,
@@ -87,19 +75,21 @@ function read(id){
                 alert(data.msg);
                 return;
             }
-            if(!editor){
-                editor = CodeMirror.fromTextArea(document.getElementById("scriptDetail"), {
-                    lineNumbers: true,
-                    lineWrapping: true,
-                    theme:'dracula',
-                    autofocus:true,
-                    mode: getMode(data.type)
-                });
-            }else{
-                editor.setOption('mode', getMode(data.type));
-            }
-            editor.setValue(str);
-            editor_refresh();
+            vm.$nextTick(()=>{
+                if(!editor){
+                    editor = CodeMirror.fromTextArea(vm.$refs.scriptDetail, {
+                        lineNumbers: true,
+                        lineWrapping: true,
+                        theme:'dracula',
+                        autofocus:true,
+                        mode: getMode(data.type)
+                    });
+                }else{
+                    editor.setOption('mode', getMode(data.type));
+                }
+                editor.setValue(str);
+                editor_refresh();
+            })
         }
     });
 }
@@ -110,11 +100,17 @@ function restore(id){
         contentType: "application/json",
         success: function(data){
             if(data.code == 0){
-                doSuccess('操作成功', function(index) {
-                    $("#jqGrid").trigger("reloadGrid");
+                vm.query();
+                vm.$message({
+                    message: '操作成功',
+                    type: 'success'
                 });
             }else{
-                alert("操作失败，"+data.msg);
+                vm.$alert(data.msg, '系统提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                    }
+                });
             }
         }
     });
