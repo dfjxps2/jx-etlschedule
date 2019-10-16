@@ -3,10 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>批量数据处理系统</title>
+  <title>调度系统</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <link href="${request.contextPath}/favicon.ico" rel="shortcut icon">
   <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap.min.css">
   <link rel="stylesheet" href="${request.contextPath}/statics/css/font-awesome.min.css">
   <link rel="stylesheet" href="${request.contextPath}/statics/css/AdminLTE.min.css">
@@ -16,7 +15,6 @@
   <link rel="stylesheet" href="${request.contextPath}/statics/css/main.css">
   <link rel="stylesheet" href="${request.contextPath}/statics/libs/elementui/index.css">
 
-  <link rel="icon" href="${request.contextPath}/statics/img/favicon.ico" type="image/x-icon">
   <style type="text/css">
     .content-wrapper{
       margin-left:0;
@@ -26,27 +24,16 @@
       line-height: 50px; color: #ffffff; font-size: 18px; padding-left: 20px
     }
     .header-tile:hover{color: #fff}
-    .el-menu.el-menu--horizontal{
-      border-bottom: none;
+    .el-menu--horizontal>.el-menu-item{
       height: 50px;
+      line-height: 50px;
+      text-align: center;
+      width: 140px;
+      border-bottom:none;
     }
-    .el-menu--popup-bottom-start{
-      margin-top: 0;
-    }
-    .el-menu--collapse .el-menu .el-submenu, .el-menu--popup{
-      min-width: 160px;
-    }
-    .el-submenu{
-      width: 160px;
-    }
-    .el-submenu__title{
-      border-bottom-color: transparent !important;
-    }
-    .el-menu--horizontal>.el-submenu .el-submenu__title{height: 50px; line-height: 50px}
-    .el-menu--horizontal>.el-submenu .el-submenu__icon-arrow{display: none}
-    .el-menu--horizontal .el-menu .el-menu-item, .el-menu--horizontal .el-menu .el-submenu__title{
-      height: 42px;
-      line-height: 42px;
+    .el-menu--horizontal>.el-menu-item.is-active {
+      border-bottom: none;
+      background-color: rgba(255,255,255,0.1) !important;
     }
     .quit{
       width: 80px;
@@ -65,15 +52,12 @@
 <div class="wrapper" id="rrapp" v-cloak style="overflow: hidden;">
   <header class="main-header">
     <el-row class="heafer-bg">
-      <el-col :span="4">
-        <a href="#main.html" class="header-tile">批量数据处理系统</a>
+      <el-col :span="2">
+        <a href="#main.html" class="header-tile">调度系统</a>
       </el-col>
-      <el-col :span="15">
-        <el-menu :default-active="0" class="el-menu-demo" mode="horizontal" background-color="#1F2E4D" text-color="#FFFFFF" active-text-color="#FFFFFF">
-          <el-submenu :index="index" v-for="(menu,index) in menuList">
-            <template slot="title">{{menu.name}}</template>
-            <el-menu-item v-if="item.type == 1" @click="toLink(item.url)" :index="index-index1" v-for="(item,index1) in menu.list">{{item.name}}</el-menu-item>
-          </el-submenu>
+      <el-col :span="17">
+        <el-menu :default-active="getActiveTab" class="el-menu-demo" mode="horizontal" background-color="#1F2E4D" text-color="#FFFFFF" active-text-color="#FFFFFF">
+          <el-menu-item v-if="item.type == 1" @click="toLink(item.url)" :index="index" v-for="(item,index) in menuList">{{item.name}}</el-menu-item>
         </el-menu>
       </el-col>
       <el-col :span="5">

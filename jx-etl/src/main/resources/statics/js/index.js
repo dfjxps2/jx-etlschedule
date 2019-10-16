@@ -55,28 +55,40 @@ var vm = new Vue({
         headerMenus: [],
         headerMenus2: [],
     },
+    computed: {
+        getActiveTab(){
+            for (var index = 0; index<this.menuList.length; index++) {
+                console.log('===',this.menuList[index].url)
+                if (location.href.indexOf(this.menuList[index].url) > -1) {
+                    return index;
+                }
+            }
+            return '';
+        },
+    },
     methods : {
         getMenuList : function(event) {
             $.getJSON("sys/menu/nav?_" + $.now(), function(r) {
 
-                var root = {
-                    menuId: 42,
-                    parentId: 0,
-                    parentName: null,
-                    name: "批量数据处理",
-                    url: "",
-                    perms: null,
-                    type: 0,
-                    icon: "icon1",
-                    orderNum: 4,
-                    open: null,
-                    list: r.menuList
-                }
-                vm.menuList = [root]
+                // var root = {
+                //     menuId: 42,
+                //     parentId: 0,
+                //     parentName: null,
+                //     name: "批量数据处理",
+                //     url: "",
+                //     perms: null,
+                //     type: 0,
+                //     icon: "icon1",
+                //     orderNum: 4,
+                //     open: null,
+                //     list: r.menuList
+                // }
+                vm.menuList = r.menuList
 
                 console.log('get_menu_nav', vm.menuList)
             });
         },
+
         getUser : function() {
             $.getJSON("sys/user/info?_" + $.now(), function(r) {
                 vm.user = r.user;
