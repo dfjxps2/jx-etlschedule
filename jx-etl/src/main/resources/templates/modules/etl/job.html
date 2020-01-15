@@ -210,7 +210,7 @@
                         <div class="col-sm-6">
                             <div class="col-sm-3 control-label">作业名称</div>
                             <div class="col-sm-9">
-                                <el-input placeholder="作业名称" size="small" @blur="setDoScript();" v-model="job.etlJob" readonly><template slot="append"><span id="upload" @click="uploadScript">导入</span></template></el-input>
+                                <el-input placeholder="作业名称" size="small" @blur="setDoScript();" v-model="job.etlJob"><template slot="append"><span id="upload" @click="uploadScript">导入</span></template></el-input>
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -224,7 +224,7 @@
                         <div class="col-sm-6">
                             <div class="col-sm-3 control-label">作业模板</div>
                             <div class="col-sm-9 cus-select-width">
-                                <el-select size="small" style="width: 100%" v-model="job.publicScript" placeholder="作业模板" @change="setDoScript">
+                                <el-select size="small" style="width: 100%" v-model="job.publicScript" placeholder="作业模板" @change="getPublicScript();">
                                     <el-option v-for="item in doScripts" :key="item.code" :label="item.name" :value="item.code"></el-option>
                                 </el-select>
                             </div>
@@ -292,7 +292,7 @@
                                 :data="allDependPage.list"
                                 border
                                 size="small"
-                                height="452"
+                                height="248"
                                 :stripe="true"
                                 style="width: 100%"
                                 @selection-change="adHandleSelectionChange">
@@ -613,8 +613,7 @@
         vm.job.etlSystem = $("#etlSystemAddSelect").find("option:selected").text();
     }
     function getPublicScript() {
-        var script = doScripts.map(x=>{if(x.code == vm.job.publicScript) return x.name})
-
+        var script = vm.doScripts.find(x=>{if(x.code == vm.job.publicScript) return x}).name
         var scriptId = vm.job.publicScript;
         var index = script.lastIndexOf(".");
         var end = script.substr(index, script.length);

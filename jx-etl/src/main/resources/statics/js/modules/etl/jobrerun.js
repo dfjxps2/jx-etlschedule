@@ -196,7 +196,7 @@ var vm = new Vue({
 							vm.reBack();
 							vm.query();
 							vm.$message({
-								message: '操作成功',
+								message: r.msg,
 								type: 'success'
 							});
                         }else{

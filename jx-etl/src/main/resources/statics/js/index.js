@@ -166,7 +166,7 @@ var vm = new Vue({
                         if(result.code == 0){//成功
                             Cookies.remove('authList');
                             Cookies.remove('user');
-                            parent.location.href ='http://172.26.60.219/zyzx/logout?remPath=/zyzx/portal/index.htm';
+                            parent.location.href ='/jx-etl/login.html';
                         }else{
                         }
                     }

@@ -1,26 +1,16 @@
-# Tomcat
-server:
-  tomcat:
-    uri-encoding: UTF-8
-    max-threads: 1000
-    min-spare-threads: 30
-  port: 9095
-  servlet:
-    context-path: /jx-etl
-
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.jdbc.Driver
     druid:
       first:  #数据源1
-        url: jdbc:mysql://192.166.162.150:3506/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+        url: jdbc:mysql://10.217.17.115:3306/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
         username: etl
-        password: etl123
+        password: edw123
       second:  #数据源2
-        url: jdbc:mysql://192.166.162.150:3506/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+        url: jdbc:mysql://10.217.17.115:3306/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
         username: etl
-        password: etl123
+        password: edw123
       initial-size: 10
       max-active: 100
       min-idle: 10
@@ -61,12 +51,11 @@ system-params:
   # 是否创建软连接标志
   create_ln_flag: true
   # 作业配置导出文件
-  config_export_dir: /usr/share/etl/tmp/
+  config_export_dir: /home/etl/tmp/
   # cas登录服务地址
-  cas_url: http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=gydsj_sjpcl&sid=871b412eab6ea3e7b21cb2dfa4b64c58
-  portal_url: http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=gydsj_sjpcl&sid=871b412eab6ea3e7b21cb2dfa4b64c58
+  cas_url: http://10.10.10.41:17001/cas/login?locale=zh_CN&service=http%3A%2F%2F10.10.10.42%3A8080%2Fportal%2Fcallback%3Fclient_name%3DCasClient
+  portal_url: http://10.10.10.41:17001/cas/logout?service=http%3A%2F%2F10.10.10.36%3A8081%2Fjx-etl%2F
   portal_app: 批量数据处理系统
-  soap_url: http://172.26.52.167:18001/portal/intlDataSynchronizedService?wsdl
-  cas_server_url_prefix: http://172.26.52.167:17001/cas
-  project_url: http://172.26.52.168:9095/jx-etl/
-  top_menu_url: http://192.166.162.181:8081/app/api_v1/getMenuUrlsByCaId
+  soap_url: http://10.10.10.42:18001/portal/intlDataSynchronizedService?wsdl
+  cas_server_url_prefix: http://10.10.10.41:17001/cas
+  project_url: http://10.10.10.36:8081/

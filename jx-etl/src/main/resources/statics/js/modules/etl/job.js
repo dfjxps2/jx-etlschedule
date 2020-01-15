@@ -159,7 +159,8 @@ var vm = new Vue({
 				etlJob:"",
 				runningscript:null,
 				allDependSave:[],
-				preEtlJob:null
+				preEtlJob:null,
+				lastJobstatus:'Ready',
 			};
 			vm.frequencyD = '';
 			vm.frequencyM = '';
@@ -529,6 +530,10 @@ var vm = new Vue({
 			vm.q.reqAllDeps = true;
 
 			vm.query(true);
+			vm.q.reqDenpsType=null;
+			vm.q.dep_etlSystem=null;
+			vm.q.dep_etlJob=null;
+			vm.q.reqAllDeps = null;
 		},
 		reloadDependJobsSelect:function(init){
 			if (init) {
@@ -927,6 +932,9 @@ function setDoScript(){
 		vm.job.etlJobAllNm=null;
 		vm.isChange=false;
 		vm.job.etlJob=vm.job.etlJob.toLocaleUpperCase();
+	}
+	if (!vm.job.publicScript) {
+		return;
 	}
 	var script = vm.doScripts.find(x=>{if(x.code == vm.job.publicScript) return x}).name
 	// var script = $("#publicScriptid").find("option:selected").text();

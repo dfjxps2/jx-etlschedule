@@ -55,14 +55,14 @@
       <el-col :span="2">
         <a href="#main.html" class="header-tile">调度系统</a>
       </el-col>
-      <el-col :span="17">
+      <el-col :span="19">
         <el-menu :default-active="getActiveTab" class="el-menu-demo" mode="horizontal" background-color="#1F2E4D" text-color="#FFFFFF" active-text-color="#FFFFFF">
           <el-menu-item v-if="item.type == 1" @click="toLink(item.url)" :index="index" v-for="(item,index) in menuList">{{item.name}}</el-menu-item>
         </el-menu>
       </el-col>
-      <el-col :span="5">
-        <div style="color: #ffffff; line-height: 50px">
-          <span style="font-size: 16px">${sysUser.username}，欢迎您访问！</span>
+      <el-col :span="3">
+        <div style="color: #ffffff; line-height: 50px; text-align: right">
+<!--          <span style="font-size: 16px">${sysUser.username}，欢迎您访问！</span>-->
           <el-button type="text" class="quit" @click="logout()"><i class="el-icon-switch-button"></i>退出</el-button>
         </div>
       </el-col>
