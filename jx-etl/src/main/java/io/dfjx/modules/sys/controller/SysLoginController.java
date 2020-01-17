@@ -20,8 +20,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.dfjx.common.config.SystemParams;
+import io.dfjx.common.synchrodata.CasFilter;
+import io.dfjx.common.utils.StringTools;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
@@ -42,7 +46,7 @@ import io.dfjx.modules.sys.shiro.ShiroUtils;
 
 /**
  * 登录相关
- * 
+ *
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年11月10日 下午1:15:31
@@ -51,6 +55,8 @@ import io.dfjx.modules.sys.shiro.ShiroUtils;
 public class SysLoginController {
     @Autowired
     private Producer producer;
+    @Autowired
+    private SystemParams systemParams;
 
     @RequestMapping("captcha.jpg")
     public void captcha(HttpServletResponse response) throws IOException {
@@ -98,13 +104,47 @@ public class SysLoginController {
         return R.ok();
     }
 
+    @RequestMapping("indexsso")
+    public String indexsso(HttpServletRequest request){
+        String main = "index";
+//        if(SYSTEM_PROFILE.equals(SpringContextUtils.getActiveProfile())){
+//            return main;
+//        }
+        CasFilter sso = new CasFilter();
+        boolean isLogin = sso.doLogin(request);
+        if(!isLogin){
+            return "redirect:"+getCasLogin();
+        }
+        return "index";
+    }
+
+    @RequestMapping("loginsso")
+    public String loginsso(){
+        return "redirect:"+getCasLogout();
+//        if(SYSTEM_PROFILE.equals(SpringContextUtils.getActiveProfile())){
+//            return "redirect:login.html";
+//        }else{
+//            return "redirect:"+getCasLogout();
+//        }
+
+    }
+
+    private String getCasLogout(){
+        String url = systemParams.getCasServiceUrl() + "/logout?service=" + StringTools.urlEncode(systemParams.getProjectUrl());
+        return url;
+    }
+    private String getCasLogin(){
+        String url = systemParams.getCasServiceUrl() + "/login?service=" + StringTools.urlEncode(systemParams.getProjectUrl());
+        return url;
+    }
+
     /**
      * 退出
      */
     @RequestMapping(value = "logout", method = RequestMethod.GET)
     public String logout() {
         ShiroUtils.logout();
-        return "redirect:logincas";
+        return "redirect:"+getCasLogout();
         //return "redirect:login.html";
     }
 

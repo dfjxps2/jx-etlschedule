@@ -89,6 +89,9 @@
                     label="数据日期"
                     :show-overflow-tooltip="true"
                     align="center">
+                <template slot-scope="scope">
+                    <span>{{dateFormat('YYYY-mm-dd',scope.row.txdate)}}</span>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="starttime"

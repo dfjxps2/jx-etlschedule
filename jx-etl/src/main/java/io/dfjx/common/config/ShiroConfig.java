@@ -80,7 +80,7 @@ public class ShiroConfig {
         shiroFilter.setSecurityManager(securityManager);
 
         //shiroFilter.setLoginUrl("/login.html");
-        shiroFilter.setLoginUrl("/logincas");
+        shiroFilter.setLoginUrl("/");
         //shiroFilter.setUnauthorizedUrl("/");
 
         //oauth过滤

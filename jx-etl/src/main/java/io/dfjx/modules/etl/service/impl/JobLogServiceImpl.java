@@ -48,6 +48,7 @@ public class JobLogServiceImpl extends ServiceImpl<JobLogDao, JobLogEntity> impl
                             .like(StringUtils.isNotBlank(etlSystem), "etl_system", etlSystem)
                             .like(StringUtils.isNotBlank(txdate), "txdate", txdate)
                             .orderBy("txdate", false)
+                            .orderBy("starttime", false)
                             .orderBy("jobsessionid", false)
             );
 

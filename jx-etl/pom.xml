@@ -181,6 +181,12 @@
 			<artifactId>lombok</artifactId>
 			<version>1.18.8</version>
 		</dependency>
+		<!--增加CAS包-->
+		<dependency>
+			<groupId>org.jasig.cas.client</groupId>
+			<artifactId>cas-client-core</artifactId>
+			<version>3.5.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

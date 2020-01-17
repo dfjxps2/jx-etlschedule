@@ -14,8 +14,8 @@ public class SystemParams {
 	private String execFileLnDir;
 	private String createLnFlag;
 	private String configExportDir;
-	private String casUrl;
-	private String portalUrl;
+	private String casServiceUrl;
+	private String projectUrl;
 	private String portalApp;
 	private String soapUrl;
 	private String topMenuUrl;
@@ -76,20 +76,20 @@ public class SystemParams {
 		this.configExportDir = configExportDir;
 	}
 
-	public String getCasUrl() {
-		return casUrl;
+	public String getCasServiceUrl() {
+		return casServiceUrl;
 	}
 
-	public void setCasUrl(String casUrl) {
-		this.casUrl = casUrl;
+	public void setCasServiceUrl(String casServiceUrl) {
+		this.casServiceUrl = casServiceUrl;
 	}
 
-	public String getPortalUrl() {
-		return portalUrl;
+	public String getProjectUrl() {
+		return projectUrl;
 	}
 
-	public void setPortalUrl(String portalUrl) {
-		this.portalUrl = portalUrl;
+	public void setProjectUrl(String projectUrl) {
+		this.projectUrl = projectUrl;
 	}
 
 	public String getPortalApp() {

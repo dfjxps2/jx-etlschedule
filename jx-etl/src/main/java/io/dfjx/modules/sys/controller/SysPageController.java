@@ -68,27 +68,33 @@ public class SysPageController {
 		return "modules/" + module + "/" + url;
 	}
 
-	@GetMapping(value = {"/", "index.html"})
-	public String index(HttpServletRequest request, Map<String, Object> map){
-        PortalFilter sso = new PortalFilter();
-        boolean isLogin = sso.doLogin(request);
-        if(!isLogin){
-            return "redirect:"+systemParams.getPortalUrl();
-        }
+//	@GetMapping(value = {"/", "index.html"})
+//	public String index(HttpServletRequest request, Map<String, Object> map){
+//        PortalFilter sso = new PortalFilter();
+//        boolean isLogin = sso.doLogin(request);
+//        if(!isLogin){
+//            return "redirect:"+systemParams.getPortalUrl();
+//        }
+//
+//		SysUserEntity sysUser = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+//		map.put("sysUser", sysUser);
+//        return "index";
+//	}
 
-		SysUserEntity sysUser = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
-		map.put("sysUser", sysUser);
-        return "index";
+
+	@RequestMapping(value = {"/"})
+	public String index(){
+		return "indexsso";
 	}
 
-	@RequestMapping("index1.html")
-	public String index1(){
-		return "index1";
+	@RequestMapping("index.html")
+	public String index2(){
+		return "indexsso";
 	}
 
 	@RequestMapping("login.html")
 	public String login(){
-		return "login";
+		return "indexsso";
 	}
 
 	@RequestMapping("main.html")
@@ -113,8 +119,9 @@ public class SysPageController {
 		return "404";
 	}
 
-	@RequestMapping("logincas")
-	public String logincas(){
-		return "redirect:"+systemParams.getPortalUrl();
-	}
+//	@RequestMapping("logincas")
+//	public String logincas(){
+//		return "redirect:"+systemParams.getPortalUrl();
+//	}
+
 }

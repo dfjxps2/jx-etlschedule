@@ -53,9 +53,7 @@ system-params:
   # 作业配置导出文件
   config_export_dir: /home/etl/tmp/
   # cas登录服务地址
-  cas_url: http://10.10.10.41:17001/cas/login?locale=zh_CN&service=http%3A%2F%2F10.10.10.42%3A8080%2Fportal%2Fcallback%3Fclient_name%3DCasClient
-  portal_url: http://10.10.10.41:17001/cas/logout?service=http%3A%2F%2F10.10.10.36%3A8081%2Fjx-etl%2F
-  portal_app: 批量数据处理系统
-  soap_url: http://10.10.10.42:18001/portal/intlDataSynchronizedService?wsdl
-  cas_server_url_prefix: http://10.10.10.41:17001/cas
-  project_url: http://10.10.10.36:8081/
+  cas-service-url: http://10.217.17.116:8094/cas
+  project-url: http://10.217.17.115:7202/jx-etl/
+  portal-app: 备案项目管理
+  soap_url: http://10.217.17.116:18001/portal/intlDataSynchronizedService?wsdl

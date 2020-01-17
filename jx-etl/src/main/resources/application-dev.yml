@@ -12,13 +12,13 @@ spring:
 #        username: root
 #        password: 123456
       first:  #数据源1
-        url: jdbc:mysql://localhost:3306/jx_etl?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
-        username: root
-        password: rootroot
-      second:  #数据源2
-        url: jdbc:mysql://localhost:3306/jx_etl?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
-        username: root
-        password: rootroot
+        url: jdbc:mysql://10.217.17.115:3306/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+        username: etl
+        password: edw123
+        second:  #数据源2
+          url: jdbc:mysql://10.217.17.115:3306/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+          username: etl
+          password: edw123
       initial-size: 10
       max-active: 100
       min-idle: 10
@@ -53,7 +53,7 @@ system-params:
 #  配置作业脚本上传目录
   hql_script_upload_dir: /udf/APP/
 # 配置作业控制文件路径
-  control_file_dir: /home/etl/ETLAuto/DATA/receive/
+  control_file_dir: /udf/etl/
 # 执行脚本软链接目录
   exec_file_ln_dir: /udf/APP/
 # 是否创建软连接标志
@@ -61,11 +61,7 @@ system-params:
 # 作业配置导出文件
   config_export_dir: d:/udf/tmp/
 # cas登录服务地址
-#  cas_url: https://127.0.0.1:8443/cas/login?locale=zh_CN&service=http%3A%2F%2F127.0.0.1%3A7202%2Fjx-etl%2Findex.html
-  cas_url: http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=gydsj_sjpcl&sid=871b412eab6ea3e7b21cb2dfa4b64c58
-  portal_url: http://172.26.64.109:7001/GovSSOService/SSOSecService?LinkType=online&LinkID=gydsj_sjpcl&sid=871b412eab6ea3e7b21cb2dfa4b64c58
-  portal_app: 批量数据处理
-  soap_url: http://127.0.0.1:18001/portal/intlDataSynchronizedService?wsdl
-  cas_server_url_prefix: https://127.0.0.1:8443/cas
-  project_url: http://localhost:7202/
-  top_menu_url: http://172.26.60.219:8081/app/api_v1/getMenuUrlsByCaId
+  cas-service-url: http://10.217.17.116:8094/cas
+  project-url: http://localhost:7202/jx-etl/
+  portal-app: 备案项目管理
+  soap_url: http://10.217.17.116:18001/portal/intlDataSynchronizedService?wsdl
