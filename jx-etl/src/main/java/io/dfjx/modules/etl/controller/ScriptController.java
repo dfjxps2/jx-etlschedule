@@ -9,6 +9,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.dfjx.common.utils.TagUserUtils;
 import io.dfjx.modules.etl.service.ScriptLogService;
 import io.dfjx.modules.etl.util.ChmodUtil;
 import io.dfjx.modules.etl.util.ReadFileUtil;
@@ -38,7 +39,7 @@ import org.springframework.util.FileCopyUtils;
 
 
 /**
- * 
+ *
  *
  * @author lwq
  * @email 404461275@qq.com
@@ -61,7 +62,7 @@ public class ScriptController {
 	@RequestMapping("/list")
 	@RequiresPermissions("etl:script:list")
 	public R list(@RequestParam Map<String, Object> params){
-		String username = ((SysUserEntity) SecurityUtils.getSubject().getPrincipal()).getUsername();
+		String username = TagUserUtils.userName();
 		params.put("username",username);
 		params.put("shareflag","1");//只显示本人所属和共享脚本
 		PageUtils page = scriptService.queryPage(params);
@@ -87,7 +88,7 @@ public class ScriptController {
 	@RequestMapping("/save")
 	@RequiresPermissions("etl:script:save")
 	public R save(@RequestBody ScriptEntity script){
-		String username = ((SysUserEntity) SecurityUtils.getSubject().getPrincipal()).getUsername();
+		String username = TagUserUtils.userName();
 		script.setUsername(username);
 		scriptService.insert(script);
 
@@ -119,7 +120,7 @@ public class ScriptController {
 
 	/**
 	 * 上传
-	 * 
+	 *
 	 * @param
 	 * @return
 	 * @throws IOException
@@ -138,11 +139,11 @@ public class ScriptController {
 		}
 		filePath=filePath+fileName;
 		try {
-			File targetFile = new File(filePath);  
-			if(targetFile.exists()){    
+			File targetFile = new File(filePath);
+			if(targetFile.exists()){
 				return R.error(1, "脚本已存在");
-				//targetFile.delete();    
-			}  
+				//targetFile.delete();
+			}
 			FileOutputStream out = new FileOutputStream(filePath);
 			out.write(file.getBytes());
 			out.flush();
@@ -153,7 +154,7 @@ public class ScriptController {
 		}
 		return R.ok();
 	}
-	@RequestMapping("/getScriptPath") 
+	@RequestMapping("/getScriptPath")
 	@RequiresPermissions("etl:script:getScriptPath")
 	public R getScriptPath(){
 		String filePath= systemParams.getPublicScriptUploadDir();
@@ -161,7 +162,7 @@ public class ScriptController {
 	}
 
 
-	@RequestMapping("/getScripts") 
+	@RequestMapping("/getScripts")
 	@RequiresPermissions("etl:script:getScripts")
 	public R getService(){
 		List<Map<String, Object>> listMap  = scriptService.getScripts();
@@ -222,7 +223,7 @@ public class ScriptController {
 			ChmodUtil.addExt(targetFile);
 
 			//添加版本信息
-			String username = ((SysUserEntity) SecurityUtils.getSubject().getPrincipal()).getUsername();
+			String username = TagUserUtils.userName();
 			scriptLogService.addLog(script, version, "更新", "修改脚本内容", username, logDate, backupName);
 
 		} catch (Exception e) {

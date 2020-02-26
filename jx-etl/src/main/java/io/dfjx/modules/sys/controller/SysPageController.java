@@ -16,28 +16,25 @@
 
 package io.dfjx.modules.sys.controller;
 
-import com.google.gson.Gson;
 import io.dfjx.common.config.SystemParams;
-import io.dfjx.common.synchrodata.Dom4jUtil;
-import io.dfjx.common.synchrodata.PortalFilter;
-import io.dfjx.common.synchrodata.SynchronizedDataConstants;
-import io.dfjx.common.synchrodata.WebClient;
+import io.dfjx.common.utils.TagUserUtils;
 import io.dfjx.modules.etl.service.JobLogService;
 import io.dfjx.modules.etl.service.JobService;
 import io.dfjx.modules.etl.service.ScriptService;
 import io.dfjx.modules.sys.entity.SysUserEntity;
-import io.dfjx.modules.sys.shiro.ShiroUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -63,28 +60,19 @@ public class SysPageController {
 	@Autowired
 	private ScriptService scriptService;
 
+	@Value("${auth.login.url}")
+	private String loginUrl;
+
 	@RequestMapping("modules/{module}/{url}.html")
 	public String module(@PathVariable("module") String module, @PathVariable("url") String url){
 		return "modules/" + module + "/" + url;
 	}
 
-//	@GetMapping(value = {"/", "index.html"})
-//	public String index(HttpServletRequest request, Map<String, Object> map){
-//        PortalFilter sso = new PortalFilter();
-//        boolean isLogin = sso.doLogin(request);
-//        if(!isLogin){
-//            return "redirect:"+systemParams.getPortalUrl();
-//        }
-//
-//		SysUserEntity sysUser = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
-//		map.put("sysUser", sysUser);
-//        return "index";
-//	}
-
-
-	@RequestMapping(value = {"/"})
-	public String index(){
-		return "indexsso";
+	@GetMapping(value = {"/", "index.html"})
+	public String index(HttpServletRequest request, Map<String, Object> map){
+		SysUserEntity sysUser = TagUserUtils.getTagUser();
+		map.put("sysUser", sysUser);
+        return "index";
 	}
 
 	@RequestMapping("index.html")
@@ -119,9 +107,25 @@ public class SysPageController {
 		return "404";
 	}
 
-//	@RequestMapping("logincas")
-//	public String logincas(){
-//		return "redirect:"+systemParams.getPortalUrl();
-//	}
+	@RequestMapping("logincas")
+	public String logincas(){
+		return "redirect:"+loginUrl;
+	}
 
+	@Resource
+	private HttpServletResponse httpServletResponse;
+	@RequestMapping("loginback")
+	public String loginback(HttpServletRequest request, HttpServletResponse response){
+		String token = request.getParameter("ucToken");
+		if (StringUtils.isNotEmpty(token)) {
+			Cookie accessTokenCookie = new Cookie("access_token", "bearer" + token.substring(7));
+			accessTokenCookie.setPath("/");
+			accessTokenCookie.setMaxAge(60 * 60 * 12 * 2 * 7);
+			accessTokenCookie.setHttpOnly(true);
+			accessTokenCookie.setDomain("localhost");
+			httpServletResponse.addCookie(accessTokenCookie);
+			return "redirect:/";
+		}
+		return "redirect:"+loginUrl;
+	}
 }

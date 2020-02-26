@@ -3,14 +3,13 @@ package io.dfjx.datasources;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.sql.DataSource;
 
+import com.alibaba.druid.pool.DruidDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 
 /**
  * 配置多数据源
@@ -21,24 +20,25 @@ import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 @Configuration
 public class DynamicDataSourceConfig {
 
+
     @Bean
-    @ConfigurationProperties("spring.datasource.druid.first")
-    public DataSource firstDataSource(){
-        return DruidDataSourceBuilder.create().build();
+    @ConfigurationProperties(prefix = "spring.datasource.druid")
+    public DataSourceProperties dataSourceProperties() {
+        return new DataSourceProperties();
     }
 
     @Bean
-    @ConfigurationProperties("spring.datasource.druid.second")
-    public DataSource secondDataSource(){
-        return DruidDataSourceBuilder.create().build();
-    }
-
-    @Bean
-    @Primary
-    public DynamicDataSource dataSource(DataSource firstDataSource, DataSource secondDataSource) {
+    public DynamicDataSource dynamicDataSource(DataSourceProperties dataSourceProperties) {
+        DynamicDataSource dynamicDataSource = new DynamicDataSource();
         Map<Object, Object> targetDataSources = new HashMap<>();
-        targetDataSources.put(DataSourceNames.FIRST, firstDataSource);
-        targetDataSources.put(DataSourceNames.SECOND, secondDataSource);
-        return new DynamicDataSource(firstDataSource, targetDataSources);
+        targetDataSources.put("first",dynamicDataSource);
+        dynamicDataSource.setTargetDataSources(targetDataSources);
+
+        //默认数据源
+        DruidDataSource defaultDataSource = DynamicDataSourceFactory.buildDruidDataSource(dataSourceProperties);
+        dynamicDataSource.setDefaultTargetDataSource(defaultDataSource);
+
+        return dynamicDataSource;
     }
+
 }
