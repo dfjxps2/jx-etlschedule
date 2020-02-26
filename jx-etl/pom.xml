@@ -46,14 +46,14 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.shiro</groupId>
-		    <artifactId>shiro-core</artifactId>
-		    <version>${shiro.version}</version>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-core</artifactId>
+			<version>${shiro.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.shiro</groupId>
-		    <artifactId>shiro-spring</artifactId>
-		    <version>${shiro.version}</version>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring</artifactId>
+			<version>${shiro.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.axet</groupId>
@@ -180,6 +180,88 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dfjinxin</groupId>
+			<artifactId>dfjinxin-commons-auth</artifactId>
+			<version>${project.version}</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/../commoms-lib/dfjinxin-commons-auth-0.0.1-SNAPSHOT.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.dfjinxin</groupId>
+			<artifactId>dfjinxin-commons-core</artifactId>
+			<version>${project.version}</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/../commoms-lib/dfjinxin-commons-core-0.0.1-SNAPSHOT.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.dfjinxin</groupId>
+			<artifactId>dfjinxin-commons-constant</artifactId>
+			<version>${project.version}</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/../commoms-lib/dfjinxin-commons-constant-0.0.1-SNAPSHOT.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.seaboxdata.auth</groupId>
+			<artifactId>auth-api</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/../commoms-lib/auth-api-1.0.0-SNAPSHOT.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.seaboxdata.commons</groupId>
+			<artifactId>commons-core</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/../commoms-lib/commons-core-1.0.0-SNAPSHOT.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.seaboxdata.commons</groupId>
+			<artifactId>commons-services</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/../commoms-lib/commons-services-1.0.0-SNAPSHOT.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-oauth2</artifactId>
+			<version>2.1.4.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-security</artifactId>
+			<version>2.1.4.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<version>2.1.8.RELEASE</version>
+		</dependency>
+		<!--         链接登录时放开           -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+			<version>2.1.3.RELEASE</version>
+		</dependency>
+		<!--feign-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<version>2.1.3.RELEASE</version>
+		</dependency>
+		<!--hutool-->
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-all</artifactId>
+			<version>4.6.5</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-httpclient</artifactId>
+			<version>10.2.3</version>
 		</dependency>
 	</dependencies>
 

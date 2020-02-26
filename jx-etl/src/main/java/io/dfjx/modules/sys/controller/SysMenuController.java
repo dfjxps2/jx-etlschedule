@@ -23,6 +23,7 @@ import io.dfjx.common.config.SystemParams;
 import io.dfjx.common.exception.RRException;
 import io.dfjx.common.utils.Constant;
 import io.dfjx.common.utils.R;
+import io.dfjx.common.utils.TagUserUtils;
 import io.dfjx.common.utils.WebClient;
 import io.dfjx.modules.sys.entity.SysMenuEntity;
 import io.dfjx.modules.sys.entity.SysUserEntity;
@@ -39,7 +40,7 @@ import java.util.Map;
 
 /**
  * 系统菜单
- * 
+ *
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年10月27日 下午9:58:15
@@ -59,7 +60,7 @@ public class SysMenuController extends AbstractController {
 	 */
 	@GetMapping("top")
 	public R top() {
-		SysUserEntity sysUser = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+		SysUserEntity sysUser = TagUserUtils.getTagUser();
 		WebClient client = new WebClient();
 		JSONObject json = client.post3(systemParams.getTopMenuUrl(), new HashMap(){{
 			put("models", "{\"caId\":\"" + sysUser.getCaUserId() + "\"}");
@@ -78,7 +79,7 @@ public class SysMenuController extends AbstractController {
 		List<SysMenuEntity> menuList = sysMenuService.getUserMenuList(getUserId());
 		return R.ok().put("menuList", menuList);
 	}
-	
+
 	/**
 	 * 所有菜单列表
 	 */
@@ -95,7 +96,7 @@ public class SysMenuController extends AbstractController {
 
 		return menuList;
 	}
-	
+
 	/**
 	 * 选择菜单(添加、修改菜单)
 	 */
@@ -104,7 +105,7 @@ public class SysMenuController extends AbstractController {
 	public R select(){
 		//查询列表数据
 		List<SysMenuEntity> menuList = sysMenuService.queryNotButtonList();
-		
+
 		//添加顶级菜单
 		SysMenuEntity root = new SysMenuEntity();
 		root.setMenuId(0L);
@@ -112,10 +113,10 @@ public class SysMenuController extends AbstractController {
 		root.setParentId(-1L);
 		root.setOpen(true);
 		menuList.add(root);
-		
+
 		return R.ok().put("menuList", menuList);
 	}
-	
+
 	/**
 	 * 菜单信息
 	 */
@@ -125,7 +126,7 @@ public class SysMenuController extends AbstractController {
 		SysMenuEntity menu = sysMenuService.selectById(menuId);
 		return R.ok().put("menu", menu);
 	}
-	
+
 	/**
 	 * 保存
 	 */
@@ -135,12 +136,12 @@ public class SysMenuController extends AbstractController {
 	public R save(@RequestBody SysMenuEntity menu){
 		//数据校验
 		verifyForm(menu);
-		
+
 		sysMenuService.insert(menu);
-		
+
 		return R.ok();
 	}
-	
+
 	/**
 	 * 修改
 	 */
@@ -150,12 +151,12 @@ public class SysMenuController extends AbstractController {
 	public R update(@RequestBody SysMenuEntity menu){
 		//数据校验
 		verifyForm(menu);
-				
+
 		sysMenuService.updateById(menu);
-		
+
 		return R.ok();
 	}
-	
+
 	/**
 	 * 删除
 	 */
@@ -177,7 +178,7 @@ public class SysMenuController extends AbstractController {
 
 		return R.ok();
 	}
-	
+
 	/**
 	 * 验证参数是否正确
 	 */
@@ -185,25 +186,25 @@ public class SysMenuController extends AbstractController {
 		if(StringUtils.isBlank(menu.getName())){
 			throw new RRException("菜单名称不能为空");
 		}
-		
+
 		if(menu.getParentId() == null){
 			throw new RRException("上级菜单不能为空");
 		}
-		
+
 		//菜单
 		if(menu.getType() == Constant.MenuType.MENU.getValue()){
 			if(StringUtils.isBlank(menu.getUrl())){
 				throw new RRException("菜单URL不能为空");
 			}
 		}
-		
+
 		//上级菜单类型
 		int parentType = Constant.MenuType.CATALOG.getValue();
 		if(menu.getParentId() != 0){
 			SysMenuEntity parentMenu = sysMenuService.selectById(menu.getParentId());
 			parentType = parentMenu.getType();
 		}
-		
+
 		//目录、菜单
 		if(menu.getType() == Constant.MenuType.CATALOG.getValue() ||
 				menu.getType() == Constant.MenuType.MENU.getValue()){
@@ -212,7 +213,7 @@ public class SysMenuController extends AbstractController {
 			}
 			return ;
 		}
-		
+
 		//按钮
 		if(menu.getType() == Constant.MenuType.BUTTON.getValue()){
 			if(parentType != Constant.MenuType.MENU.getValue()){

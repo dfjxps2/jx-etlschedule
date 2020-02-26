@@ -18,8 +18,11 @@ package io.dfjx.modules.sys.service.impl;
 
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.seaboxdata.auth.api.controller.IOauthUserController;
+import com.seaboxdata.auth.api.vo.OauthUserVO;
 import io.dfjx.common.utils.Constant;
 import io.dfjx.common.utils.MapUtils;
+import io.dfjx.common.utils.TagUserUtils;
 import io.dfjx.modules.sys.dao.SysMenuDao;
 import io.dfjx.modules.sys.entity.SysMenuEntity;
 import io.dfjx.modules.sys.service.SysMenuService;
@@ -29,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -38,14 +42,16 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 	private SysUserService sysUserService;
 	@Autowired
 	private SysRoleMenuService sysRoleMenuService;
-	
+	@Autowired
+	private IOauthUserController authUserController;
+
 	@Override
 	public List<SysMenuEntity> queryListParentId(Long parentId, List<Long> menuIdList) {
 		List<SysMenuEntity> menuList = queryListParentId(parentId);
 		if(menuIdList == null){
 			return menuList;
 		}
-		
+
 		List<SysMenuEntity> userMenuList = new ArrayList<>();
 		for(SysMenuEntity menu : menuList){
 			if(menuIdList.contains(menu.getMenuId())){
@@ -67,14 +73,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 
 	@Override
 	public List<SysMenuEntity> getUserMenuList(Long userId) {
-		//系统管理员，拥有最高权限
-		/*if(userId == Constant.SUPER_ADMIN){
-			return getAllMenuList(null);
-		}*/
-		
-		//用户菜单列表
-		List<Long> menuIdList = sysUserService.queryAllMenuId(userId);
-		return getAllMenuList(menuIdList);
+		List<OauthUserVO> oauthUserVOS = authUserController.selectUserByUserId(Arrays.asList(TagUserUtils.userId()));
+		List<SysMenuEntity> menuIdList = baseMapper.queryByPermsCode(oauthUserVOS.get(0).getPermissionCodes());
+		return menuIdList;
 	}
 
 	@Override
@@ -93,7 +94,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 		List<SysMenuEntity> menuList = queryListParentId(0L, menuIdList);
 		//递归获取子菜单
 		getMenuTreeList(menuList, menuIdList);
-		
+
 		return menuList;
 	}
 
@@ -102,7 +103,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 	 */
 	private List<SysMenuEntity> getMenuTreeList(List<SysMenuEntity> menuList, List<Long> menuIdList){
 		List<SysMenuEntity> subMenuList = new ArrayList<SysMenuEntity>();
-		
+
 		for(SysMenuEntity entity : menuList){
 			//目录
 			if(entity.getType() == Constant.MenuType.CATALOG.getValue()){
@@ -110,7 +111,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 			}
 			subMenuList.add(entity);
 		}
-		
+
 		return subMenuList;
 	}
 }

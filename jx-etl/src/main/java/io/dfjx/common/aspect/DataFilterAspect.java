@@ -46,8 +46,8 @@ import io.dfjx.modules.sys.shiro.ShiroUtils;
  * @author Mark sunlightcs@gmail.com
  * @since 3.0.0 2017-09-17
  */
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class DataFilterAspect {
     @Autowired
     private SysDeptService sysDeptService;

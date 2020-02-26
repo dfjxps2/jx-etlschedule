@@ -30,7 +30,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * @author Mark sunlightcs@gmail.com
  * @since 3.0.0 2017-07-07
  */
-@Configuration
+//@Configuration
 public class RedisConfig {
     @Autowired
     private RedisConnectionFactory factory;

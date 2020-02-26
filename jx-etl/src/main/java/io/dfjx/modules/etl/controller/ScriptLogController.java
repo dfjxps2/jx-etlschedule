@@ -3,6 +3,7 @@ package io.dfjx.modules.etl.controller;
 import io.dfjx.common.config.SystemParams;
 import io.dfjx.common.utils.PageUtils;
 import io.dfjx.common.utils.R;
+import io.dfjx.common.utils.TagUserUtils;
 import io.dfjx.modules.etl.entity.ScriptEntity;
 import io.dfjx.modules.etl.entity.ScriptLogEntity;
 import io.dfjx.modules.etl.service.ScriptLogService;
@@ -91,7 +92,7 @@ public class ScriptLogController {
             FileCopyUtils.copy(restoreFile, targetFile);
 
             //添加版本信息
-            String username = ((SysUserEntity) SecurityUtils.getSubject().getPrincipal()).getUsername();
+            String username = TagUserUtils.userName();
             scriptLogService.addLog(script, version, "还原", "恢复脚本内容", username, logDate, backupName);
 
         } catch (Exception e) {

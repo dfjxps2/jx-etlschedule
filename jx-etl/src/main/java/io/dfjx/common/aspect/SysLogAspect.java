@@ -21,6 +21,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import io.dfjx.common.utils.TagUserUtils;
 import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -45,15 +46,15 @@ import io.dfjx.modules.sys.service.SysLogService;
  * @author Mark sunlightcs@gmail.com
  * @since 1.3.0 2017-03-08
  */
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class SysLogAspect {
 	@Autowired
 	private SysLogService sysLogService;
-	
+
 	@Pointcut("@annotation(io.dfjx.common.annotation.SysLog)")
-	public void logPointCut() { 
-		
+	public void logPointCut() {
+
 	}
 
 	@Around("logPointCut()")
@@ -101,7 +102,7 @@ public class SysLogAspect {
 		sysLog.setIp(IPUtils.getIpAddr(request));
 
 		//用户名
-		String username = ((SysUserEntity) SecurityUtils.getSubject().getPrincipal()).getUsername();
+		String username = TagUserUtils.userName();
 		sysLog.setUsername(username);
 
 		sysLog.setTime(time);

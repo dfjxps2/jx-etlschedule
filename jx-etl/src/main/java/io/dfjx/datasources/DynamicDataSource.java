@@ -1,41 +1,37 @@
+/**
+ * 2019 东方金信
+ *
+ *
+ *
+ *
+ */
+
 package io.dfjx.datasources;
-
-import java.util.Map;
-
-import javax.sql.DataSource;
 
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 /**
- * 动态数据源
- * @author chenshun
- * @email sunlightcs@gmail.com
- * @date 2017/8/19 1:03
+ * 多数据源
+ *
+ * @author Mark sunlightcs@gmail.com
  */
 public class DynamicDataSource extends AbstractRoutingDataSource {
-    private static final ThreadLocal<String> contextHolder = new ThreadLocal<>();
-
-    public DynamicDataSource(DataSource defaultTargetDataSource, Map<Object, Object> targetDataSources) {
-        super.setDefaultTargetDataSource(defaultTargetDataSource);
-        super.setTargetDataSources(targetDataSources);
-        super.afterPropertiesSet();
-    }
 
     @Override
     protected Object determineCurrentLookupKey() {
-        return getDataSource();
+        return DynamicContextHolder.peek();
     }
 
     public static void setDataSource(String dataSource) {
-        contextHolder.set(dataSource);
+        DynamicContextHolder.push(dataSource);
     }
 
     public static String getDataSource() {
-        return contextHolder.get();
+        return DynamicContextHolder.peek();
     }
 
     public static void clearDataSource() {
-        contextHolder.remove();
+        DynamicContextHolder.poll();
     }
 
 }

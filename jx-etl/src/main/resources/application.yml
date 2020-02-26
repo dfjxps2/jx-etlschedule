@@ -8,9 +8,22 @@ server:
   servlet:
     context-path: /jx-etl
 
+dfjinxin:
+  core:
+    idgenerator:
+      mode: snowflake
+      datacenter: 1
+      worker: 1
+  auth:
+    url: http://auth-server
+
 spring:
+  application:
+    name: jx-etl
   profiles:
-    active: prod
+    active: dev
+  main:
+    allow-bean-definition-overriding: true
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -21,7 +34,7 @@ spring:
       enabled: true
   redis:
     database: 0
-    host: 192.168.137.130
+    host: localhost
     port: 6379
     password:      # 密码（默认为空）
     timeout: 6000ms  # 连接超时时长（毫秒）
@@ -41,6 +54,25 @@ dfjx:
     open: false  # 是否开启redis缓存  true开启   false关闭
   shiro:
     redis: false # true表示shiro session存到redis里，需要开启redis，才会生效【分布式场景】
+
+cookie:
+  access-cookie-time: 864000
+
+auth-server-url: http://auth-server
+
+# spring security 配置
+security:
+  oauth2:
+    client:
+      client-id: testclientid
+      client-secret: 123456
+      scope: read_userinfo
+      access-token-uri: ${auth-server-url}/oauth/token
+      user-authorization-uri: ${auth-server-url}/oauth/authorize
+    resource:
+      loadBalanced: true
+      token-info-uri: ${auth-server-url}/oauth/check_token
+      check-token: ${auth-server-url}/oauth/check_token
 
 #mybatis
 mybatis-plus:
