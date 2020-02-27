@@ -21,6 +21,7 @@ import io.dfjx.modules.sys.entity.SysMenuEntity;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -43,6 +44,6 @@ public interface SysMenuDao extends BaseMapper<SysMenuEntity> {
 	 */
 	List<SysMenuEntity> queryNotButtonList();
 
-	List<SysMenuEntity> queryByPermsCode(@Param("codes") Set<String> codes);
+	List<SysMenuEntity> queryByPermsCode(@Param("map") Map<Long, String> map);
 
 }

@@ -12,8 +12,8 @@
 	</select>
 	<select id="queryByPermsCode" resultType="io.dfjx.modules.sys.entity.SysMenuEntity">
 		select * from sys_menu where perms in
-		<foreach collection="codes" item="item" index="index" open="(" close=")" separator=",">
-			#{item}
+		<foreach collection="map.entrySet()" index="key" item="value" open="(" close=")" separator=",">
+			#{value}
 		</foreach>
 		order by order_num asc
 	</select>
