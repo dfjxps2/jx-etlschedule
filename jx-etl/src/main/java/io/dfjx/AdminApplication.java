@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableFeignClients({"com.seaboxdata.auth"})
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 @EnableDfjinxinResourceServer
 @MapperScan(basePackages = {"io.dfjx.modules.*.dao"})
 public class AdminApplication extends SpringBootServletInitializer {

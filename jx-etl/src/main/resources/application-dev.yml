@@ -33,15 +33,21 @@ spring:
           config:
             multi-statement-allow: true
 
-# 注册中心配置
-eureka:
-  instance:
-    prefer-ip-address: true
-    ip-address: 127.0.0.1
-    non-secure-port: ${server.port}
-  client:
-    service-url:
-      defaultZone: http://123.207.126.81:8761/eureka/
+auth-server-url: http://123.207.126.81:30002
+
+# spring security 配置
+security:
+  oauth2:
+    client:
+      client-id: testclientid
+      client-secret: 123456
+      scope: read_userinfo
+      access-token-uri: ${auth-server-url}/oauth/token
+      user-authorization-uri: ${auth-server-url}/oauth/authorize
+    resource:
+      loadBalanced: true
+      token-info-uri: ${auth-server-url}/oauth/check_token
+      check-token: ${auth-server-url}/oauth/check_token
 
 seaboxdata:
   auth:

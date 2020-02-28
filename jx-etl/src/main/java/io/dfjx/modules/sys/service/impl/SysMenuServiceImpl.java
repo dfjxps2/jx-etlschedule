@@ -18,9 +18,7 @@ package io.dfjx.modules.sys.service.impl;
 
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.seaboxdata.auth.api.controller.IOauthRoleController;
-import com.seaboxdata.auth.api.controller.IOauthUserController;
-import com.seaboxdata.auth.api.vo.OauthUserVO;
+import com.dfjinxin.commons.auth.compoment.OauthUserTemplate;
 import io.dfjx.common.utils.Constant;
 import io.dfjx.common.utils.MapUtils;
 import io.dfjx.common.utils.TagUserUtils;
@@ -33,7 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +42,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 	@Autowired
 	private SysRoleMenuService sysRoleMenuService;
 	@Autowired
-	private IOauthRoleController oauthRoleController;
+	private OauthUserTemplate oauthUserTemplate;
 
 	@Override
 	public List<SysMenuEntity> queryListParentId(Long parentId, List<Long> menuIdList) {
@@ -75,8 +72,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 
 	@Override
 	public List<SysMenuEntity> getUserMenuList(Long userId) {
-		Map<Long, String> map = oauthRoleController.selectPermissionsByUserIdAndSystem(TagUserUtils.userId(), "ETL");
-		List<SysMenuEntity> menuIdList = baseMapper.queryByPermsCode(map);
+		Map<Long, String> mapCodes = oauthUserTemplate.selectPermissionsByUserIdAndSystem(TagUserUtils.userId(), "ETL");
+		List<SysMenuEntity> menuIdList = baseMapper.queryByPermsCode(mapCodes);
 		return menuIdList;
 	}
 
