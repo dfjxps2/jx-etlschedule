@@ -28,6 +28,10 @@ public class Constant {
     /** 数据权限过滤 */
 	public static final String SQL_FILTER = "sql_filter";
 
+	public static String APP_NAME = "ETL";
+
+	public static String ACCESS_TOKEN = "access_token";
+
 
 	/**
 	 * 菜单类型
@@ -56,7 +60,7 @@ public class Constant {
             return value;
         }
     }
-    
+
     /**
      * 定时任务状态
      */
@@ -75,7 +79,7 @@ public class Constant {
         ScheduleStatus(int value) {
             this.value = value;
         }
-        
+
         public int getValue() {
             return value;
         }

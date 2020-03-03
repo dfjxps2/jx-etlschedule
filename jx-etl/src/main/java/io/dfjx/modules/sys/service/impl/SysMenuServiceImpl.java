@@ -20,6 +20,7 @@ package io.dfjx.modules.sys.service.impl;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.dfjinxin.commons.auth.compoment.OauthUserTemplate;
 import io.dfjx.common.utils.Constant;
+import io.dfjx.common.utils.CookieUtils;
 import io.dfjx.common.utils.MapUtils;
 import io.dfjx.common.utils.TagUserUtils;
 import io.dfjx.modules.sys.dao.SysMenuDao;
@@ -27,9 +28,11 @@ import io.dfjx.modules.sys.entity.SysMenuEntity;
 import io.dfjx.modules.sys.service.SysMenuService;
 import io.dfjx.modules.sys.service.SysRoleMenuService;
 import io.dfjx.modules.sys.service.SysUserService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -71,8 +74,12 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 	}
 
 	@Override
-	public List<SysMenuEntity> getUserMenuList(Long userId) {
-		Map<Long, String> mapCodes = oauthUserTemplate.selectPermissionsByUserIdAndSystem(TagUserUtils.userId(), "ETL");
+	public List<SysMenuEntity> getUserMenuList(HttpServletRequest request, Long userId) {
+		String token = CookieUtils.get(request, Constant.ACCESS_TOKEN).getValue();
+		if(StringUtils.isNotBlank(token)){
+			token = token.toLowerCase().replace("bearer", "");
+		}
+		Map<Long, String> mapCodes = oauthUserTemplate.selectPermissionsByUserIdAndSystem(TagUserUtils.userId(), Constant.APP_NAME, token);
 		List<SysMenuEntity> menuIdList = baseMapper.queryByPermsCode(mapCodes);
 		return menuIdList;
 	}

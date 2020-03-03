@@ -17,6 +17,8 @@
 package io.dfjx.modules.sys.controller;
 
 import io.dfjx.common.config.SystemParams;
+import io.dfjx.common.utils.Constant;
+import io.dfjx.common.utils.CookieUtils;
 import io.dfjx.common.utils.TagUserUtils;
 import io.dfjx.modules.etl.service.JobLogService;
 import io.dfjx.modules.etl.service.JobService;
@@ -112,18 +114,11 @@ public class SysPageController {
 		return "redirect:"+loginUrl;
 	}
 
-	@Resource
-	private HttpServletResponse httpServletResponse;
 	@RequestMapping("loginback")
 	public String loginback(HttpServletRequest request, HttpServletResponse response){
 		String token = request.getParameter("ucToken");
 		if (StringUtils.isNotEmpty(token)) {
-			Cookie accessTokenCookie = new Cookie("access_token", "bearer" + token.substring(7));
-			accessTokenCookie.setPath("/");
-			accessTokenCookie.setMaxAge(60 * 60 * 12 * 2 * 7);
-			accessTokenCookie.setHttpOnly(true);
-			accessTokenCookie.setDomain("localhost");
-			httpServletResponse.addCookie(accessTokenCookie);
+			CookieUtils.set(response, Constant.ACCESS_TOKEN, "bearer" + token.substring(7), 60 * 60 * 12 * 2 * 7);
 			return "redirect:/";
 		}
 		return "redirect:"+loginUrl;

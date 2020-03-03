@@ -20,13 +20,14 @@ import com.baomidou.mybatisplus.service.IService;
 import io.dfjx.common.utils.PageUtils;
 import io.dfjx.modules.sys.entity.SysUserEntity;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
 
 /**
  * 系统用户
- * 
+ *
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2016年9月18日 上午9:43:39
@@ -34,17 +35,19 @@ import java.util.Map;
 public interface SysUserService extends IService<SysUserEntity> {
 
 	PageUtils queryPage(Map<String, Object> params);
-	
+
 	/**
 	 * 查询用户的所有菜单ID
 	 */
 	List<Long> queryAllMenuId(Long userId);
-	
+
+	SysUserEntity queryUserById (Long userId);
+
 	/**
 	 * 保存用户
 	 */
 	void save(SysUserEntity user);
-	
+
 	/**
 	 * 修改用户
 	 */

@@ -19,13 +19,12 @@ public class TagUserUtils {
     }
 
     public static String userName(){
-        return sysUserService.selectById(userId()).getUsername();
+        return sysUserService.queryUserById(userId()).getUsername();
 //        return "admin";
     }
 
     public static SysUserEntity getTagUser(){
-        SysUserEntity userEntity = sysUserService.selectById(userId());
-
+        SysUserEntity userEntity = sysUserService.queryUserById(userId());
         return userEntity;
     }
 
