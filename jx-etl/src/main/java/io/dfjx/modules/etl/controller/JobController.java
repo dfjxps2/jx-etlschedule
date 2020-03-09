@@ -214,7 +214,7 @@ public class JobController {
 			return R.error(1, "作业名称已存在");
 		}
 		else if(list.size()>0 && StringUtils.isNotBlank(job.getId()+"")){
-			if(list.get(0).getId()!=job.getId()){
+			if(!list.get(0).getId().equals(job.getId())){
 				return R.error(1, "作业名称已存在");
 			}
 		}

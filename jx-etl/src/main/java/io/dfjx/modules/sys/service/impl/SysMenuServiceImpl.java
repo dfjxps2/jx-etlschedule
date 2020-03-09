@@ -30,6 +30,7 @@ import io.dfjx.modules.sys.service.SysRoleMenuService;
 import io.dfjx.modules.sys.service.SysUserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +47,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 	private SysRoleMenuService sysRoleMenuService;
 	@Autowired
 	private OauthUserTemplate oauthUserTemplate;
+
+	@Value("${auth.config.need}")
+	private boolean isAuth;
 
 	@Override
 	public List<SysMenuEntity> queryListParentId(Long parentId, List<Long> menuIdList) {
@@ -75,6 +79,12 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 
 	@Override
 	public List<SysMenuEntity> getUserMenuList(HttpServletRequest request, Long userId) {
+
+		if (!isAuth) {
+			List<Long> menuIdList = sysUserService.queryAllMenuId(userId);
+			return getAllMenuList(menuIdList);
+		}
+
 		String token = CookieUtils.get(request, Constant.ACCESS_TOKEN).getValue();
 		if(StringUtils.isNotBlank(token)){
 			token = token.toLowerCase().replace("bearer", "");

@@ -1,5 +1,6 @@
 package io.dfjx.common.utils;
 
+import com.dfjinxin.commons.auth.utlis.OnlineUserUtils;
 import com.seaboxdata.auth.api.utils.UserUtils;
 import com.seaboxdata.auth.api.vo.OauthLoginUserVO;
 import io.dfjx.modules.sys.entity.SysUserEntity;
@@ -13,13 +14,12 @@ public class TagUserUtils {
     public static Long userId(){
 //        return SecurityUtils.getUser().getUserId();
 
-        OauthLoginUserVO userVO = UserUtils.getUserDetails();
-        return userVO.getUserId();
+        return OnlineUserUtils.userId();
 //        return 1L;
     }
 
     public static String userName(){
-        return sysUserService.queryUserById(userId()).getUsername();
+        return OnlineUserUtils.username(userId(), null);
 //        return "admin";
     }
 
