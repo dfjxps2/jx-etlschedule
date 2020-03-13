@@ -75,7 +75,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 
 	@Override
 	public SysUserEntity queryUserById(Long userId) {
-		String token = CookieUtils.get(request, Constant.ACCESS_TOKEN).getValue();
+		String token = null;
+		try{
+			token = CookieUtils.get(request, Constant.ACCESS_TOKEN).getValue();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if(StringUtils.isNotBlank(token)){
 			token = token.toLowerCase().replace("bearer", "");
 		}

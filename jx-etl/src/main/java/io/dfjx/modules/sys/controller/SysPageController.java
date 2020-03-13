@@ -84,7 +84,7 @@ public class SysPageController {
 
 	@RequestMapping("login.html")
 	public String login(){
-		return "indexsso";
+		return "redirect:index.html";
 	}
 
 	@RequestMapping("main.html")

@@ -24,6 +24,7 @@ public class TagUserUtils {
     }
 
     public static SysUserEntity getTagUser(){
+        OnlineUserUtils.getOauthLoginUserVO();
         SysUserEntity userEntity = sysUserService.queryUserById(userId());
         return userEntity;
     }
