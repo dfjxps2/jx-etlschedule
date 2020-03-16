@@ -3,6 +3,7 @@ package io.dfjx.modules.etl.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import io.dfjx.common.utils.DateUtils;
 import io.dfjx.common.utils.PageUtils;
 import io.dfjx.common.utils.Query;
 import io.dfjx.modules.etl.dao.JobLogDao;
@@ -117,7 +118,7 @@ public class JobLogServiceImpl extends ServiceImpl<JobLogDao, JobLogEntity> impl
         int triggerCountSucTotal = 0;
         List triggerDayCountFailList = new ArrayList();
         List triggerDayCountSucList = new ArrayList();
-        List<Date> triggerDayList = new ArrayList();
+        List<String> triggerDayList = new ArrayList();
 
 
         for (int i = 0; i < list.size(); i++) {
@@ -130,7 +131,7 @@ public class JobLogServiceImpl extends ServiceImpl<JobLogDao, JobLogEntity> impl
 
             triggerDayCountFailList.add(err_cnt);
             triggerDayCountSucList.add(success_cnt);
-            triggerDayList.add((Date) map.get("txdate"));
+            triggerDayList.add(map.get("endtime") + "");
         }
 
         Map data = new HashMap();
