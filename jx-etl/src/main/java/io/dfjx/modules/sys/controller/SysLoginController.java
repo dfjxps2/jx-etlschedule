@@ -23,6 +23,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.dfjinxin.commons.auth.compoment.OauthUserTemplate;
 import io.dfjx.common.config.SystemParams;
 import io.dfjx.common.synchrodata.CasFilter;
 import io.dfjx.common.utils.StringTools;
@@ -55,8 +56,6 @@ import io.dfjx.modules.sys.shiro.ShiroUtils;
 public class SysLoginController {
     @Autowired
     private Producer producer;
-    @Autowired
-    private SystemParams systemParams;
 
     @RequestMapping("captcha.jpg")
     public void captcha(HttpServletResponse response) throws IOException {
@@ -72,99 +71,6 @@ public class SysLoginController {
 
         ServletOutputStream out = response.getOutputStream();
         ImageIO.write(image, "jpg", out);
-    }
-
-    /**
-     * 登录
-     */
-    @ResponseBody
-    @RequestMapping(value = "/sys/login", method = RequestMethod.POST)
-    // thp改 去除验证码
-    // public R login(String username, String password, String captcha) {
-    public R login(String username, String password) {
-        // String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
-        // if(!captcha.equalsIgnoreCase(kaptcha)){
-        // return R.error("验证码不正确");
-        // }
-
-        try {
-            Subject subject = ShiroUtils.getSubject();
-            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-            subject.login(token);
-        } catch (UnknownAccountException e) {
-            return R.error(e.getMessage());
-        } catch (IncorrectCredentialsException e) {
-            return R.error("账号或密码不正确");
-        } catch (LockedAccountException e) {
-            return R.error("账号已被锁定,请联系管理员");
-        } catch (AuthenticationException e) {
-            return R.error("账户验证失败");
-        }
-
-        return R.ok();
-    }
-
-    @RequestMapping("indexsso")
-    public String indexsso(HttpServletRequest request){
-        String main = "index";
-//        if(SYSTEM_PROFILE.equals(SpringContextUtils.getActiveProfile())){
-//            return main;
-//        }
-        CasFilter sso = new CasFilter();
-        boolean isLogin = sso.doLogin(request);
-        if(!isLogin){
-            return "redirect:"+getCasLogin();
-        }
-        return "index";
-    }
-
-    @RequestMapping("loginsso")
-    public String loginsso(){
-        return "redirect:"+getCasLogout();
-//        if(SYSTEM_PROFILE.equals(SpringContextUtils.getActiveProfile())){
-//            return "redirect:login.html";
-//        }else{
-//            return "redirect:"+getCasLogout();
-//        }
-
-    }
-
-    private String getCasLogout(){
-        String url = systemParams.getCasServiceUrl() + "/logout?service=" + StringTools.urlEncode(systemParams.getProjectUrl());
-        return url;
-    }
-    private String getCasLogin(){
-        String url = systemParams.getCasServiceUrl() + "/login?service=" + StringTools.urlEncode(systemParams.getProjectUrl());
-        return url;
-    }
-
-    /**
-     * 退出
-     */
-    @RequestMapping(value = "logout", method = RequestMethod.GET)
-    public String logout() {
-        ShiroUtils.logout();
-        return "redirect:"+getCasLogout();
-        //return "redirect:login.html";
-    }
-
-    /**
-     * 退出
-     */
-    @RequestMapping(value = "/oosLogin", method = RequestMethod.GET)
-    public String oosLogin(String username, String password) {
-        Subject subject = ShiroUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-        subject.login(token);
-        return "redirect:index.html";
-    }
-
-    @RequestMapping(value = "/oosLoginAdmin", method = RequestMethod.GET)
-    public String oosLoginAdmin(String username, String password) {
-        Subject subject = ShiroUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken("admin", "admin");
-        subject.login(token);
-        return "redirect:index.html";
     }
 
 }

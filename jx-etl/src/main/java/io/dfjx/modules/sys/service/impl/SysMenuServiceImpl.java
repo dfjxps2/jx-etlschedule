@@ -19,6 +19,7 @@ package io.dfjx.modules.sys.service.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.dfjinxin.commons.auth.compoment.OauthUserTemplate;
+import io.dfjx.common.exception.RRException;
 import io.dfjx.common.utils.Constant;
 import io.dfjx.common.utils.CookieUtils;
 import io.dfjx.common.utils.MapUtils;
@@ -90,6 +91,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 			token = token.toLowerCase().replace("bearer", "");
 		}
 		Map<Long, String> mapCodes = oauthUserTemplate.selectPermissionsByUserIdAndSystem(TagUserUtils.userId(), Constant.APP_NAME, token);
+		if (mapCodes.size() == 0) {
+			throw new RRException("没有访问权限，请联系管理员");
+		}
 		List<SysMenuEntity> menuIdList = baseMapper.queryByPermsCode(mapCodes);
 		return menuIdList;
 	}

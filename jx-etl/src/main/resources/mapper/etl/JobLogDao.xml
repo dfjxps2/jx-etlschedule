@@ -20,22 +20,50 @@
 
 
     <select id="queryLineChartData" resultType="map">
-        select endtime,
-        sum(case when returncode = 0 then 1 else 0 end) as success_cnt,
-        sum(case when returncode > 0 then 1 else 0 end) as err_cnt
-        from etl_job_log
-        where txdate >= #{fromDate} and txdate &lt;= #{toDate}
-        group by txdate
-        order by txdate
+        SELECT
+        endtime,
+        txdate,
+        sum(CASE WHEN returncode = 0 THEN 1 ELSE 0 END) AS success_cnt,
+        sum(CASE WHEN returncode > 0 THEN 1 ELSE 0 END ) AS err_cnt
+        FROM
+        (
+        SELECT
+        DATE_FORMAT(endtime, '%Y-%m-%d') as endtime,
+        txdate,
+        returncode
+        FROM
+        etl_job_log
+        WHERE
+        endtime >= #{fromDate}
+        AND endtime &lt;= DATE_ADD(#{toDate},INTERVAL 1 DAY)
+        ) t
+        GROUP BY
+        t.endtime
+        ORDER BY
+        t.endtime
 	</select>
 
     <select id="queryPieChartData" resultType="map">
-        select endtime, sum(case when returncode = 0 then 1 else 0 end) as success_cnt,
-       sum(case when returncode > 0 then 1 else 0 end) as err_cnt,
-       count(1)
-        from etl_job_log
-        where endtime >= #{fromDate} and txdate &lt;= #{toDate}
-        group by endtime
-        order by endtime
+        SELECT
+        endtime,
+        txdate,
+        sum(CASE WHEN returncode = 0 THEN 1 ELSE 0 END) AS success_cnt,
+        sum(CASE WHEN returncode > 0 THEN 1 ELSE 0 END ) AS err_cnt
+        FROM
+        (
+        SELECT
+        DATE_FORMAT(endtime, '%Y-%m-%d') as endtime,
+        txdate,
+        returncode
+        FROM
+        etl_job_log
+        WHERE
+        endtime >= #{fromDate}
+        AND endtime &lt;= DATE_ADD(#{toDate},INTERVAL 1 DAY)
+        ) t
+        GROUP BY
+        t.endtime
+        ORDER BY
+        t.endtime
     </select>
 </mapper>

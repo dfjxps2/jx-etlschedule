@@ -56,9 +56,9 @@ seaboxdata:
 #统一认证
 auth:
   config:
-    need: false
+    need: true
   login:
-    url: http://123.207.126.81:30002/login/toLogin?redirect_url=http%3A%2F%2Flocalhost%3A7202%2Fjx-etl%2Floginback
+    url: http://123.207.126.81:30001/frontier/auth/toLogin?redirect_url=http%3A%2F%2Flocalhost%3A7202%2Fjx-etl%2Floginback
 
 system-params:
 #  配置日志下载目录 /home/etl/ETLAuto/LOG/

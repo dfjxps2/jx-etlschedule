@@ -28,7 +28,7 @@
       height: 50px;
       line-height: 50px;
       text-align: center;
-      width: 140px;
+      width: 130px;
       border-bottom:none;
     }
     .el-menu--horizontal>.el-menu-item.is-active {
@@ -36,7 +36,7 @@
       background-color: rgba(255,255,255,0.1) !important;
     }
     .quit{
-      width: 80px;
+      padding: 0 10px;
       height: 32px;
       letter-spacing: 1px;
       border-radius: 4px;
@@ -55,15 +55,15 @@
       <el-col :span="2">
         <a href="#main.html" class="header-tile">调度系统</a>
       </el-col>
-      <el-col :span="19">
+      <el-col :span="18">
         <el-menu :default-active="getActiveTab" class="el-menu-demo" mode="horizontal" background-color="#1F2E4D" text-color="#FFFFFF" active-text-color="#FFFFFF">
           <el-menu-item v-if="item.type == 1" @click="toLink(item.url)" :index="index" v-for="(item,index) in menuList">{{item.name}}</el-menu-item>
         </el-menu>
       </el-col>
-      <el-col :span="3">
+      <el-col :span="4">
         <div style="color: #ffffff; line-height: 50px; text-align: right">
-          <span style="font-size: 16px">${sysUser.username}，欢迎您访问！</span>
-<!--          <el-button type="text" class="quit" @click="logout()"><i class="el-icon-switch-button"></i>退出</el-button>-->
+          <span style="font-size: 16px">${sysUser.username} 欢迎您！</span>
+          <el-button type="text" class="quit" @click="logout()"><i class="el-icon-switch-button"></i>退出</el-button>
         </div>
       </el-col>
     </el-row>

@@ -16,6 +16,7 @@
 
 package io.dfjx.modules.sys.controller;
 
+import com.dfjinxin.commons.auth.compoment.OauthUserTemplate;
 import io.dfjx.common.config.SystemParams;
 import io.dfjx.common.utils.Constant;
 import io.dfjx.common.utils.CookieUtils;
@@ -62,6 +63,9 @@ public class SysPageController {
 	@Autowired
 	private ScriptService scriptService;
 
+	@Autowired
+	private OauthUserTemplate oauthUserTemplate;
+
 	@Value("${auth.login.url}")
 	private String loginUrl;
 
@@ -79,7 +83,7 @@ public class SysPageController {
 
 	@RequestMapping("index.html")
 	public String index2(){
-		return "indexsso";
+		return "index";
 	}
 
 	@RequestMapping("login.html")
@@ -123,4 +127,12 @@ public class SysPageController {
 		}
 		return "redirect:"+loginUrl;
 	}
+
+	@RequestMapping("ca/logout")
+	public String logout(HttpServletRequest request){
+		String token = CookieUtils.get(request, Constant.ACCESS_TOKEN).getValue().substring(6);
+		oauthUserTemplate.loginOut(token);
+		return "redirect:"+loginUrl;
+	}
+
 }

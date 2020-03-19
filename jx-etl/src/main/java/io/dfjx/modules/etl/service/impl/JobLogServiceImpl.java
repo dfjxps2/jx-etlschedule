@@ -59,11 +59,14 @@ public class JobLogServiceImpl extends ServiceImpl<JobLogDao, JobLogEntity> impl
 
     public String getLogDir(String etlSystem,Integer jobsessionid,String scriptfile,String txdate ){
 
+        Date date = new Date();
+        date.setTime(Long.parseLong(txdate));
+
         JobLogEntity jobLogEntity = this.selectOne(new EntityWrapper<JobLogEntity>()
                             .eq("etl_system",etlSystem)
                             .eq("jobsessionid",jobsessionid)
                             .eq("scriptfile",scriptfile)
-                            .eq("txdate",txdate)
+                            .eq("txdate",date)
 
         );
         if(jobLogEntity == null){

@@ -84,8 +84,10 @@ var vm = new Vue({
                 //     list: r.menuList
                 // }
                 vm.menuList = r.menuList
-
-                console.log('get_menu_nav', vm.menuList)
+            }).complete(function(data) {
+                if (data.responseJSON.code != 0) {
+                    layer.alert(data.responseJSON.msg);
+                }
             });
         },
 
@@ -158,7 +160,7 @@ var vm = new Vue({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                parent.location.href='logout'
+                parent.location.href='ca/logout'
             }).catch(() => {
             });
         },
