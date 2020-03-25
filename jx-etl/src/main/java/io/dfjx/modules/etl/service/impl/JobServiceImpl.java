@@ -53,11 +53,11 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	private JobStepService jobStepService;
 
 	@Autowired
-	private JobSourceService jobSourceService;	
-	
+	private JobSourceService jobSourceService;
+
 	@Autowired
-	private JobTimewindowService jobTimewindowService;	
-	
+	private JobTimewindowService jobTimewindowService;
+
 	@Autowired
 	private SystemParams systemParams;
 
@@ -95,7 +95,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 			}
 			if(StringUtils.isNotBlank(lastJobStatus)){
 				sql.append(" and last_JobStatus like '%" + lastJobStatus +"%' ");
-			}	
+			}
 			if(StringUtils.isNotBlank(enable)){
 				sql.append(" and Enable ='" + enable +"' ");
 			}
@@ -155,7 +155,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 			page = this.selectPage(new Query<JobEntity>(params).getPage(),jobwarper);
 		}
 		//加载触发作业
-		Map<String,Object> map=new HashMap<String,Object>();	
+		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("Stream_System", etlSystem);
 		map.put("Stream_Job", etlJob);
 		JobStreamEntity jse= new JobStreamEntity();
@@ -213,13 +213,14 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	//保存依赖作业
 
 	private void saveDependencyJob(JobEntity job){
-		if(job.getAllDependSave()==null || job.getAllDependSave().length==0){
-			return ;
-		}
 		Map<String,Object> map=new HashMap<String,Object>();
-		List<JobEntity>  dependLists=jobDao.selectBatchIds(Arrays.asList(job.getAllDependSave()));
 		map.put("ETL_System",job.getEtlSystem() );
 		map.put("ETL_Job", job.getEtlJob());
+		if(job.getAllDependSave()==null || job.getAllDependSave().length==0){
+			jobDependencyDao.deleteByMap(map);
+			return ;
+		}
+		List<JobEntity>  dependLists=jobDao.selectBatchIds(Arrays.asList(job.getAllDependSave()));
 		jobDependencyDao.deleteByMap(map);
 		JobDependencyEntity jde = new JobDependencyEntity();
 		for(JobEntity j:dependLists){
@@ -747,6 +748,9 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
     @Transactional(rollbackFor = Exception.class)
 	public String jobBatcheConfig() throws Exception{
 		File file = new File(systemParams.getPublicScriptUploadDir()+"job_batch_config.xls");
+		if (!file.exists()) {
+			throw new Exception("请上传配置文件");
+		}
 		List<String[]> jobconfiglist = ExcelData.getSheetDataBySheetName(file,"jobconfig");
 		List<String[]> jobdenpencylist = ExcelData.getSheetDataBySheetName(file,"jobdenpency");
         String platform="";

@@ -59,6 +59,8 @@ auth:
     need: true
   login:
     url: http://123.207.126.81:30001/frontier/auth/toLogin?redirect_url=http%3A%2F%2Flocalhost%3A7202%2Fjx-etl%2Floginback
+  logout:
+    url: http://59.212.226.49:9302/cas/logout
 
 system-params:
 #  配置日志下载目录 /home/etl/ETLAuto/LOG/

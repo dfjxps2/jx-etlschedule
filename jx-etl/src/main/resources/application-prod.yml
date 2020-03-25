@@ -59,7 +59,8 @@ auth:
     need: true
   login:
     url: http://auth-frontier.jxwda.bjdx.gov.cn/frontier/auth/toLogin?redirect_url=http%3A%2F%2F10.217.17.115%3A7202%2Fjx-etl%2Floginback
-
+  logout:
+    url: http://59.212.226.49:9302/cas/logout
 
 system-params:
   #  配置日志下载目录

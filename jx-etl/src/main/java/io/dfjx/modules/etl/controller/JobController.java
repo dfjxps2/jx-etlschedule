@@ -324,7 +324,7 @@ public class JobController {
 			}
 
 			if (saveFile.exists()) {
-				return R.error("上传文件已存在");
+				saveFile.delete();
 			}
 			try {
 				BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(saveFile));
@@ -372,6 +372,7 @@ public class JobController {
 				case "err205": return R.error("etl_job_source表配置失败,请检查");
 				case "err206": return R.error("etl_job_timewindow表配置失败,请检查");
 				case "err207": return R.error("创建作业软连接失败,请检查");
+				default: return R.error(e.getMessage());
 			}
 
 		}

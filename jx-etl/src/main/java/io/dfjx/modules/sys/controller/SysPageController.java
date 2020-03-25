@@ -68,6 +68,8 @@ public class SysPageController {
 
 	@Value("${auth.login.url}")
 	private String loginUrl;
+	@Value("${auth.logout.url}")
+	private String logoutUrl;
 
 	@RequestMapping("modules/{module}/{url}.html")
 	public String module(@PathVariable("module") String module, @PathVariable("url") String url){
@@ -132,7 +134,7 @@ public class SysPageController {
 	public String logout(HttpServletRequest request){
 		String token = CookieUtils.get(request, Constant.ACCESS_TOKEN).getValue().substring(6);
 		oauthUserTemplate.loginOut(token);
-		return "redirect:"+loginUrl;
+		return "redirect:"+logoutUrl;
 	}
 
 }
