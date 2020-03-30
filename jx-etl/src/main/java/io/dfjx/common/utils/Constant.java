@@ -32,6 +32,8 @@ public class Constant {
 
 	public static String ACCESS_TOKEN = "access_token";
 
+	public static String REFRESH_TOKEN = "refresh_token";
+
 
 	/**
 	 * 菜单类型

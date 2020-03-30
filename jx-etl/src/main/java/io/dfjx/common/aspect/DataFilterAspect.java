@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import io.dfjx.common.utils.TagUserUtils;
 import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -38,7 +39,6 @@ import io.dfjx.modules.sys.entity.SysUserEntity;
 import io.dfjx.modules.sys.service.SysDeptService;
 import io.dfjx.modules.sys.service.SysRoleDeptService;
 import io.dfjx.modules.sys.service.SysUserRoleService;
-import io.dfjx.modules.sys.shiro.ShiroUtils;
 
 /**
  * 数据过滤，切面处理类
@@ -65,7 +65,7 @@ public class DataFilterAspect {
     public void dataFilter(JoinPoint point) throws Throwable {
         Object params = point.getArgs()[0];
         if(params != null && params instanceof Map){
-            SysUserEntity user = ShiroUtils.getUserEntity();
+            SysUserEntity user = TagUserUtils.getTagUser();
 
             //如果不是超级管理员，则进行数据过滤
             if(user.getUserId() != Constant.SUPER_ADMIN){

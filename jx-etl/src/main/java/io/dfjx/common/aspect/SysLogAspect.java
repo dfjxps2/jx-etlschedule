@@ -22,14 +22,11 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
 import io.dfjx.common.utils.TagUserUtils;
-import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
@@ -37,7 +34,6 @@ import io.dfjx.common.annotation.SysLog;
 import io.dfjx.common.utils.HttpContextUtils;
 import io.dfjx.common.utils.IPUtils;
 import io.dfjx.modules.sys.entity.SysLogEntity;
-import io.dfjx.modules.sys.entity.SysUserEntity;
 import io.dfjx.modules.sys.service.SysLogService;
 
 /**

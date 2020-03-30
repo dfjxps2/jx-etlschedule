@@ -1,4 +1,4 @@
-package io.dfjx.common.filter;
+package io.dfjx.modules.auth.filter;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

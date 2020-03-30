@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,7 +46,7 @@ import io.dfjx.modules.sys.service.SysConfigService;
 
 /**
  * 文件上传
- * 
+ *
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-25 12:13:26
@@ -61,12 +60,12 @@ public class SysOssController {
     private SysConfigService sysConfigService;
 
     private final static String KEY = ConfigConstant.CLOUD_STORAGE_CONFIG_KEY;
-	
+
 	/**
 	 * 列表
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions("sys:oss:all")
+//	@RequiresPermissions("sys:oss:all")
 	public R list(@RequestParam Map<String, Object> params){
 		PageUtils page = sysOssService.queryPage(params);
 
@@ -78,7 +77,7 @@ public class SysOssController {
      * 云存储配置信息
      */
     @RequestMapping("/config")
-    @RequiresPermissions("sys:oss:all")
+//    @RequiresPermissions("sys:oss:all")
     public R config(){
         CloudStorageConfig config = sysConfigService.getConfigObject(KEY, CloudStorageConfig.class);
 
@@ -90,7 +89,7 @@ public class SysOssController {
 	 * 保存云存储配置信息
 	 */
 	@RequestMapping("/saveConfig")
-	@RequiresPermissions("sys:oss:all")
+//	@RequiresPermissions("sys:oss:all")
 	public R saveConfig(@RequestBody CloudStorageConfig config){
 		//校验类型
 		ValidatorUtils.validateEntity(config);
@@ -110,13 +109,13 @@ public class SysOssController {
 
 		return R.ok();
 	}
-	
+
 
 	/**
 	 * 上传文件
 	 */
 	@RequestMapping("/upload")
-	@RequiresPermissions("sys:oss:all")
+//	@RequiresPermissions("sys:oss:all")
 	public R upload(@RequestParam("file") MultipartFile file) throws Exception {
 		if (file.isEmpty()) {
 			throw new RRException("上传文件不能为空");
@@ -140,7 +139,7 @@ public class SysOssController {
 	 * 删除
 	 */
 	@RequestMapping("/delete")
-	@RequiresPermissions("sys:oss:all")
+//	@RequiresPermissions("sys:oss:all")
 	public R delete(@RequestBody Long[] ids){
 		sysOssService.deleteBatchIds(Arrays.asList(ids));
 

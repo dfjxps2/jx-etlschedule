@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Map;
 
 import io.dfjx.common.validator.ValidatorUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +19,7 @@ import io.dfjx.common.utils.R;
 
 
 /**
- * 
+ *
  *
  * @author lwq
  * @email 404461275@qq.com
@@ -36,7 +35,7 @@ public class JobStepController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("etl:jobstep:list")
+//    @RequiresPermissions("etl:jobstep:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = jobStepService.queryPage(params);
 
@@ -48,7 +47,7 @@ public class JobStepController {
      * 信息
      */
     @RequestMapping("/info/{id}")
-    @RequiresPermissions("etl:jobstep:info")
+//    @RequiresPermissions("etl:jobstep:info")
     public R info(@PathVariable("id") Integer id){
         JobStepEntity jobStep = jobStepService.selectById(id);
 
@@ -59,7 +58,7 @@ public class JobStepController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("etl:jobstep:save")
+//    @RequiresPermissions("etl:jobstep:save")
     public R save(@RequestBody JobStepEntity jobStep){
         jobStepService.insert(jobStep);
 
@@ -70,11 +69,11 @@ public class JobStepController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("etl:jobstep:update")
+//    @RequiresPermissions("etl:jobstep:update")
     public R update(@RequestBody JobStepEntity jobStep){
         ValidatorUtils.validateEntity(jobStep);
         jobStepService.updateAllColumnById(jobStep);//全部更新
-        
+
         return R.ok();
     }
 
@@ -82,7 +81,7 @@ public class JobStepController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("etl:jobstep:delete")
+//    @RequiresPermissions("etl:jobstep:delete")
     public R delete(@RequestBody Integer[] ids){
         jobStepService.deleteBatchIds(Arrays.asList(ids));
 

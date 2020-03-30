@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Map;
 
 import io.dfjx.common.validator.ValidatorUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +19,7 @@ import io.dfjx.common.utils.R;
 
 
 /**
- * 
+ *
  *
  * @author lwq
  * @email 404461275@qq.com
@@ -36,7 +35,7 @@ public class JobTimewindowController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("etl:jobtimewindow:list")
+//    @RequiresPermissions("etl:jobtimewindow:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = jobTimewindowService.queryPage(params);
 
@@ -48,7 +47,7 @@ public class JobTimewindowController {
      * 信息
      */
     @RequestMapping("/info/{id}")
-    @RequiresPermissions("etl:jobtimewindow:info")
+//    @RequiresPermissions("etl:jobtimewindow:info")
     public R info(@PathVariable("id") Integer id){
         JobTimewindowEntity jobTimewindow = jobTimewindowService.selectById(id);
 
@@ -59,7 +58,7 @@ public class JobTimewindowController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("etl:jobtimewindow:save")
+//    @RequiresPermissions("etl:jobtimewindow:save")
     public R save(@RequestBody JobTimewindowEntity jobTimewindow){
         jobTimewindowService.insert(jobTimewindow);
 
@@ -70,11 +69,11 @@ public class JobTimewindowController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("etl:jobtimewindow:update")
+//    @RequiresPermissions("etl:jobtimewindow:update")
     public R update(@RequestBody JobTimewindowEntity jobTimewindow){
         ValidatorUtils.validateEntity(jobTimewindow);
         jobTimewindowService.updateAllColumnById(jobTimewindow);//全部更新
-        
+
         return R.ok();
     }
 
@@ -82,7 +81,7 @@ public class JobTimewindowController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("etl:jobtimewindow:delete")
+//    @RequiresPermissions("etl:jobtimewindow:delete")
     public R delete(@RequestBody Integer[] ids){
         jobTimewindowService.deleteBatchIds(Arrays.asList(ids));
 

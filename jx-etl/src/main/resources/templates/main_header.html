@@ -19,16 +19,16 @@
     .content-wrapper{
       margin-left:0;
     }
-    .heafer-bg{background-color: #1F2E4D; height: 50px;}
+    .heafer-bg{background-color: #1A3275; height: 50px;}
     .header-tile{
-      line-height: 50px; color: #ffffff; font-size: 18px; padding-left: 20px
+      line-height: 50px; color: #ffffff; font-size: 18px; padding-left: 10px; vertical-align: middle;
     }
     .header-tile:hover{color: #fff}
     .el-menu--horizontal>.el-menu-item{
       height: 50px;
       line-height: 50px;
       text-align: center;
-      width: 130px;
+      width: 126px;
       border-bottom:none;
     }
     .el-menu--horizontal>.el-menu-item.is-active {
@@ -52,11 +52,12 @@
 <div class="wrapper" id="rrapp" v-cloak style="overflow: hidden;">
   <header class="main-header">
     <el-row class="heafer-bg">
-      <el-col :span="2">
+      <el-col :span="3">
+        <img src="${request.contextPath}/statics/img/mainImgs/abstract.png" height="24" style="padding-left: 15px"/>
         <a href="#main.html" class="header-tile">调度系统</a>
       </el-col>
-      <el-col :span="18">
-        <el-menu :default-active="getActiveTab" class="el-menu-demo" mode="horizontal" background-color="#1F2E4D" text-color="#FFFFFF" active-text-color="#FFFFFF">
+      <el-col :span="17">
+        <el-menu :default-active="getActiveTab" class="el-menu-demo" mode="horizontal" background-color="#1A3275" text-color="#FFFFFF" active-text-color="#FFFFFF">
           <el-menu-item v-if="item.type == 1" @click="toLink(item.url)" :index="index" v-for="(item,index) in menuList">{{item.name}}</el-menu-item>
         </el-menu>
       </el-col>

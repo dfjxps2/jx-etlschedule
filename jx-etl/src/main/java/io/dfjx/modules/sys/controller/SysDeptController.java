@@ -20,7 +20,6 @@ import io.dfjx.common.utils.Constant;
 import io.dfjx.common.utils.R;
 import io.dfjx.modules.sys.entity.SysDeptEntity;
 import io.dfjx.modules.sys.service.SysDeptService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +32,7 @@ import java.util.List;
 
 /**
  * 部门管理
- * 
+ *
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-06-20 15:23:47
@@ -43,12 +42,12 @@ import java.util.List;
 public class SysDeptController extends AbstractController {
 	@Autowired
 	private SysDeptService sysDeptService;
-	
+
 	/**
 	 * 列表
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions("sys:dept:list")
+//	@RequiresPermissions("sys:dept:list")
 	public List<SysDeptEntity> list(){
 		List<SysDeptEntity> deptList = sysDeptService.queryList(new HashMap<String, Object>());
 
@@ -59,7 +58,7 @@ public class SysDeptController extends AbstractController {
 	 * 选择部门(添加、修改菜单)
 	 */
 	@RequestMapping("/select")
-	@RequiresPermissions("sys:dept:select")
+//	@RequiresPermissions("sys:dept:select")
 	public R select(){
 		List<SysDeptEntity> deptList = sysDeptService.queryList(new HashMap<String, Object>());
 
@@ -80,7 +79,7 @@ public class SysDeptController extends AbstractController {
 	 * 上级部门Id(管理员则为0)
 	 */
 	@RequestMapping("/info")
-	@RequiresPermissions("sys:dept:list")
+//	@RequiresPermissions("sys:dept:list")
 	public R info(){
 		long deptId = 0;
 		if(getUserId() != Constant.SUPER_ADMIN){
@@ -101,45 +100,45 @@ public class SysDeptController extends AbstractController {
 
 		return R.ok().put("deptId", deptId);
 	}
-	
+
 	/**
 	 * 信息
 	 */
 	@RequestMapping("/info/{deptId}")
-	@RequiresPermissions("sys:dept:info")
+//	@RequiresPermissions("sys:dept:info")
 	public R info(@PathVariable("deptId") Long deptId){
 		SysDeptEntity dept = sysDeptService.selectById(deptId);
-		
+
 		return R.ok().put("dept", dept);
 	}
-	
+
 	/**
 	 * 保存
 	 */
 	@RequestMapping("/save")
-	@RequiresPermissions("sys:dept:save")
+//	@RequiresPermissions("sys:dept:save")
 	public R save(@RequestBody SysDeptEntity dept){
 		sysDeptService.insert(dept);
-		
+
 		return R.ok();
 	}
-	
+
 	/**
 	 * 修改
 	 */
 	@RequestMapping("/update")
-	@RequiresPermissions("sys:dept:update")
+//	@RequiresPermissions("sys:dept:update")
 	public R update(@RequestBody SysDeptEntity dept){
 		sysDeptService.updateById(dept);
-		
+
 		return R.ok();
 	}
-	
+
 	/**
 	 * 删除
 	 */
 	@RequestMapping("/delete")
-	@RequiresPermissions("sys:dept:delete")
+//	@RequiresPermissions("sys:dept:delete")
 	public R delete(long deptId){
 		//判断是否有子部门
 		List<Long> deptList = sysDeptService.queryDetpIdList(deptId);
@@ -148,8 +147,8 @@ public class SysDeptController extends AbstractController {
 		}
 
 		sysDeptService.deleteById(deptId);
-		
+
 		return R.ok();
 	}
-	
+
 }

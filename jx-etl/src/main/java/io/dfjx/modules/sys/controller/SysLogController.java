@@ -19,7 +19,6 @@ package io.dfjx.modules.sys.controller;
 import io.dfjx.modules.sys.service.SysLogService;
 import io.dfjx.common.utils.PageUtils;
 import io.dfjx.common.utils.R;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +30,7 @@ import java.util.Map;
 
 /**
  * 系统日志
- * 
+ *
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2017-03-08 10:40:56
@@ -41,17 +40,17 @@ import java.util.Map;
 public class SysLogController {
 	@Autowired
 	private SysLogService sysLogService;
-	
+
 	/**
 	 * 列表
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("sys:log:list")
+//	@RequiresPermissions("sys:log:list")
 	public R list(@RequestParam Map<String, Object> params){
 		PageUtils page = sysLogService.queryPage(params);
 
 		return R.ok().put("page", page);
 	}
-	
+
 }

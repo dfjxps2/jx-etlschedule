@@ -22,6 +22,7 @@ import io.dfjx.modules.sys.entity.SysMenuEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -54,10 +55,14 @@ public interface SysMenuService extends IService<SysMenuEntity> {
 	/**
 	 * 获取用户菜单列表
 	 */
-	List<SysMenuEntity> getUserMenuList(HttpServletRequest request, Long userId);
+	List<SysMenuEntity> getUserMenuList(Long userId);
 
 	/**
 	 * 删除
 	 */
 	void delete(Long menuId);
+
+	List<SysMenuEntity> queryByPermsCode(List<String> codes);
+
+	Set<String> queryPermsCodeToSet();
 }

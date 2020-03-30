@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Map;
 
 import io.dfjx.common.validator.ValidatorUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +19,7 @@ import io.dfjx.common.utils.R;
 
 
 /**
- * 
+ *
  *
  * @author lwq
  * @email 404461275@qq.com
@@ -36,7 +35,7 @@ public class JobStatusTypeController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("etl:jobstatustype:list")
+//    @RequiresPermissions("etl:jobstatustype:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = jobStatusTypeService.queryPage(params);
 
@@ -48,7 +47,7 @@ public class JobStatusTypeController {
      * 信息
      */
     @RequestMapping("/info/{id}")
-    @RequiresPermissions("etl:jobstatustype:info")
+//    @RequiresPermissions("etl:jobstatustype:info")
     public R info(@PathVariable("id") Integer id){
         JobStatusTypeEntity jobStatusType = jobStatusTypeService.selectById(id);
 
@@ -59,7 +58,7 @@ public class JobStatusTypeController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("etl:jobstatustype:save")
+//    @RequiresPermissions("etl:jobstatustype:save")
     public R save(@RequestBody JobStatusTypeEntity jobStatusType){
         jobStatusTypeService.insert(jobStatusType);
 
@@ -70,11 +69,11 @@ public class JobStatusTypeController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("etl:jobstatustype:update")
+//    @RequiresPermissions("etl:jobstatustype:update")
     public R update(@RequestBody JobStatusTypeEntity jobStatusType){
         ValidatorUtils.validateEntity(jobStatusType);
         jobStatusTypeService.updateAllColumnById(jobStatusType);//全部更新
-        
+
         return R.ok();
     }
 
@@ -82,7 +81,7 @@ public class JobStatusTypeController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("etl:jobstatustype:delete")
+//    @RequiresPermissions("etl:jobstatustype:delete")
     public R delete(@RequestBody Integer[] ids){
         jobStatusTypeService.deleteBatchIds(Arrays.asList(ids));
 

@@ -17,7 +17,6 @@
 package io.dfjx.modules.sys.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.Gson;
 import io.dfjx.common.annotation.SysLog;
 import io.dfjx.common.config.SystemParams;
 import io.dfjx.common.exception.RRException;
@@ -25,19 +24,18 @@ import io.dfjx.common.utils.Constant;
 import io.dfjx.common.utils.R;
 import io.dfjx.common.utils.TagUserUtils;
 import io.dfjx.common.utils.WebClient;
+import io.dfjx.modules.auth.utils.UserThreadLocal;
+import io.dfjx.modules.auth.vo.OnlineUser;
 import io.dfjx.modules.sys.entity.SysMenuEntity;
 import io.dfjx.modules.sys.entity.SysUserEntity;
 import io.dfjx.modules.sys.service.SysMenuService;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 系统菜单
@@ -76,16 +74,28 @@ public class SysMenuController extends AbstractController {
 	 * 导航菜单
 	 */
 	@RequestMapping("/nav")
-	public R nav(HttpServletRequest request){
-		List<SysMenuEntity> menuList = sysMenuService.getUserMenuList(request, getUserId());
-		return R.ok().put("menuList", menuList);
+	public R nav(){
+
+		OnlineUser onlineUser = UserThreadLocal.get();
+		if (!onlineUser.isIaAuth()) {
+			List<SysMenuEntity> menuList = sysMenuService.getUserMenuList(null);
+			return R.ok().put("menuList", menuList);
+		}
+		Set<String> paramCode = onlineUser.getPermissions();
+		if (paramCode.size() > 0) {
+			List<String> permissionList = new ArrayList<>(paramCode);
+			List<SysMenuEntity> menuList = sysMenuService.queryByPermsCode(permissionList);
+			return R.ok().put("menuList", menuList).put("permission",permissionList);
+		} else {
+			throw new RRException("没有访问权限，请联系管理员");
+		}
 	}
 
 	/**
 	 * 所有菜单列表
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions("sys:menu:list")
+//	@RequiresPermissions("sys:menu:list")
 	public List<SysMenuEntity> list(){
 		List<SysMenuEntity> menuList = sysMenuService.selectList(null);
 		for(SysMenuEntity sysMenuEntity : menuList){
@@ -102,7 +112,7 @@ public class SysMenuController extends AbstractController {
 	 * 选择菜单(添加、修改菜单)
 	 */
 	@RequestMapping("/select")
-	@RequiresPermissions("sys:menu:select")
+//	@RequiresPermissions("sys:menu:select")
 	public R select(){
 		//查询列表数据
 		List<SysMenuEntity> menuList = sysMenuService.queryNotButtonList();
@@ -122,7 +132,7 @@ public class SysMenuController extends AbstractController {
 	 * 菜单信息
 	 */
 	@RequestMapping("/info/{menuId}")
-	@RequiresPermissions("sys:menu:info")
+//	@RequiresPermissions("sys:menu:info")
 	public R info(@PathVariable("menuId") Long menuId){
 		SysMenuEntity menu = sysMenuService.selectById(menuId);
 		return R.ok().put("menu", menu);
@@ -133,7 +143,7 @@ public class SysMenuController extends AbstractController {
 	 */
 	@SysLog("保存菜单")
 	@RequestMapping("/save")
-	@RequiresPermissions("sys:menu:save")
+//	@RequiresPermissions("sys:menu:save")
 	public R save(@RequestBody SysMenuEntity menu){
 		//数据校验
 		verifyForm(menu);
@@ -148,7 +158,7 @@ public class SysMenuController extends AbstractController {
 	 */
 	@SysLog("修改菜单")
 	@RequestMapping("/update")
-	@RequiresPermissions("sys:menu:update")
+//	@RequiresPermissions("sys:menu:update")
 	public R update(@RequestBody SysMenuEntity menu){
 		//数据校验
 		verifyForm(menu);
@@ -163,7 +173,7 @@ public class SysMenuController extends AbstractController {
 	 */
 	@SysLog("删除菜单")
 	@RequestMapping("/delete")
-	@RequiresPermissions("sys:menu:delete")
+//	@RequiresPermissions("sys:menu:delete")
 	public R delete(long menuId){
 		if(menuId <= 31){
 			return R.error("系统菜单，不能删除");

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Map;
 
 import io.dfjx.common.validator.ValidatorUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +19,7 @@ import io.dfjx.common.utils.R;
 
 
 /**
- * 
+ *
  *
  * @author lwq
  * @email 404461275@qq.com
@@ -36,7 +35,7 @@ public class JobSourceController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("etl:jobsource:list")
+//    @RequiresPermissions("etl:jobsource:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = jobSourceService.queryPage(params);
 
@@ -48,7 +47,7 @@ public class JobSourceController {
      * 信息
      */
     @RequestMapping("/info/{id}")
-    @RequiresPermissions("etl:jobsource:info")
+//    @RequiresPermissions("etl:jobsource:info")
     public R info(@PathVariable("id") Integer id){
         JobSourceEntity jobSource = jobSourceService.selectById(id);
 
@@ -59,7 +58,7 @@ public class JobSourceController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("etl:jobsource:save")
+//    @RequiresPermissions("etl:jobsource:save")
     public R save(@RequestBody JobSourceEntity jobSource){
         jobSourceService.insert(jobSource);
 
@@ -70,11 +69,11 @@ public class JobSourceController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("etl:jobsource:update")
+//    @RequiresPermissions("etl:jobsource:update")
     public R update(@RequestBody JobSourceEntity jobSource){
         ValidatorUtils.validateEntity(jobSource);
         jobSourceService.updateAllColumnById(jobSource);//全部更新
-        
+
         return R.ok();
     }
 
@@ -82,7 +81,7 @@ public class JobSourceController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("etl:jobsource:delete")
+//    @RequiresPermissions("etl:jobsource:delete")
     public R delete(@RequestBody Integer[] ids){
         jobSourceService.deleteBatchIds(Arrays.asList(ids));
 

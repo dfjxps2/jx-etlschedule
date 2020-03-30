@@ -18,26 +18,20 @@ package io.dfjx.modules.sys.service.impl;
 
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.dfjinxin.commons.auth.compoment.OauthUserTemplate;
-import io.dfjx.common.exception.RRException;
 import io.dfjx.common.utils.Constant;
-import io.dfjx.common.utils.CookieUtils;
 import io.dfjx.common.utils.MapUtils;
-import io.dfjx.common.utils.TagUserUtils;
 import io.dfjx.modules.sys.dao.SysMenuDao;
 import io.dfjx.modules.sys.entity.SysMenuEntity;
 import io.dfjx.modules.sys.service.SysMenuService;
 import io.dfjx.modules.sys.service.SysRoleMenuService;
 import io.dfjx.modules.sys.service.SysUserService;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 
 @Service("sysMenuService")
@@ -46,11 +40,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 	private SysUserService sysUserService;
 	@Autowired
 	private SysRoleMenuService sysRoleMenuService;
-	@Autowired
-	private OauthUserTemplate oauthUserTemplate;
-
-	@Value("${auth.config.need}")
-	private boolean isAuth;
 
 	@Override
 	public List<SysMenuEntity> queryListParentId(Long parentId, List<Long> menuIdList) {
@@ -79,23 +68,15 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 	}
 
 	@Override
-	public List<SysMenuEntity> getUserMenuList(HttpServletRequest request, Long userId) {
+	public List<SysMenuEntity> getUserMenuList(Long userId) {
+		//系统管理员，拥有最高权限
+//		if(userId == Constant.SUPER_ADMIN){
+			return getAllMenuList(null);
+//		}
 
-		if (!isAuth) {
-			List<Long> menuIdList = sysUserService.queryAllMenuId(userId);
-			return getAllMenuList(menuIdList);
-		}
-
-		String token = CookieUtils.get(request, Constant.ACCESS_TOKEN).getValue();
-		if(StringUtils.isNotBlank(token)){
-			token = token.toLowerCase().replace("bearer", "");
-		}
-		Map<Long, String> mapCodes = oauthUserTemplate.selectPermissionsByUserIdAndSystem(TagUserUtils.userId(), Constant.APP_NAME, token);
-		if (mapCodes.size() == 0) {
-			throw new RRException("没有访问权限，请联系管理员");
-		}
-		List<SysMenuEntity> menuIdList = baseMapper.queryByPermsCode(mapCodes);
-		return menuIdList;
+//		//用户菜单列表
+//		List<Long> menuIdList = sysUserService.queryAllMenuId(userId);
+//		return getAllMenuList(menuIdList);
 	}
 
 	@Override
@@ -104,6 +85,19 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 		this.deleteById(menuId);
 		//删除菜单与角色关联
 		sysRoleMenuService.deleteByMap(new MapUtils().put("menu_id", menuId));
+	}
+
+	@Override
+	public List<SysMenuEntity> queryByPermsCode(List<String> codes) {
+		if (codes.size() == 0) {
+			return new ArrayList<>();
+		}
+		return baseMapper.queryByPermsCode(codes);
+	}
+
+	@Override
+	public Set<String> queryPermsCodeToSet() {
+		return null;
 	}
 
 	/**

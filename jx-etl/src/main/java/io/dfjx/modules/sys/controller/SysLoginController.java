@@ -20,30 +20,15 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.dfjinxin.commons.auth.compoment.OauthUserTemplate;
-import io.dfjx.common.config.SystemParams;
-import io.dfjx.common.synchrodata.CasFilter;
-import io.dfjx.common.utils.StringTools;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 
-import io.dfjx.common.utils.R;
-import io.dfjx.modules.sys.shiro.ShiroUtils;
 
 /**
  * 登录相关
@@ -57,20 +42,20 @@ public class SysLoginController {
     @Autowired
     private Producer producer;
 
-    @RequestMapping("captcha.jpg")
-    public void captcha(HttpServletResponse response) throws IOException {
-        response.setHeader("Cache-Control", "no-store, no-cache");
-        response.setContentType("image/jpeg");
-
-        // 生成文字验证码
-        String text = producer.createText();
-        // 生成图片验证码
-        BufferedImage image = producer.createImage(text);
-        // 保存到shiro session
-        ShiroUtils.setSessionAttribute(Constants.KAPTCHA_SESSION_KEY, text);
-
-        ServletOutputStream out = response.getOutputStream();
-        ImageIO.write(image, "jpg", out);
-    }
+//    @RequestMapping("captcha.jpg")
+//    public void captcha(HttpServletResponse response) throws IOException {
+//        response.setHeader("Cache-Control", "no-store, no-cache");
+//        response.setContentType("image/jpeg");
+//
+//        // 生成文字验证码
+//        String text = producer.createText();
+//        // 生成图片验证码
+//        BufferedImage image = producer.createImage(text);
+//        // 保存到shiro session
+//        ShiroUtils.setSessionAttribute(Constants.KAPTCHA_SESSION_KEY, text);
+//
+//        ServletOutputStream out = response.getOutputStream();
+//        ImageIO.write(image, "jpg", out);
+//    }
 
 }

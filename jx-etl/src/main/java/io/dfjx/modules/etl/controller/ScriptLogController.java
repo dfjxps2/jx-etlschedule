@@ -8,17 +8,12 @@ import io.dfjx.modules.etl.entity.ScriptEntity;
 import io.dfjx.modules.etl.entity.ScriptLogEntity;
 import io.dfjx.modules.etl.service.ScriptLogService;
 import io.dfjx.modules.etl.service.ScriptService;
-import io.dfjx.modules.etl.util.ChmodUtil;
 import io.dfjx.modules.etl.util.ReadFileUtil;
-import io.dfjx.modules.sys.entity.SysUserEntity;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,14 +35,14 @@ public class ScriptLogController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("etl:script:list")
+//    @RequiresPermissions("etl:script:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = scriptLogService.queryPage(params);
         return R.ok().put("page", page);
     }
 
     @RequestMapping("/readScripts/{id}")
-    @RequiresPermissions("etl:script:list")
+//    @RequiresPermissions("etl:script:list")
     public R readScripts(@PathVariable("id") Integer id){
         ScriptLogEntity script = scriptLogService.selectById(id);
         String filePath= systemParams.getPublicScriptUploadDir() + "BACKUP" + File.separator;
@@ -61,7 +56,7 @@ public class ScriptLogController {
     }
 
     @RequestMapping("/saveScripts/{id}")
-    @RequiresPermissions("etl:script:list")
+//    @RequiresPermissions("etl:script:list")
     public R saveScripts(@PathVariable("id") Integer id){
         ScriptLogEntity scriptLog = scriptLogService.selectById(id);
         ScriptEntity script = scriptService.selectById(scriptLog.getScriptid());

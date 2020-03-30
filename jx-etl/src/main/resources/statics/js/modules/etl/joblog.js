@@ -376,6 +376,7 @@ function timelineChart(data){
     $("#btnlog1").hide();
     var groups = {}, html = ['<div class="history">'];
     data.forEach(function(d){
+        d.txdate = dateFormat('YYYY-mm-dd',new Date(d.txdate));
         var y = d.txdate.substr(0, 7);
         if(!groups[y]){
             groups[y] = [];

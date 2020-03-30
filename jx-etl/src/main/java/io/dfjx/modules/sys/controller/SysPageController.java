@@ -16,11 +16,11 @@
 
 package io.dfjx.modules.sys.controller;
 
-import com.dfjinxin.commons.auth.compoment.OauthUserTemplate;
 import io.dfjx.common.config.SystemParams;
 import io.dfjx.common.utils.Constant;
 import io.dfjx.common.utils.CookieUtils;
 import io.dfjx.common.utils.TagUserUtils;
+import io.dfjx.modules.auth.service.AuthService;
 import io.dfjx.modules.etl.service.JobLogService;
 import io.dfjx.modules.etl.service.JobService;
 import io.dfjx.modules.etl.service.ScriptService;
@@ -34,8 +34,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
@@ -64,7 +62,7 @@ public class SysPageController {
 	private ScriptService scriptService;
 
 	@Autowired
-	private OauthUserTemplate oauthUserTemplate;
+	private AuthService authService;
 
 	@Value("${auth.login.url}")
 	private String loginUrl;
@@ -122,19 +120,22 @@ public class SysPageController {
 
 	@RequestMapping("loginback")
 	public String loginback(HttpServletRequest request, HttpServletResponse response){
-		String token = request.getParameter("ucToken");
-		if (StringUtils.isNotEmpty(token)) {
-			CookieUtils.set(response, Constant.ACCESS_TOKEN, "bearer" + token.substring(7), 60 * 60 * 12 * 2 * 7);
-			return "redirect:/";
+		String access_token = request.getParameter("access_token");
+		String refresh_token = request.getParameter("refresh_token");
+		if (StringUtils.isNotEmpty(access_token)) {
+			CookieUtils.set(response, Constant.ACCESS_TOKEN, access_token, 60 * 60 * 12 * 2 * 7);
 		}
-		return "redirect:"+loginUrl;
+		if (StringUtils.isNotEmpty(refresh_token)) {
+			CookieUtils.set(response, Constant.REFRESH_TOKEN, refresh_token, 60 * 60 * 12 * 2 * 7);
+		}
+		return "redirect:/";
 	}
 
 	@RequestMapping("ca/logout")
-	public String logout(HttpServletRequest request){
-		String token = CookieUtils.get(request, Constant.ACCESS_TOKEN).getValue().substring(6);
-		oauthUserTemplate.loginOut(token);
+	public String logout(HttpServletRequest request, HttpServletResponse response){
+		CookieUtils.set(response, Constant.ACCESS_TOKEN, null, 0);
+		CookieUtils.set(response, Constant.REFRESH_TOKEN, null, 0);
+		authService.loginOut(request);
 		return "redirect:"+logoutUrl;
 	}
-
 }

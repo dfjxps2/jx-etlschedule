@@ -10,7 +10,6 @@ import io.dfjx.modules.etl.util.DownLoadFileUtil;
 import io.dfjx.modules.etl.util.ReadFileUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ import java.util.Map;
 
 
 /**
- * 
+ *
  *
  * @author lwq
  * @email 404461275@qq.com
@@ -46,7 +45,7 @@ public class JobLogController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("etl:joblog:list")
+//    @RequiresPermissions("etl:joblog:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = jobLogService.queryPage(params);
 
@@ -58,7 +57,7 @@ public class JobLogController {
      * 信息
      */
     @RequestMapping("/info/{etlSystem}")
-    @RequiresPermissions("etl:joblog:info")
+//    @RequiresPermissions("etl:joblog:info")
     public R info(@PathVariable("etlSystem") String etlSystem){
         JobLogEntity jobLog = jobLogService.selectById(etlSystem);
 
@@ -69,7 +68,7 @@ public class JobLogController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("etl:joblog:save")
+//    @RequiresPermissions("etl:joblog:save")
     public R save(@RequestBody JobLogEntity jobLog){
         jobLogService.insert(jobLog);
 
@@ -80,7 +79,7 @@ public class JobLogController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("etl:joblog:update")
+//    @RequiresPermissions("etl:joblog:update")
     public R update(@RequestBody JobLogEntity jobLog){
         ValidatorUtils.validateEntity(jobLog);
         jobLogService.updateAllColumnById(jobLog);//全部更新
@@ -92,7 +91,7 @@ public class JobLogController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("etl:joblog:delete")
+//    @RequiresPermissions("etl:joblog:delete")
     public R delete(@RequestBody String[] etlSystems){
         jobLogService.deleteBatchIds(Arrays.asList(etlSystems));
 
@@ -104,7 +103,7 @@ public class JobLogController {
      * 查看作业日志详情
      */
     @RequestMapping("/loadlog")
-    @RequiresPermissions("etl:joblog:loadlog")
+//    @RequiresPermissions("etl:joblog:loadlog")
     public R loadlog(@RequestParam Map<String, Object> params){
         logger.info("loadlog-param==============" + params.toString());
         String etlSystem = params.get("etlSystem").toString();
@@ -130,7 +129,7 @@ public class JobLogController {
      * 下载选中日志
      */
     @RequestMapping("/logdload")
-    @RequiresPermissions("etl:joblog:logdload")
+//    @RequiresPermissions("etl:joblog:logdload")
     public void logdload(HttpServletRequest request, HttpServletResponse response) {
         String etlSystem = request.getParameter("etlSystem");
         Integer jobsessionid = Integer.parseInt(request.getParameter("jobsessionid"));
@@ -151,7 +150,7 @@ public class JobLogController {
      * 查看最新作业日志详情
      */
     @RequestMapping("/loadLast")
-    @RequiresPermissions("etl:joblog:loadlog")
+//    @RequiresPermissions("etl:joblog:loadlog")
     public R loadLast(@RequestParam Map<String, Object> params){
         String etlSystem = params.get("etlSystem").toString();
         String etlJob = params.get("etlJob").toString();
@@ -177,7 +176,7 @@ public class JobLogController {
      * 下载最新日志
      */
     @RequestMapping("/downloadLast")
-    @RequiresPermissions("etl:joblog:logdload")
+//    @RequiresPermissions("etl:joblog:logdload")
     public void downloadLast(HttpServletRequest request, HttpServletResponse response) {
         String etlSystem = request.getParameter("etlSystem");
         String etlJob = request.getParameter("etlJob");

@@ -13,11 +13,7 @@ import io.dfjx.common.utils.TagUserUtils;
 import io.dfjx.modules.etl.service.ScriptLogService;
 import io.dfjx.modules.etl.util.ChmodUtil;
 import io.dfjx.modules.etl.util.ReadFileUtil;
-import io.dfjx.modules.sys.entity.SysUserEntity;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +56,7 @@ public class ScriptController {
 	 * 列表
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions("etl:script:list")
+//	@RequiresPermissions("etl:script:list")
 	public R list(@RequestParam Map<String, Object> params){
 		String username = TagUserUtils.userName();
 		params.put("username",username);
@@ -75,7 +71,7 @@ public class ScriptController {
 	 * 信息
 	 */
 	@RequestMapping("/info/{scriptid}")
-	@RequiresPermissions("etl:script:info")
+//	@RequiresPermissions("etl:script:info")
 	public R info(@PathVariable("scriptid") Integer scriptid){
 		ScriptEntity script = scriptService.selectById(scriptid);
 
@@ -86,7 +82,7 @@ public class ScriptController {
 	 * 保存
 	 */
 	@RequestMapping("/save")
-	@RequiresPermissions("etl:script:save")
+//	@RequiresPermissions("etl:script:save")
 	public R save(@RequestBody ScriptEntity script){
 		String username = TagUserUtils.userName();
 		script.setUsername(username);
@@ -99,7 +95,7 @@ public class ScriptController {
 	 * 修改
 	 */
 	@RequestMapping("/update")
-	@RequiresPermissions("etl:script:update")
+//	@RequiresPermissions("etl:script:update")
 	public R update(@RequestBody ScriptEntity script){
 		ValidatorUtils.validateEntity(script);
 		scriptService.updateAllColumnById(script);//全部更新
@@ -111,7 +107,7 @@ public class ScriptController {
 	 * 删除
 	 */
 	@RequestMapping("/delete")
-	@RequiresPermissions("etl:script:delete")
+//	@RequiresPermissions("etl:script:delete")
 	public R delete(@RequestBody Integer[] scriptids){
 		scriptService.deleteBatchIds(Arrays.asList(scriptids));
 
@@ -126,7 +122,7 @@ public class ScriptController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "upload")
-	@RequiresPermissions("etl:script:upload")
+//	@RequiresPermissions("etl:script:upload")
 	@ResponseBody
 	public R upload(@RequestParam("file") MultipartFile file,HttpServletRequest request, HttpServletResponse resp) {
 		//String contentType = file.getContentType();
@@ -155,7 +151,7 @@ public class ScriptController {
 		return R.ok();
 	}
 	@RequestMapping("/getScriptPath")
-	@RequiresPermissions("etl:script:getScriptPath")
+//	@RequiresPermissions("etl:script:getScriptPath")
 	public R getScriptPath(){
 		String filePath= systemParams.getPublicScriptUploadDir();
 		return R.ok().put("filePath",filePath);
@@ -163,7 +159,7 @@ public class ScriptController {
 
 
 	@RequestMapping("/getScripts")
-	@RequiresPermissions("etl:script:getScripts")
+//	@RequiresPermissions("etl:script:getScripts")
 	public R getService(){
 		List<Map<String, Object>> listMap  = scriptService.getScripts();
 		return R.ok().put("doScripts",listMap);

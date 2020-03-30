@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Map;
 
 import io.dfjx.common.validator.ValidatorUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +19,7 @@ import io.dfjx.common.utils.R;
 
 
 /**
- * 
+ *
  *
  * @author lwq
  * @email 404461275@qq.com
@@ -36,7 +35,7 @@ public class JobDependencyController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("etl:jobdependency:list")
+//    @RequiresPermissions("etl:jobdependency:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = jobDependencyService.queryPage(params);
 
@@ -48,7 +47,7 @@ public class JobDependencyController {
      * 信息
      */
     @RequestMapping("/info/{etlSystem}")
-    @RequiresPermissions("etl:jobdependency:info")
+//    @RequiresPermissions("etl:jobdependency:info")
     public R info(@PathVariable("etlSystem") String etlSystem){
         JobDependencyEntity jobDependency = jobDependencyService.selectById(etlSystem);
 
@@ -59,7 +58,7 @@ public class JobDependencyController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("etl:jobdependency:save")
+//    @RequiresPermissions("etl:jobdependency:save")
     public R save(@RequestBody JobDependencyEntity jobDependency){
         jobDependencyService.insert(jobDependency);
 
@@ -70,11 +69,11 @@ public class JobDependencyController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("etl:jobdependency:update")
+//    @RequiresPermissions("etl:jobdependency:update")
     public R update(@RequestBody JobDependencyEntity jobDependency){
         ValidatorUtils.validateEntity(jobDependency);
         jobDependencyService.updateAllColumnById(jobDependency);//全部更新
-        
+
         return R.ok();
     }
 
@@ -82,7 +81,7 @@ public class JobDependencyController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("etl:jobdependency:delete")
+//    @RequiresPermissions("etl:jobdependency:delete")
     public R delete(@RequestBody String[] etlSystems){
         jobDependencyService.deleteBatchIds(Arrays.asList(etlSystems));
 

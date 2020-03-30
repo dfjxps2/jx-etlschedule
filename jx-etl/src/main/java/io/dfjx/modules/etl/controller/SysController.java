@@ -6,7 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +22,7 @@ import io.dfjx.modules.etl.service.SysService;
 
 
 /**
- * 
+ *
  *
  * @author lwq
  * @email 404461275@qq.com
@@ -39,7 +38,7 @@ public class SysController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("etl:sys:list")
+//    @RequiresPermissions("etl:sys:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = sysService.queryPage(params);
 
@@ -51,7 +50,7 @@ public class SysController {
      * 信息
      */
     @RequestMapping("/info/{etlSystem}")
-    @RequiresPermissions("etl:sys:info")
+//    @RequiresPermissions("etl:sys:info")
     public R info(@PathVariable("etlSystem") String etlSystem){
         SysEntity sys = sysService.selectById(etlSystem);
 
@@ -62,7 +61,7 @@ public class SysController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("etl:sys:save")
+//    @RequiresPermissions("etl:sys:save")
     public R save(@RequestBody SysEntity sys){
         sysService.insert(sys);
 
@@ -73,11 +72,11 @@ public class SysController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("etl:sys:update")
+//    @RequiresPermissions("etl:sys:update")
     public R update(@RequestBody SysEntity sys){
         ValidatorUtils.validateEntity(sys);
         sysService.updateAllColumnById(sys);//全部更新
-        
+
         return R.ok();
     }
 
@@ -85,7 +84,7 @@ public class SysController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("etl:sys:delete")
+//    @RequiresPermissions("etl:sys:delete")
     public R delete(@RequestBody String[] etlSystems){
         sysService.deleteBatchIds(Arrays.asList(etlSystems));
 

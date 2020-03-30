@@ -18,7 +18,6 @@ package io.dfjx.modules.sys.controller;
 
 import io.dfjx.common.utils.TagUserUtils;
 import io.dfjx.modules.sys.entity.SysUserEntity;
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

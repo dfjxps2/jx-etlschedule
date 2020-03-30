@@ -44,6 +44,6 @@ public interface SysMenuDao extends BaseMapper<SysMenuEntity> {
 	 */
 	List<SysMenuEntity> queryNotButtonList();
 
-	List<SysMenuEntity> queryByPermsCode(@Param("map") Map<Long, String> map);
+	List<SysMenuEntity> queryByPermsCode(@Param("codes") List<String> codes);
 
 }

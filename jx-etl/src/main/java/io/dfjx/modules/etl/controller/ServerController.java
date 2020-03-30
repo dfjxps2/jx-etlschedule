@@ -5,7 +5,6 @@ import io.dfjx.common.utils.R;
 import io.dfjx.common.validator.ValidatorUtils;
 import io.dfjx.modules.etl.entity.ServerEntity;
 import io.dfjx.modules.etl.service.ServerService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import java.util.Map;
 
 
 /**
- * 
+ *
  *
  * @author lwq
  * @email 404461275@qq.com
@@ -36,7 +35,7 @@ public class ServerController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("etl:server:list")
+//    @RequiresPermissions("etl:server:list")
     public R list(@RequestParam Map<String, Object> params){
         logger.info("================"+params.toString());
         PageUtils page = serverService.queryPage(params);
@@ -48,7 +47,7 @@ public class ServerController {
      * 信息
      */
     @RequestMapping("/info/{etlServer}")
-    @RequiresPermissions("etl:server:info")
+//    @RequiresPermissions("etl:server:info")
     public R info(@PathVariable("etlServer") String etlServer){
         ServerEntity server = serverService.selectById(etlServer);
         return R.ok().put("server", server);
@@ -58,7 +57,7 @@ public class ServerController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("etl:server:save")
+//    @RequiresPermissions("etl:server:save")
     public R save(@RequestBody ServerEntity server){
         serverService.insert(server);
 
@@ -69,11 +68,11 @@ public class ServerController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("etl:server:update")
+//    @RequiresPermissions("etl:server:update")
     public R update(@RequestBody ServerEntity server){
         ValidatorUtils.validateEntity(server);
         serverService.updateAllColumnById(server);//全部更新
-        
+
         return R.ok();
     }
 
@@ -81,16 +80,16 @@ public class ServerController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("etl:server:delete")
+//    @RequiresPermissions("etl:server:delete")
     public R delete(@RequestBody String[] etlServers){
         logger.info("==============" + etlServers.toString());
         serverService.deleteBatchIds(Arrays.asList(etlServers));
 
         return R.ok();
     }
-    
-    @RequestMapping("/getService") 
-    @RequiresPermissions("etl:server:getService")
+
+    @RequestMapping("/getService")
+//    @RequiresPermissions("etl:server:getService")
     public R getService(){
     	List<Map<String, Object>> listMap  = serverService.getServices();
         return R.ok().put("allServers",listMap);

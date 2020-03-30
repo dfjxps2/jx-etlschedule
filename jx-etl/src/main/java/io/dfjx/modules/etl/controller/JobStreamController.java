@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Map;
 
 import io.dfjx.common.validator.ValidatorUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +19,7 @@ import io.dfjx.common.utils.R;
 
 
 /**
- * 
+ *
  *
  * @author lwq
  * @email 404461275@qq.com
@@ -36,7 +35,7 @@ public class JobStreamController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("etl:jobstream:list")
+//    @RequiresPermissions("etl:jobstream:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = jobStreamService.queryPage(params);
 
@@ -48,7 +47,7 @@ public class JobStreamController {
      * 信息
      */
     @RequestMapping("/info/{etlSystem}")
-    @RequiresPermissions("etl:jobstream:info")
+//    @RequiresPermissions("etl:jobstream:info")
     public R info(@PathVariable("etlSystem") String etlSystem){
         JobStreamEntity jobStream = jobStreamService.selectById(etlSystem);
 
@@ -59,7 +58,7 @@ public class JobStreamController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("etl:jobstream:save")
+//    @RequiresPermissions("etl:jobstream:save")
     public R save(@RequestBody JobStreamEntity jobStream){
         jobStreamService.insert(jobStream);
 
@@ -70,11 +69,11 @@ public class JobStreamController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("etl:jobstream:update")
+//    @RequiresPermissions("etl:jobstream:update")
     public R update(@RequestBody JobStreamEntity jobStream){
         ValidatorUtils.validateEntity(jobStream);
         jobStreamService.updateAllColumnById(jobStream);//全部更新
-        
+
         return R.ok();
     }
 
@@ -82,7 +81,7 @@ public class JobStreamController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("etl:jobstream:delete")
+//    @RequiresPermissions("etl:jobstream:delete")
     public R delete(@RequestBody String[] etlSystems){
         jobStreamService.deleteBatchIds(Arrays.asList(etlSystems));
 
