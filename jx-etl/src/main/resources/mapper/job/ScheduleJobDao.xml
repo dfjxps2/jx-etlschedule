@@ -2,13 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="io.dfjx.modules.job.dao.ScheduleJobDao">
-	
+
 	<!-- 批量更新状态 -->
-	<update id="updateBatch"> 
-		update schedule_job set status = #{status} where job_id in 
+	<update id="updateBatch">
+		update schedule_job set status = #{status} where job_id in
 		<foreach item="jobId" collection="list"  open="(" separator="," close=")">
 			#{jobId}
 		</foreach>
 	</update>
+
+	<select id="selectByEtlJob" resultType="io.dfjx.modules.job.entity.ScheduleJobEntity">
+		SELECT
+			*
+		FROM
+			schedule_job sj
+		WHERE
+			sj.params LIKE CONCAT('%"rerunjobids":"',#{etl_job},'"%')
+			order by job_id desc
+			limit 1;
+	</select>
 
 </mapper>

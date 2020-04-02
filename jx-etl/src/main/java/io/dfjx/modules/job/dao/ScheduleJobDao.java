@@ -18,7 +18,9 @@ package io.dfjx.modules.job.dao;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import io.dfjx.modules.job.entity.ScheduleJobEntity;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,9 +30,11 @@ import java.util.Map;
  * @since 1.2.0 2016-11-28
  */
 public interface ScheduleJobDao extends BaseMapper<ScheduleJobEntity> {
-	
+
 	/**
 	 * 批量更新状态
 	 */
 	int updateBatch(Map<String, Object> map);
+
+	ScheduleJobEntity selectByEtlJob(@Param("etl_job") String etl_job);
 }

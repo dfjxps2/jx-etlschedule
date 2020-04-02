@@ -34,13 +34,9 @@
       <div class="row">
         <div class="col-xs-12">
             <a class="btn btn-default btn-sm" @click="query(true)"><i class="fa fa-search"></i> 查询</a>
-            <#if shiro.hasPermission("etl:joblog:delete")>
-                  <a class="btn btn-primary btn-sm" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-            </#if><#if shiro.hasPermission("etl:joblog:loadlog")>
+            <a class="btn btn-primary btn-sm" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
             <a class="btn btn-primary btn-sm" @click="loadlog" ><i class="fa fa-search"></i>&nbsp;查看日志详情</a>
-            </#if><#if shiro.hasPermission("etl:joblog:logdload")>
             <a class="btn btn-primary btn-sm"   @click="logdload" ><i class="fa fa-download"></i>&nbsp;下载日志详情</a>
-            </#if>
             <a class="btn btn-primary btn-sm" @click="timeline"><i class="fa fa-clock-o"></i>&nbsp;作业时间轴</a>
           </div>
         </div>

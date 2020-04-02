@@ -15,15 +15,9 @@
           <el-input v-model="q.etlServer" size="small" @keyup.enter="query(true)" placeholder="服务器名称" clearable></el-input>
       </div>
         <a class="btn btn-default btn-sm" @click="query"><i class="fa fa-search"></i> 查询</a>
-      <#if shiro.hasPermission("etl:server:save")>
       <a class="btn btn-primary btn-sm" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-      </#if>
-			<#if shiro.hasPermission("etl:server:update")>
       <a class="btn btn-primary btn-sm" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-			</#if>
-			<#if shiro.hasPermission("etl:server:delete")>
       <a class="btn btn-primary btn-sm" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-			</#if>
     </div>
     <div style="padding: 0 10px">
         <el-table

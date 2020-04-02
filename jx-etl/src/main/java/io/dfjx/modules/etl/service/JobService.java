@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 
+ *
  *
  * @author lwq
  * @email 404461275@qq.com
@@ -29,9 +29,9 @@ public interface JobService extends IService<JobEntity> {
 	PageUtils getDependencyJobs(Map<String, Object> params);
 
 	void  insertExt(JobEntity job);
-	
+
 	void  updateExt(JobEntity job);
-	
+
     PageUtils getAllDependencyJobs(Map<String, Object> params);
 
     PageUtils getAllDependencyJobs2(Map<String, Object> params);
@@ -65,5 +65,9 @@ public interface JobService extends IService<JobEntity> {
 	String expJobConfigFile();
 
 	int getCount(Integer enable);
+
+	Map<String, Object> checkTigger(Integer id);
+
+	Boolean updateTrigger(List<String> ids, String trigger);
 }
 

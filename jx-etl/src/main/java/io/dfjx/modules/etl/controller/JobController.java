@@ -246,6 +246,37 @@ public class JobController {
 		return R.ok("批量吊起作业成功");
 	}
 
+	/**
+	 * 检查是否配置定时器
+	 */
+
+	@RequestMapping("/checktrigger/{id}")
+//	@RequiresPermissions("etl:job:rerunmulti")
+	public R checkTrigger(@PathVariable("id") Integer id) {
+		logger.info("checkTrigger params==="+id);
+		Map<String, Object> map = jobService.checkTigger(id);
+		return R.ok().put("data", map);
+	}
+
+	@RequestMapping("/settrigger")
+//	@RequiresPermissions("etl:job:rerunmulti")
+	public R setTrigger(@RequestBody String[] etlSystems) {
+		logger.info("setTrigger params==="+etlSystems);
+		if(etlSystems.length > 0){
+			jobService.updateTrigger(Arrays.asList(etlSystems), "Y");
+		}
+		return R.ok();
+	}
+
+	@RequestMapping("/removetrigger")
+//	@RequiresPermissions("etl:job:rerunmulti")
+	public R removeTrigger(@RequestBody String[] etlSystems) {
+		logger.info("removeTrigger params==="+etlSystems);
+		if(etlSystems.length > 0){
+			jobService.updateTrigger(Arrays.asList(etlSystems), "N");
+		}
+		return R.ok();
+	}
 
 	/**
 	 * 批量更新作业状态

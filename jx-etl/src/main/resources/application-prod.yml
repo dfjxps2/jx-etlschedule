@@ -34,7 +34,7 @@ spring:
             multi-statement-allow: true
 
 auth-url: http://172.25.13.75:31234
-auth-frontier-url: http://59.212.226.45:31000
+auth-frontier-url: http://auth-frontier.jxwda.bjdx.gov.cn
 
 #统一认证
 auth:

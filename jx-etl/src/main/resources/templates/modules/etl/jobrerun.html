@@ -47,10 +47,8 @@
         </div>
         <div class="row">
           <div class="col-xs-12">
-            <#if shiro.hasPermission("etl:job:rerunmulti")>
+            <a class="btn btn-primary btn-sm" @click="openTask"><span class="glyphicon glyphicon-repeat"></span> &nbsp;定时重跑 </a>
             <a class="btn btn-warning btn-sm" @click="openRerun"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量重跑 </a>
-            </#if>
-
             <a class="btn btn-warning btn-sm" @click="openUpdateStatus"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业状态 </a>
             <a class="btn btn-warning btn-sm" @click="openUpdateTxDate"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业数据日期 </a>
             <a class="btn btn-warning btn-sm" @click="openUpdateEnable"><span class="glyphicon glyphicon-repeat"></span> &nbsp;批量更新作业有效性 </a>
@@ -67,9 +65,7 @@
           </div>
 
         </div>
-        <!--<#if shiro.hasPermission("etl:job:rerun")>-->
         <!--<a class="btn btn-warning" @click="openRerun"><span class="glyphicon glyphicon-repeat"></span> &nbsp;重跑 </a>-->
-        <!--</#if>-->
         <div style="clear:both;"></div>
       </div>
     <div class="ml-15 mr-15">
@@ -144,6 +140,15 @@
                   align="center">
           </el-table-column>
           <el-table-column
+                  prop="timetrigger"
+                  label="定时任务"
+                  align="center">
+            <template slot-scope="scope">
+              <span v-if="scope.row.timetrigger == 'Y'" >是</span>
+              <span v-else="">否</span>
+            </template>
+          </el-table-column>
+          <el-table-column
                   prop="lastJobstatus"
                   label="运行状态"
                   :show-overflow-tooltip="true"
@@ -178,6 +183,17 @@
       </div>
     </div>
     </div>
+
+    <el-dialog :title="title" :visible="showTaskData" :close-on-click-modal="false" :show-close="false">
+      <el-date-picker v-model="schedule.rerun_data_date" size="small" style="width: 100%" type="date" placeholder="重跑数据日期" value-format="yyyy-MM-dd"></el-date-picker>
+      <el-input size="small" v-model="schedule.cronExpression" placeholder="如：0 0 12 * * ?" style="margin-top: 10px"></el-input>
+      <el-input size="small" v-model="schedule.remark" placeholder="备注" style="margin-top: 10px"></el-input>
+      <div slot="footer" class="dialog-footer">
+        <a class="btn btn-danger btn-sm" @click="deleteTigger" v-if="schedule.jobId != null">删除定时器</a>
+        <a class="btn btn-primary btn-sm" @click="taskmulti">确定</a>
+        <a class="btn btn-warning btn-sm" @click="reBack">返回</a>
+      </div>
+    </el-dialog>
 
   <el-dialog :title="title" :visible="showQueryData" :close-on-click-modal="false" :show-close="false">
     <el-date-picker v-model="q.rerun_data_date" size="small" style="width: 100%" type="date" placeholder="重跑数据日期" value-format="yyyy-MM-dd"></el-date-picker>

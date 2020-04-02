@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
- * 
- * 
+ *
+ *
  * @author lwq
  * @email 404461275@qq.com
  * @date 2018-07-24 15:17:47
@@ -28,4 +30,8 @@ public interface JobDao extends BaseMapper<JobEntity> {
 
     int updateSingleJobEnable(@Param("newEnableFlag") String newEnableFlag,
                               @Param("id") int id);
+    int updateTimeTigger(@Param("tigger") String tigger,
+                              @Param("ids") List<String> ids);
+
+    List<JobEntity> checkTigger(@Param("ids") List<String> ids);
 }

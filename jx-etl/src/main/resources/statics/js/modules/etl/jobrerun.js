@@ -32,9 +32,20 @@ var vm = new Vue({
             newJobTxdate: null,
             newEnableFlag: null,
 		},
+		schedule:{
+			jobId:null,
+			beanName:'jobReturnTask',
+			methodName:'rerunMulti',
+			remark:null,
+			cronExpression:'',
+			params:{
+			},
+			rerun_data_date:null
+		},
 		dependQ:{},
 		showList: true,
 		showQueryData:false,
+		showTaskData:false,
         showUpdateBatchStatus: false,
         showUpdateBatchJobTxDate: false,
         showUpdateBatchEnable: false,
@@ -150,6 +161,46 @@ var vm = new Vue({
 				}
 			});
 		},
+		openTask:function(){
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			if(vm.multipleSelection.length > 1){
+				vm.$alert('最多选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			vm.schedule = {
+				jobId:null,
+					beanName:'jobReturnTask',
+					methodName:'rerunMulti',
+					remark:null,
+					cronExpression:'',
+					params:{
+				},
+				rerun_data_date:null,
+				etlJob:null
+			}
+			$.get(baseURL + "etl/job/checktrigger/"+vm.multipleSelection[0].id, function(r){
+				vm.schedule.jobId = r.data.jobId
+				vm.schedule.cronExpression = r.data.cronExpression
+				vm.schedule.rerun_data_date = r.data.rerun_data_date
+				vm.schedule.remark = r.data.remark
+				vm.schedule.etlJob = r.data.etlJob
+
+				vm.showTaskData = true;
+				vm.title = "定时重跑作业";
+			});
+			//vm.rerun();
+		},
 		openRerun:function(){
 			if(vm.multipleSelection.length == 0){
 				vm.$alert('请选择一条记录', '系统提示', {
@@ -164,6 +215,80 @@ var vm = new Vue({
 			vm.showQueryData = true;
 			vm.title = "重跑作业";
 			//vm.rerun();
+		},
+		setTrigger(ids){
+			$.ajax({
+				type: "POST",
+				url: baseURL + "etl/job/settrigger",
+				contentType: "application/json",
+				data: JSON.stringify(ids),
+				success: function(r){
+
+				}
+			});
+		},
+		removeTrigger(ids){
+			$.ajax({
+				type: "POST",
+				url: baseURL + "etl/job/removetrigger",
+				contentType: "application/json",
+				data: JSON.stringify(ids),
+				success: function(r){
+
+				}
+			});
+		},
+		taskmulti:function(){
+			if(vm.multipleSelection.length == 0){
+				vm.$alert('请选择一条记录', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return ;
+			}
+			var ids = vm.multipleSelection.map(x=>{return x.id})
+			if(vm.schedule.rerun_data_date == null){
+				vm.$alert('请选择数据重跑日期', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return;
+			}
+			if(vm.schedule.cronExpression.length == 0){
+				vm.$alert('请选择数填写cron表达式', '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
+					}
+				});
+				return;
+			}
+			var param = {
+				'rerunjobids':ids.join(','),
+				'lastTxDate':vm.schedule.rerun_data_date
+			}
+			vm.schedule.params = JSON.stringify(param);
+			var url = vm.schedule.jobId == null ? "sys/schedule/save" : "sys/schedule/update";
+			$.ajax({
+				type: "POST",
+				url: baseURL + url,
+				contentType: "application/json",
+				data: JSON.stringify(vm.schedule),
+				success: function(r){
+					if(r.code === 0){
+						vm.reBack();
+						vm.query();
+						vm.setTrigger(ids);
+						vm.$message({
+							message: r.msg,
+							type: '操作成功'
+						});
+					}else{
+						alert(r.msg);
+					}
+				}
+			});
 		},
         rerunmulti:function(){
 			if(vm.multipleSelection.length == 0){
@@ -211,7 +336,38 @@ var vm = new Vue({
             }
             return;
 		},
-
+		deleteTigger(){
+			vm.$confirm('确定要删除定时器?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				$.ajax({
+					type: "POST",
+					url: baseURL + "sys/schedule/delete",
+					contentType: "application/json",
+					data: JSON.stringify([vm.schedule.jobId]),
+					success: function(r){
+						if(r.code == 0){
+							vm.reBack();
+							vm.query();
+							vm.removeTrigger([vm.schedule.etlJob]);
+							vm.$message({
+								message: '操作成功',
+								type: 'success'
+							});
+						}else{
+							vm.$alert(r.msg, '系统提示', {
+								confirmButtonText: '确定',
+								callback: action => {
+								}
+							});
+						}
+					}
+				});
+			}).catch(() => {
+			});
+		},
 		loadsys: function(componentId){
 			$.ajax({
 				type: "GET",
@@ -326,6 +482,7 @@ var vm = new Vue({
 		reBack: function () {
 			vm.showList = true;
 			vm.showQueryData = false;
+			vm.showTaskData = false;
 		},
 
         openUpdateStatus: function () {

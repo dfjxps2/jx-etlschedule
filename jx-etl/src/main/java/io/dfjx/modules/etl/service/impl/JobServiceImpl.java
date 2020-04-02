@@ -3,16 +3,21 @@ package io.dfjx.modules.etl.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.google.gson.Gson;
 import io.dfjx.common.config.SystemParams;
+import io.dfjx.common.exception.RRException;
 import io.dfjx.common.utils.PageUtils;
 import io.dfjx.common.utils.Query;
 import io.dfjx.modules.etl.dao.JobDao;
 import io.dfjx.modules.etl.dao.JobDependencyDao;
+import io.dfjx.modules.etl.dto.RerunMultiDto;
 import io.dfjx.modules.etl.entity.*;
 import io.dfjx.modules.etl.service.*;
 import io.dfjx.modules.etl.util.CreateFileUtil;
 import io.dfjx.modules.etl.util.ExcelData;
 import io.dfjx.modules.etl.util.ExcelTool;
+import io.dfjx.modules.job.dao.ScheduleJobDao;
+import io.dfjx.modules.job.entity.ScheduleJobEntity;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -39,6 +44,8 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	@Autowired
 	private JobDao jobDao;
 
+	@Autowired
+	private ScheduleJobDao scheduleJobDao;
 
 	@Autowired
 	private JobDependencyDao jobDependencyDao;
@@ -671,6 +678,18 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	}
 
 	/**
+	 * 批量设置定时任务
+	 * @param ids
+	 * @return
+	 */
+	@Transactional
+	@Override
+	public Boolean updateTrigger(List<String> ids, String trigger) {
+		baseMapper.updateTimeTigger(trigger, ids);
+		return true;
+	}
+
+	/**
 	 * 按照作业id重跑单个作业
 	 */
 	public Boolean rerunSingle(Integer id,String lastTxDate){
@@ -1297,5 +1316,21 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	@Override
 	public int getCount(Integer enable) {
 		return super.baseMapper.selectCount(new EntityWrapper<JobEntity>().addFilter("enable=" + enable));
+	}
+
+	@Override
+	public Map<String, Object> checkTigger(Integer id) {
+		Map<String, Object> map = new HashMap<>();
+		JobEntity jobEntity = this.selectById(id);
+		ScheduleJobEntity scheduleJobEntity = scheduleJobDao.selectByEtlJob(jobEntity.getId()+"");
+		if (scheduleJobEntity != null) {
+			RerunMultiDto rerunMultiDto = new Gson().fromJson(scheduleJobEntity.getParams(), RerunMultiDto.class);
+			map.put("jobId", scheduleJobEntity.getJobId());
+			map.put("etlJob", jobEntity.getId());
+			map.put("rerun_data_date", rerunMultiDto.getLastTxDate());
+			map.put("cronExpression", scheduleJobEntity.getCronExpression());
+			map.put("remark", scheduleJobEntity.getRemark());
+		}
+		return map;
 	}
 }
