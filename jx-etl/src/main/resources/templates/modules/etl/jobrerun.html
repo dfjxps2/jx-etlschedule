@@ -185,7 +185,11 @@
     </div>
 
     <el-dialog :title="title" :visible="showTaskData" :close-on-click-modal="false" :show-close="false">
-      <el-date-picker v-model="schedule.rerun_data_date" size="small" style="width: 100%" type="date" placeholder="重跑数据日期" value-format="yyyy-MM-dd"></el-date-picker>
+      <el-radio-group v-model="triggerJob.lastTxDate" size="small" @change="onChange">
+        <el-radio-button :label="-1">前一天</el-radio-button>
+        <el-radio-button :label="0">当天</el-radio-button>
+        <el-radio-button :label="1">后一天</el-radio-button>
+      </el-radio-group>
       <el-input size="small" v-model="schedule.cronExpression" placeholder="如：0 0 12 * * ?" style="margin-top: 10px"></el-input>
       <el-input size="small" v-model="schedule.remark" placeholder="备注" style="margin-top: 10px"></el-input>
       <div slot="footer" class="dialog-footer">

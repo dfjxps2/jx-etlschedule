@@ -17,6 +17,7 @@ package io.dfjx.modules.job.task;
  */
 
 import com.google.gson.Gson;
+import io.dfjx.common.utils.DateUtils;
 import io.dfjx.modules.etl.dto.RerunMultiDto;
 import io.dfjx.modules.etl.service.JobService;
 import io.dfjx.modules.sys.entity.SysUserEntity;
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,9 +49,10 @@ public class JobReturnTask {
 		logger.info("我是带参数的rerunMulti方法，正在被执行，参数为：" + params);
 
 		RerunMultiDto rerunMultiDto = new Gson().fromJson(params, RerunMultiDto.class);
+		Date date = DateUtils.addDateDays(new Date(), rerunMultiDto.getLastTxDate());
 		Map<String, Object> paramsMap = new HashMap<>();
 		paramsMap.put("rerunjobids", rerunMultiDto.getRerunjobids());
-		paramsMap.put("lastTxDate", rerunMultiDto.getLastTxDate());
+		paramsMap.put("lastTxDate", DateUtils.format(date, "yyyy-MM-dd"));
 		jobService.rerunMulti(paramsMap);
 
 	}

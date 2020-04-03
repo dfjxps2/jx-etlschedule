@@ -38,9 +38,11 @@ var vm = new Vue({
 			methodName:'rerunMulti',
 			remark:null,
 			cronExpression:'',
-			params:{
-			},
-			rerun_data_date:null
+			params:{},
+		},
+		triggerJob:{
+			etlJob:null,
+			lastTxDate:-1
 		},
 		dependQ:{},
 		showList: true,
@@ -161,6 +163,9 @@ var vm = new Vue({
 				}
 			});
 		},
+		onChange:function(val){
+			vm.schedule.rerun_data_date = val
+		},
 		openTask:function(){
 			if(vm.multipleSelection.length == 0){
 				vm.$alert('请选择一条记录', '系统提示', {
@@ -180,21 +185,22 @@ var vm = new Vue({
 			}
 			vm.schedule = {
 				jobId:null,
-					beanName:'jobReturnTask',
-					methodName:'rerunMulti',
-					remark:null,
-					cronExpression:'',
-					params:{
-				},
-				rerun_data_date:null,
-				etlJob:null
+				beanName:'jobReturnTask',
+				methodName:'rerunMulti',
+				remark:null,
+				cronExpression:'',
+				params:{},
 			}
+			vm.triggerJob = {
+				etlJob:null,
+				lastTxDate:-1
+			},
 			$.get(baseURL + "etl/job/checktrigger/"+vm.multipleSelection[0].id, function(r){
-				vm.schedule.jobId = r.data.jobId
-				vm.schedule.cronExpression = r.data.cronExpression
-				vm.schedule.rerun_data_date = r.data.rerun_data_date
-				vm.schedule.remark = r.data.remark
-				vm.schedule.etlJob = r.data.etlJob
+				if (r.data.scheduleJob) {
+					vm.schedule = r.data.scheduleJob
+					vm.triggerJob.lastTxDate = r.data.lastTxDate
+					vm.triggerJob.etlJob = r.data.etlJob
+				}
 
 				vm.showTaskData = true;
 				vm.title = "定时重跑作业";
@@ -266,7 +272,7 @@ var vm = new Vue({
 			}
 			var param = {
 				'rerunjobids':ids.join(','),
-				'lastTxDate':vm.schedule.rerun_data_date
+				'lastTxDate':vm.triggerJob.lastTxDate
 			}
 			vm.schedule.params = JSON.stringify(param);
 			var url = vm.schedule.jobId == null ? "sys/schedule/save" : "sys/schedule/update";
@@ -281,11 +287,15 @@ var vm = new Vue({
 						vm.query();
 						vm.setTrigger(ids);
 						vm.$message({
-							message: r.msg,
-							type: '操作成功'
+							message: '操作成功',
+							type: 'success'
 						});
 					}else{
-						alert(r.msg);
+						vm.$alert(r.msg, '系统提示', {
+							confirmButtonText: '确定',
+							callback: action => {
+							}
+						});
 					}
 				}
 			});
@@ -351,7 +361,7 @@ var vm = new Vue({
 						if(r.code == 0){
 							vm.reBack();
 							vm.query();
-							vm.removeTrigger([vm.schedule.etlJob]);
+							vm.removeTrigger([vm.triggerJob.etlJob]);
 							vm.$message({
 								message: '操作成功',
 								type: 'success'

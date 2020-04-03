@@ -1325,11 +1325,9 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 		ScheduleJobEntity scheduleJobEntity = scheduleJobDao.selectByEtlJob(jobEntity.getId()+"");
 		if (scheduleJobEntity != null) {
 			RerunMultiDto rerunMultiDto = new Gson().fromJson(scheduleJobEntity.getParams(), RerunMultiDto.class);
-			map.put("jobId", scheduleJobEntity.getJobId());
+			map.put("scheduleJob", scheduleJobEntity);
 			map.put("etlJob", jobEntity.getId());
-			map.put("rerun_data_date", rerunMultiDto.getLastTxDate());
-			map.put("cronExpression", scheduleJobEntity.getCronExpression());
-			map.put("remark", scheduleJobEntity.getRemark());
+			map.put("lastTxDate", rerunMultiDto.getLastTxDate());
 		}
 		return map;
 	}

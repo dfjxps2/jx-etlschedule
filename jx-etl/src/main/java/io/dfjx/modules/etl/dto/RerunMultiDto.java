@@ -4,15 +4,15 @@ import java.util.List;
 
 public class RerunMultiDto {
 
-    String lastTxDate;
+    Integer lastTxDate;
 
     String rerunjobids;
 
-    public String getLastTxDate() {
+    public Integer getLastTxDate() {
         return lastTxDate;
     }
 
-    public void setLastTxDate(String lastTxDate) {
+    public void setLastTxDate(Integer lastTxDate) {
         this.lastTxDate = lastTxDate;
     }
 
