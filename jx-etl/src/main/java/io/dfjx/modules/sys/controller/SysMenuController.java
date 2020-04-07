@@ -82,12 +82,13 @@ public class SysMenuController extends AbstractController {
 			return R.ok().put("menuList", menuList);
 		}
 		Set<String> paramCode = onlineUser.getPermissions();
+		List<SysMenuEntity> menuList = new ArrayList<>();
 		if (paramCode.size() > 0) {
 			List<String> permissionList = new ArrayList<>(paramCode);
-			List<SysMenuEntity> menuList = sysMenuService.queryByPermsCode(permissionList);
+			menuList = sysMenuService.queryByPermsCode(permissionList);
 			return R.ok().put("menuList", menuList).put("permission",permissionList);
 		} else {
-			throw new RRException("没有访问权限，请联系管理员");
+			return R.ok().put("menuList", menuList);
 		}
 	}
 

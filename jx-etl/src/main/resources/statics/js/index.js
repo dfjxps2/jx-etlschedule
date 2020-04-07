@@ -84,6 +84,9 @@ var vm = new Vue({
                 //     list: r.menuList
                 // }
                 vm.menuList = r.menuList
+                if (vm.menuList.length == 0) {
+                    location.href = 'noAccess.html';
+                }
             }).complete(function(data) {
                 if (data.responseJSON.code != 0) {
                     layer.alert(data.responseJSON.msg);

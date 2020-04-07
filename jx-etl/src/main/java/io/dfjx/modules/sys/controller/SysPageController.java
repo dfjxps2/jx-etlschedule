@@ -91,6 +91,11 @@ public class SysPageController {
 		return "redirect:index.html";
 	}
 
+	@RequestMapping("noAccess.html")
+	public String noAccess(){
+		return "noAccess";
+	}
+
 	@RequestMapping("main.html")
 	public String main(Map<String, Object> map){
 		Date now = new Date();
