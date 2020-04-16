@@ -226,7 +226,7 @@ var vm = new Vue({
 				contentType: "application/json",
 				data: JSON.stringify(ids),
 				success: function(r){
-
+					vm.query();
 				}
 			});
 		},
@@ -237,7 +237,7 @@ var vm = new Vue({
 				contentType: "application/json",
 				data: JSON.stringify(ids),
 				success: function(r){
-
+					vm.query();
 				}
 			});
 		},
@@ -273,7 +273,6 @@ var vm = new Vue({
 				success: function(r){
 					if(r.code === 0){
 						vm.reBack();
-						vm.query();
 						vm.setTrigger(ids);
 						vm.$message({
 							message: '操作成功',
