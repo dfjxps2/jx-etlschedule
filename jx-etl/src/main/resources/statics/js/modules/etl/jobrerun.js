@@ -163,9 +163,6 @@ var vm = new Vue({
 				}
 			});
 		},
-		onChange:function(val){
-			vm.schedule.rerun_data_date = val
-		},
 		openTask:function(){
 			if(vm.multipleSelection.length == 0){
 				vm.$alert('请选择一条记录', '系统提示', {
@@ -253,15 +250,6 @@ var vm = new Vue({
 				});
 				return ;
 			}
-			var ids = vm.multipleSelection.map(x=>{return x.id})
-			if(vm.schedule.rerun_data_date == null){
-				vm.$alert('请选择数据重跑日期', '系统提示', {
-					confirmButtonText: '确定',
-					callback: action => {
-					}
-				});
-				return;
-			}
 			if(vm.schedule.cronExpression.length == 0){
 				vm.$alert('请选择数填写cron表达式', '系统提示', {
 					confirmButtonText: '确定',
@@ -270,6 +258,7 @@ var vm = new Vue({
 				});
 				return;
 			}
+			var ids = vm.multipleSelection.map(x=>{return x.id})
 			var param = {
 				'rerunjobids':ids.join(','),
 				'lastTxDate':vm.triggerJob.lastTxDate

@@ -185,7 +185,7 @@
     </div>
 
     <el-dialog :title="title" :visible="showTaskData" :close-on-click-modal="false" :show-close="false">
-      <el-radio-group v-model="triggerJob.lastTxDate" size="small" @change="onChange">
+      <el-radio-group v-model="triggerJob.lastTxDate" size="small">
         <el-radio-button :label="-1">前一天</el-radio-button>
         <el-radio-button :label="0">当天</el-radio-button>
         <el-radio-button :label="1">后一天</el-radio-button>
