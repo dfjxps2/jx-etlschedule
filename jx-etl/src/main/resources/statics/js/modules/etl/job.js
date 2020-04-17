@@ -1055,7 +1055,7 @@ function auto_refresh(){
 //设置画布大小
 function initSize(data){
 	console.info('initSize')
-	var w = $("#analysisLayer").width(), h = $("#analysisLayer").height() - 40, lr = 0, lc = 0, lr0 = 2, xx = 160, yy = 100, yy0 = 80;
+	var w = $("#analysisLayer").width(), h = $("#analysisLayer").height() - 45, lr = 0, lc = 0, lr0 = 2, xx = 160, yy = 100, yy0 = 80;
 	var sta = 0, end = 0, i = 0;
 	for(var n in data) {
 		if(data[n].length > 0)
@@ -1350,7 +1350,7 @@ function initOpt1(){
 					return o.name;
 				var x = o.data.info;
 				var str = x.dependencyJob + '<br />系统名称：' + x.dependencySystem + '<br />描述：' + x.description + '<br />任务状态：'+ x.lastJobstatus
-					+ '<br />当前数据日期：'+ x.lastTxdate
+					+ '<br />当前数据日期：'+ dateFormat('YYYY-mm-dd',new Date(x.lastTxdate));
 				return str;
 			}
 		},

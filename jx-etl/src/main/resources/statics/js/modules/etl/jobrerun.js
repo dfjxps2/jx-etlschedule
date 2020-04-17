@@ -58,6 +58,7 @@ var vm = new Vue({
 		refresh_freq:20000,
 		refresh_auto:true,
 		dataPage: {},
+		triggerList: [],
 		multipleSelection:[],
 	},
 	mounted(){
@@ -105,10 +106,17 @@ var vm = new Vue({
 				data: postData,
 				success: function(r){
 					if(r.code === 0){
+						vm.triggerList = r.triggerList
 						vm.dataPage = r.page;
 					}
 				}
 			});
+		},
+		triggerFormat(row, column, cellValue, index){
+			if (vm.triggerList.indexOf(row.id + '') > -1) {
+				return '是'
+			}
+			return '否'
 		},
 		add: function(){
 			vm.showList = false;
@@ -219,17 +227,6 @@ var vm = new Vue({
 			vm.title = "重跑作业";
 			//vm.rerun();
 		},
-		setTrigger(ids){
-			$.ajax({
-				type: "POST",
-				url: baseURL + "etl/job/settrigger",
-				contentType: "application/json",
-				data: JSON.stringify(ids),
-				success: function(r){
-					vm.query();
-				}
-			});
-		},
 		removeTrigger(ids){
 			$.ajax({
 				type: "POST",
@@ -263,7 +260,9 @@ var vm = new Vue({
 				'rerunjobids':ids.join(','),
 				'lastTxDate':vm.triggerJob.lastTxDate
 			}
+
 			vm.schedule.params = JSON.stringify(param);
+			vm.schedule.remark = ids[0];
 			var url = vm.schedule.jobId == null ? "sys/schedule/save" : "sys/schedule/update";
 			$.ajax({
 				type: "POST",
@@ -273,7 +272,7 @@ var vm = new Vue({
 				success: function(r){
 					if(r.code === 0){
 						vm.reBack();
-						vm.setTrigger(ids);
+						vm.query();
 						vm.$message({
 							message: '操作成功',
 							type: 'success'
@@ -349,7 +348,6 @@ var vm = new Vue({
 						if(r.code == 0){
 							vm.reBack();
 							vm.query();
-							vm.removeTrigger([vm.triggerJob.etlJob]);
 							vm.$message({
 								message: '操作成功',
 								type: 'success'

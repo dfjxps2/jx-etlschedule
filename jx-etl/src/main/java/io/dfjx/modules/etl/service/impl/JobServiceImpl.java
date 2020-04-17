@@ -678,18 +678,6 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	}
 
 	/**
-	 * 批量设置定时任务
-	 * @param ids
-	 * @return
-	 */
-	@Transactional
-	@Override
-	public Boolean updateTrigger(List<String> ids, String trigger) {
-		baseMapper.updateTimeTigger(trigger, ids);
-		return true;
-	}
-
-	/**
 	 * 按照作业id重跑单个作业
 	 */
 	public Boolean rerunSingle(Integer id,String lastTxDate){
@@ -1330,5 +1318,10 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 			map.put("lastTxDate", rerunMultiDto.getLastTxDate());
 		}
 		return map;
+	}
+
+	@Override
+	public List<String> getTriggerList() {
+		return scheduleJobDao.getTriggerList();
 	}
 }

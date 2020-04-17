@@ -52,13 +52,6 @@
         update etl_job set enable=#{newEnableFlag} where id=#{id}
     </update>
 
-    <update id="updateTimeTigger">
-        update etl_job set TimeTrigger=#{tigger} where id in
-        <foreach collection="ids" index="key" item="value" open="(" close=")" separator=",">
-            #{value}
-        </foreach>
-    </update>
-
     <select id="checkTigger" resultMap="jobMap">
         SELECT
             *

@@ -140,13 +140,11 @@
                   align="center">
           </el-table-column>
           <el-table-column
-                  prop="timetrigger"
+                  prop="id"
                   label="定时任务"
+                  :show-overflow-tooltip="true"
+                  :formatter="triggerFormat"
                   align="center">
-            <template slot-scope="scope">
-              <span v-if="scope.row.timetrigger == 'Y'" >是</span>
-              <span v-else="">否</span>
-            </template>
           </el-table-column>
           <el-table-column
                   prop="lastJobstatus"
@@ -191,7 +189,6 @@
         <el-radio-button :label="1">后一天</el-radio-button>
       </el-radio-group>
       <el-input size="small" v-model="schedule.cronExpression" placeholder="如：0 0 12 * * ?" style="margin-top: 10px"></el-input>
-      <el-input size="small" v-model="schedule.remark" placeholder="备注" style="margin-top: 10px"></el-input>
       <div slot="footer" class="dialog-footer">
         <a class="btn btn-danger btn-sm" @click="deleteTigger" v-if="schedule.jobId != null">删除定时器</a>
         <a class="btn btn-primary btn-sm" @click="taskmulti">确定</a>

@@ -63,7 +63,8 @@ public class JobController {
 //	@RequiresPermissions("etl:job:list")/
 	public R list(@RequestParam Map<String, Object> params) {
 		PageUtils page;
-		if (params.containsKey("reqDenpsType") && "true".equals(params.get("reqDenpsType")) && ("false".equals(params.get("reqAllDeps")) || params.get("reqAllDeps")==null )) {
+        List<String> triggerList = null;
+        if (params.containsKey("reqDenpsType") && "true".equals(params.get("reqDenpsType")) && ("false".equals(params.get("reqAllDeps")) || params.get("reqAllDeps")==null )) {
 			logger.info("进入作业单层依赖查询方法");
 			page = jobService.getDependencyJobs(params);
 		} else if (params.containsKey("reqDenpsType") && "true".equals(params.get("reqDenpsType")) && "true".equals(params.get("reqAllDeps"))){
@@ -72,9 +73,10 @@ public class JobController {
 		} else {
 			logger.info("进入作业普通查询方法");
 			page = jobService.queryPage(params);
+            triggerList = jobService.getTriggerList();
 		}
 
-		return R.ok().put("page", page);
+		return R.ok().put("page", page).put("triggerList", triggerList);
 	}
 
 
@@ -249,33 +251,12 @@ public class JobController {
 	/**
 	 * 检查是否配置定时器
 	 */
-
 	@RequestMapping("/checktrigger/{id}")
 //	@RequiresPermissions("etl:job:rerunmulti")
 	public R checkTrigger(@PathVariable("id") Integer id) {
 		logger.info("checkTrigger params==="+id);
 		Map<String, Object> map = jobService.checkTigger(id);
 		return R.ok().put("data", map);
-	}
-
-	@RequestMapping("/settrigger")
-//	@RequiresPermissions("etl:job:rerunmulti")
-	public R setTrigger(@RequestBody String[] etlSystems) {
-		logger.info("setTrigger params==="+etlSystems);
-		if(etlSystems.length > 0){
-			jobService.updateTrigger(Arrays.asList(etlSystems), "Y");
-		}
-		return R.ok();
-	}
-
-	@RequestMapping("/removetrigger")
-//	@RequiresPermissions("etl:job:rerunmulti")
-	public R removeTrigger(@RequestBody String[] etlSystems) {
-		logger.info("removeTrigger params==="+etlSystems);
-		if(etlSystems.length > 0){
-			jobService.updateTrigger(Arrays.asList(etlSystems), "N");
-		}
-		return R.ok();
 	}
 
 	/**

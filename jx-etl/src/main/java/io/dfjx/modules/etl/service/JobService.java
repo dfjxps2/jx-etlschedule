@@ -68,6 +68,6 @@ public interface JobService extends IService<JobEntity> {
 
 	Map<String, Object> checkTigger(Integer id);
 
-	Boolean updateTrigger(List<String> ids, String trigger);
+	List<String> getTriggerList();
 }
 

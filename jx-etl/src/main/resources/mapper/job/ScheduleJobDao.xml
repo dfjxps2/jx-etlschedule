@@ -22,4 +22,11 @@
 			limit 1;
 	</select>
 
+	<select id="getTriggerList" resultType="string">
+		SELECT
+			sj.remark
+		FROM
+			schedule_job sj
+	</select>
+
 </mapper>

@@ -449,13 +449,13 @@
         <el-form >
             <el-form-item label="显示">
                 <el-row>
-                    <el-col :span="18">
+                    <el-col :span="17">
                         <el-radio-group v-model="showRadio" @change="setLayer">
                             <el-radio label="0">所有层</el-radio>
                             <el-radio label="1">邻近层</el-radio>
                         </el-radio-group>
                     </el-col>
-                    <el-col :span="6">
+                    <el-col :span="6" style="text-align: right">
                         <a class="btn btn-warning" @click="back"> &nbsp;返回 </a>
                     </el-col>
                 </el-row>
@@ -464,7 +464,7 @@
         </el-form>
 
     </div>
-    <div id="analysisChart" style="width:100%;height:calc(100% - 40px);overflow-x:auto;overflow-y: auto;"></div>
+    <div id="analysisChart" style="width:100%;height:calc(100% - 45px);overflow-x:auto;overflow-y: auto;"></div>
 </div>
 <!--重跑日期选择 -->
 <div v-show="showQueryData" class='cus-p-diag'>

@@ -30,8 +30,6 @@ public interface JobDao extends BaseMapper<JobEntity> {
 
     int updateSingleJobEnable(@Param("newEnableFlag") String newEnableFlag,
                               @Param("id") int id);
-    int updateTimeTigger(@Param("tigger") String tigger,
-                              @Param("ids") List<String> ids);
 
     List<JobEntity> checkTigger(@Param("ids") List<String> ids);
 }

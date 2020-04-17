@@ -37,4 +37,6 @@ public interface ScheduleJobDao extends BaseMapper<ScheduleJobEntity> {
 	int updateBatch(Map<String, Object> map);
 
 	ScheduleJobEntity selectByEtlJob(@Param("etl_job") String etl_job);
+
+	List<String> getTriggerList();
 }
