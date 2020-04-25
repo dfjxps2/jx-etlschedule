@@ -100,10 +100,11 @@ public class SysPageController {
 	public String main(Map<String, Object> map){
 		Date now = new Date();
 		Date preDate = DateUtils.addDays(now, -1);
+		Date nextDate = DateUtils.addDays(now, 1);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 		int tasks = jobService.getCount(1);
-		int dispatchs = jobLogService.getCount(dateFormat.format(preDate));
+		int dispatchs = jobLogService.getCount(dateFormat.format(preDate), dateFormat.format(nextDate));
 		int exes = scriptService.getCount();
 
 		map.put("tasks", tasks);

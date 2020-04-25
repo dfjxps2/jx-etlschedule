@@ -98,8 +98,8 @@ public class JobLogServiceImpl extends ServiceImpl<JobLogDao, JobLogEntity> impl
     }
 
     @Override
-    public int getCount(String txdate) {
-        return super.baseMapper.selectCount(new EntityWrapper<JobLogEntity>().addFilter("txdate='" + txdate + "'"));
+    public int getCount(String beginDate, String endDate) {
+        return super.baseMapper.selectCount(new EntityWrapper<JobLogEntity>().between("StartTime", beginDate, endDate));
     }
 
     @Override

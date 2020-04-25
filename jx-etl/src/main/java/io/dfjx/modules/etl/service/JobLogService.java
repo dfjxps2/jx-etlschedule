@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
+ *
  *
  * @author lwq
  * @email 404461275@qq.com
@@ -22,7 +22,7 @@ public interface JobLogService extends IService<JobLogEntity> {
 
     String getLastLogPath(String baseDir, String etlSystem, String etlJob);
 
-    int getCount(String txdate);
+    int getCount(String beginDate, String endDate);
 
     /**
      * 日期分布图 取最近天的数据
