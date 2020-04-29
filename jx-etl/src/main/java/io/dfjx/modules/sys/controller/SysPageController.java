@@ -33,9 +33,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -120,8 +124,8 @@ public class SysPageController {
 	}
 
 	@RequestMapping("logincas")
-	public String logincas(){
-		return "redirect:"+loginUrl;
+	public String logincas()throws UnsupportedEncodingException {
+		return "redirect:" + gtoLoginUrl();
 	}
 
 	@RequestMapping("loginback")
@@ -144,4 +148,16 @@ public class SysPageController {
 		authService.loginOut(request);
 		return "redirect:"+logoutUrl;
 	}
+
+	private String gtoLoginUrl () throws UnsupportedEncodingException {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		String scheme = request.getScheme();
+		String serverName = request.getServerName();
+		int port = request.getServerPort();
+		String path = request.getContextPath();
+		String basePath = scheme + "://" + serverName + ":" + port + path;
+        return loginUrl + URLEncoder.encode(basePath + "/loginback" , "utf-8");
+    }
+
 }
+
