@@ -44,7 +44,7 @@ auth:
   config:
     need: true
   login:
-    url: ${auth-frontier-url}/frontier/auth/toLogin?redirect_url=http%3A%2F%2F10.192.72.92%3A7202%2Fjx-etl%2Floginback
+    url: ${auth-frontier-url}/frontier/auth/toLogin?redirect_url=http%3A%2F%2F10.217.17.115%3A7202%2Fjx-etl%2Floginback
   logout:
     url: http://10.217.17.116:8094/cas/logout
 
