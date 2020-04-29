@@ -99,7 +99,7 @@ public class SysPageController {
 	@RequestMapping("main.html")
 	public String main(Map<String, Object> map){
 		Date now = new Date();
-		Date preDate = DateUtils.addDays(now, -1);
+		Date preDate = DateUtils.addDays(now, 0);
 		Date nextDate = DateUtils.addDays(now, 1);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 

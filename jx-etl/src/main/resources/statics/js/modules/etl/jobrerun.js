@@ -7,7 +7,6 @@ $(function () {
 	function refreshjoblist() {
 		if(vm.refresh_auto)
 			vm.query();
-		console.log(new Date().toString());
 		setTimeout(refreshjoblist,vm.refresh_freq);
     }
 });
@@ -60,6 +59,7 @@ var vm = new Vue({
 		dataPage: {},
 		triggerList: [],
 		multipleSelection:[],
+		showRadio:'0'
 	},
 	mounted(){
 		this.query(true);
