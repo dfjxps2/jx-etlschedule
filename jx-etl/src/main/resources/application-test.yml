@@ -33,8 +33,8 @@ spring:
           config:
             multi-statement-allow: true
 
-auth-url: http://auth-service.jinxin.cloud
-auth-frontier-url: http://auth-frontier.jinxin.cloud
+auth-url: http://auth-service.dxdemo.jinxin.cloud
+auth-frontier-url: http://auth-frontier.dxdemo.jinxin.cloud
 
 #统一认证
 auth:
@@ -46,7 +46,7 @@ auth:
   login:
     url: ${auth-frontier-url}/frontier/auth/toLogin?redirect_url=
   logout:
-    url: http://10.1.3.21:8095/cas/logout
+    url: http://cas.dxdemo.jinxin.cloud/cas/logout
 
 system-params:
   #  配置日志下载目录
