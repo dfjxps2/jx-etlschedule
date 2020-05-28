@@ -35,6 +35,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             httpServletResponse.sendRedirect(redirectUrl);
             return false;
         }
+        user = authService.queryUsersByIds(user.getUserId());
         user.setToken(token);
 
         Set<String> permissions = authService.selectPermissionsByUserIdAndSystemToSet(user.getUserId());

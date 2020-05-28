@@ -13,7 +13,7 @@ public interface AuthService {
 
     Set<String> selectPermissionsByUserIdAndSystemToSet(Long userId);
 
-    String queryUsersByIds(Long userId);
+    OnlineUser queryUsersByIds(Long userId);
 
     Boolean loginOut(HttpServletRequest request);
 

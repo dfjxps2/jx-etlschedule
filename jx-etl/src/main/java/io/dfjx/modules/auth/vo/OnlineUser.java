@@ -13,6 +13,10 @@ public class OnlineUser implements Serializable {
 
     private String username;
 
+    private String realname;
+
+    private String avatar;
+
     private String token;
 
     private boolean iaAuth = true;
@@ -69,5 +73,21 @@ public class OnlineUser implements Serializable {
 
     public void setPermissions(Set<String> permissions) {
         this.permissions = permissions;
+    }
+
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

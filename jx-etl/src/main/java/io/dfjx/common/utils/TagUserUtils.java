@@ -22,6 +22,8 @@ public class TagUserUtils {
         SysUserEntity entity = new SysUserEntity();
         entity.setUsername(onlineUser.getUsername());
         entity.setUserId(onlineUser.getUserId());
+        entity.setRealName(onlineUser.getRealname());
+        entity.setAvatar(onlineUser.getAvatar());
         return entity;
     }
 

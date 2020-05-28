@@ -110,6 +110,18 @@ public class SysUserEntity implements Serializable {
 	private String deptName;
 
 	/**
+	 * 部门名称
+	 */
+	@TableField(exist=false)
+	private String realName;
+
+	/**
+	 * 部门名称
+	 */
+	@TableField(exist=false)
+	private String avatar;
+
+	/**
 	 * 设置：
 	 * @param userId
 	 */
@@ -253,17 +265,20 @@ public class SysUserEntity implements Serializable {
 		this.deptName = deptName;
 	}
 
-	/**
-	 * 真实姓名
-	 */
-	private String userRealName;
-
-	public String getUserRealName() {
-		return userRealName;
+	public String getRealName() {
+		return realName;
 	}
 
-	public void setUserRealName(String userRealName) {
-		this.userRealName = userRealName;
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 
 	public String getCaUserId() {

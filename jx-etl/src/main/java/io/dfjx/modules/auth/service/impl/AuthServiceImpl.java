@@ -5,7 +5,7 @@ import io.dfjx.modules.auth.service.AuthService;
 import io.dfjx.modules.auth.utils.CookieUtils;
 import io.dfjx.modules.auth.utils.RestTemplateUtils;
 import io.dfjx.modules.auth.utils.UrlEnum;
-import io.dfjx.modules.auth.vo.OauthUserDTO;
+import io.dfjx.modules.auth.vo.OauthUserVO;
 import io.dfjx.modules.auth.vo.OnlineUser;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,12 +58,7 @@ public class AuthServiceImpl implements AuthService {
     public OnlineUser nowOnlineUser(String accessToken, HttpServletRequest request, HttpServletResponse response) {
         OnlineUser onlineUser = null;
         if (!isAuth) {
-            onlineUser = new OnlineUser();
-            onlineUser.setUserId(1L);
-            onlineUser.setTenantId(1L);
-            onlineUser.setIaAuth(false);
-            onlineUser.setUsername("test");
-            return onlineUser;
+            return buildUser();
         }
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<String, String>();
         formData.add("token", accessToken);
@@ -175,13 +170,23 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String queryUsersByIds(Long userId){
-        String reqUrl = authUrl + UrlEnum.USER_QUERYUSERS_BY_IDS.getUrl();
-        OauthUserDTO[] arrays = restTemplate.exchange(reqUrl, HttpMethod.POST, new HttpEntity<>(Arrays.asList(userId)), OauthUserDTO[].class).getBody();
-        if(null != arrays && arrays.length > 0){
-            return arrays[0].getUsername();
+    public OnlineUser queryUsersByIds(Long userId){
+
+        if (!isAuth) {
+            return buildUser();
         }
-        return "无";
+        String reqUrl = authUrl + UrlEnum.USER_SELECT_USERID.getUrl();
+        OauthUserVO[] arrays = restTemplate.exchange(reqUrl, HttpMethod.POST, new HttpEntity<>(Arrays.asList(userId)), OauthUserVO[].class).getBody();
+        OnlineUser onlineUser = new OnlineUser();
+        if (arrays != null && arrays.length > 0) {
+            onlineUser.setUserId(arrays[0].getUserId());
+            onlineUser.setUsername(arrays[0].getUsername());
+            onlineUser.setRealname(arrays[0].getName());
+//            onlineUser.setAvatar("https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png");
+            onlineUser.setAvatar(arrays[0].getUserAvatar());
+            onlineUser.setTenantId(arrays[0].getTenantId());
+        }
+        return onlineUser;
     }
 
     @Override
@@ -311,6 +316,17 @@ public class AuthServiceImpl implements AuthService {
             authorization = "Bearer" + " " + authorization;
         }
         return authorization;
+    }
+
+    private OnlineUser buildUser(){
+        OnlineUser onlineUser = new OnlineUser();
+        onlineUser = new OnlineUser();
+        onlineUser.setUserId(1L);
+        onlineUser.setTenantId(1L);
+        onlineUser.setIaAuth(false);
+        onlineUser.setUsername("test");
+        onlineUser.setRealname("测试用户");
+        return onlineUser;
     }
 
 }

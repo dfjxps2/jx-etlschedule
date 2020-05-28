@@ -6,11 +6,13 @@ import java.io.Serializable;
  * @author makaiyu
  * @date 2019/5/13 18:02
  */
-public class OauthUserDTO implements Serializable {
+public class OauthUserVO implements Serializable {
 
     private static final long serialVersionUID = 74335887421213094L;
     /** 主键id */
-    private Long id;
+    private Long userId;
+
+    private Long tenantId;
 
     /** 登录账号 */
     private String username;
@@ -18,16 +20,27 @@ public class OauthUserDTO implements Serializable {
     /** 名称 */
     private String name;
 
+
+    private String userAvatar;
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
 
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getUsername() {
@@ -44,5 +57,13 @@ public class OauthUserDTO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUserAvatar() {
+        return userAvatar;
+    }
+
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
     }
 }

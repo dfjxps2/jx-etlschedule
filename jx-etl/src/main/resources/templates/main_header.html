@@ -21,31 +21,49 @@
     .content-wrapper{
       margin-left:0;
     }
-    .heafer-bg{background-color: #1A3275; height: 50px;}
+    .heafer-bg{background-color: #1f2e4d; height: 50px;}
     .header-tile{
-      line-height: 50px; color: #ffffff; font-size: 18px; padding-left: 10px; vertical-align: middle;
+      line-height: 50px; color: #ffffff; font-size: 16px; font-weight: 700; padding-left: 10px; vertical-align: middle;
     }
     .header-tile:hover{color: #fff}
     .el-menu--horizontal>.el-menu-item{
       height: 50px;
       line-height: 50px;
       text-align: center;
-      width: 126px;
+      width: 136px;
       border-bottom:none;
     }
     .el-menu--horizontal>.el-menu-item.is-active {
       border-bottom: none;
       background-color: rgba(255,255,255,0.1) !important;
     }
-    .quit{
-      padding: 0 10px;
-      height: 32px;
-      letter-spacing: 1px;
-      border-radius: 4px;
-      font-size: 14px;
-      color:#fff;
+    .el-menu--horizontal>.el-menu-item{
+      font-size: 16px;
     }
-
+    .el-dropdown{
+      color: #fff;
+      font-size: 16px;
+    }
+    .el-dropdown-menu{
+      background-color: #1f2e4d;
+    }
+    .el-dropdown-menu__item{
+      width: 140px;
+      color: #fff;
+    }
+    .el-popper .popper__arrow, .el-popper .popper__arrow::after{
+      border-style: none
+    }
+    .el-dropdown-menu__item:hover{
+      background-color: #fff;
+    }
+    .el-popper[x-placement^=bottom]{
+      margin-top: 2px;
+    }
+    .el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover{
+      background-color: #477de9;
+      color: #fff;
+    }
   </style>
 </head>
 <!-- ADD THE CLASS layout-boxed TO GET A BOXED LAYOUT -->
@@ -55,18 +73,27 @@
   <header class="main-header">
     <el-row class="heafer-bg">
       <el-col :span="3">
-        <img src="${request.contextPath}/statics/img/mainImgs/abstract.png" height="24" style="padding-left: 15px"/>
+        <img src="${request.contextPath}/statics/img/mainImgs/abstract.png" height="28" width="28" style="margin-left: 24px"/>
         <a href="#main.html" class="header-tile">调度系统</a>
       </el-col>
-      <el-col :span="17">
-        <el-menu :default-active="getActiveTab" class="el-menu-demo" mode="horizontal" background-color="#1A3275" text-color="#FFFFFF" active-text-color="#FFFFFF">
+      <el-col :span="18" style="text-align: center">
+        <el-menu :default-active="getActiveTab" class="el-menu-demo" mode="horizontal" background-color="#1f2e4d" text-color="#afb6c0" active-text-color="#FFFFFF">
           <el-menu-item v-if="item.type == 1" @click="toLink(item.url)" :index="index" v-for="(item,index) in menuList">{{item.name}}</el-menu-item>
         </el-menu>
       </el-col>
-      <el-col :span="4">
-        <div style="color: #ffffff; line-height: 50px; text-align: right">
-          <span style="font-size: 16px">${sysUser.username} 欢迎您！</span>
-          <el-button type="text" class="quit" @click="logout()"><i class="el-icon-switch-button"></i>退出</el-button>
+      <el-col :span="3">
+        <div style="color: #ffffff; line-height: 50px; height: 50px; text-align: right">
+          <img v-if="'${sysUser.avatar}' == ''" src="${request.contextPath}/statics/img/icon-account.svg" width="28" height="28" style="border-radius: 9999px;background-color: #fff"/>
+          <img v-else src="${sysUser.avatar}" width="28" style="border-radius: 9999px;"/>
+          <el-dropdown trigger="click">
+            <span style="font-size: 16px;padding-right: 24px;margin-left: 8px">${sysUser.realName}</span>
+            <el-dropdown-menu slot="dropdown">
+<!--              <el-dropdown-item>个人中心</el-dropdown-item>-->
+              <el-dropdown-item @click.native="logout()">退出</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+<!--          <span style="font-size: 16px;padding-right: 24px;margin-left: 8px">${sysUser.realName}</span>-->
+<!--          <el-button type="text" class="quit" @click="logout()"><i class="el-icon-switch-button"></i>退出</el-button>-->
         </div>
       </el-col>
     </el-row>
