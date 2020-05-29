@@ -3,7 +3,6 @@ package io.dfjx.modules.etl.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import io.dfjx.common.utils.DateUtils;
 import io.dfjx.common.utils.PageUtils;
 import io.dfjx.common.utils.Query;
 import io.dfjx.modules.etl.dao.JobLogDao;
@@ -57,16 +56,14 @@ public class JobLogServiceImpl extends ServiceImpl<JobLogDao, JobLogEntity> impl
         return new PageUtils(page);
     }
 
+    @Override
     public String getLogDir(String etlSystem,Integer jobsessionid,String scriptfile,String txdate ){
-
-        Date date = new Date();
-        date.setTime(Long.parseLong(txdate));
 
         JobLogEntity jobLogEntity = this.selectOne(new EntityWrapper<JobLogEntity>()
                             .eq("etl_system",etlSystem)
                             .eq("jobsessionid",jobsessionid)
                             .eq("scriptfile",scriptfile)
-                            .eq("txdate",date)
+                            .eq("txdate",txdate)
 
         );
         if(jobLogEntity == null){
