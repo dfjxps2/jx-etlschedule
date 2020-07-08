@@ -111,12 +111,9 @@ public class JobLogController {
         String etlJob = params.get("etlJob").toString();
         String txdate = params.get("txdate").toString();
 
-        String[] datesplit =  txdate.substring(0,10).split("-");
-        String dateStr = datesplit[0]+datesplit[1]+datesplit[2];
-
         String txdatanew = jobLogService.getLogDir(etlSystem,jobsessionid,etlJob,txdate);
-        String filename = etlSystem + "_" + etlJob + "_" + dateStr + "." + jobsessionid + ".log";
-        String filepathname = systemParams.getFileDownloadDir() + etlSystem + "/" + txdatanew + "/" + filename;
+        String filename = etlJob + "." + jobsessionid + ".log";
+        String filepathname = systemParams.getFileDownloadDir() + etlSystem + "/" + txdatanew + "/" + filename.toLowerCase();
         logger.info("日志名称  "+ filepathname);
         String logresult = ReadFileUtil.readToString(filepathname);
         if(logresult == "-1"){
@@ -139,18 +136,15 @@ public class JobLogController {
         String etlJob = request.getParameter("etlJob");
         String txdate = request.getParameter("txdate");
 
-        String[] datesplit =  txdate.substring(0,10).split("-");
-        String dateStr = datesplit[0]+datesplit[1]+datesplit[2];
-
         String txdatanew = jobLogService.getLogDir(etlSystem,jobsessionid,etlJob,txdate);
-        String filename = etlSystem + "_" + etlJob + "_" + dateStr + "." + jobsessionid + ".log";
+        String filename = etlJob + "." + jobsessionid + ".log";
         String filepath= systemParams.getFileDownloadDir() + etlSystem + "/" + txdatanew + "/";
-        File file = new File(filepath+filename);
+        File file = new File(filepath+filename.toLowerCase());
         if (!file.exists()){
               logger.info("日志文件不存在或已被清理");
         }
 
-        DownLoadFileUtil.downloadFile(response,filepath,filename);
+        DownLoadFileUtil.downloadFile(response,filepath,filename.toLowerCase());
     }
 
     /**
