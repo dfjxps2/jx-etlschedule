@@ -160,7 +160,7 @@ var vm = new Vue({
             var rowdata = vm.multipleSelection[0];
             var etlSystem = rowdata.etlSystem;
             var jobsessionid = rowdata.jobsessionid;
-            var scriptfile = rowdata.scriptfile;
+            var etlJob = rowdata.etlJob;
             var txdate = rowdata.txdate;
 
             // alert("txdate=====" + txdate);
@@ -168,7 +168,7 @@ var vm = new Vue({
                 type: "GET",
                 url: baseURL + "etl/joblog/loadlog",
                 contentType: "application/json",
-                data: {'etlSystem':etlSystem,'jobsessionid':jobsessionid,'scriptfile':scriptfile,'txdate':txdate},
+                data: {'etlSystem':etlSystem,'jobsessionid':jobsessionid,'etlJob':etlJob,'txdate':txdate},
                 success: function(data){
                     vm.myModal = true;
                     if(data.code == 0){
@@ -202,16 +202,16 @@ var vm = new Vue({
             var rowdata = vm.multipleSelection[0];
             var etlSystem = rowdata.etlSystem;
             var jobsessionid = rowdata.jobsessionid;
-            var scriptfile = rowdata.scriptfile;
+            var etlJob = rowdata.etlJob;
             var txdate = rowdata.txdate;
             $.ajax({
                 type: "GET",
                 url: baseURL + "etl/joblog/loadlog",
                 contentType: "application/json",
-                data: {'etlSystem':etlSystem,'jobsessionid':jobsessionid,'scriptfile':scriptfile,'txdate':txdate},
+                data: {'etlSystem':etlSystem,'jobsessionid':jobsessionid,'etlJob':etlJob,'txdate':txdate},
                 success: function(data){
                     if(data.code == 0){
-                        location.href = baseURL+"etl/joblog/logdload?etlSystem="+etlSystem+"&jobsessionid=" + jobsessionid +"&scriptfile="+scriptfile+"&txdate="+txdate;
+                        location.href = baseURL+"etl/joblog/logdload?etlSystem="+etlSystem+"&jobsessionid=" + jobsessionid +"&etlJob="+etlJob+"&txdate="+txdate;
                     }else{
                         vm.$alert(data.msg, '系统提示', {
                             confirmButtonText: '确定',
@@ -332,7 +332,7 @@ var vm = new Vue({
             }
             var etlSystem = _tllog.etlSystem;
             var jobsessionid = _tllog.jobsessionid;
-            var scriptfile = _tllog.scriptfile;
+            var etlJob = _tllog.etlJob;
             var txdate = _tllog.txdate;
             $.ajax({
                 type: "GET",
@@ -341,7 +341,7 @@ var vm = new Vue({
                 data: _tllog,
                 success: function(data){
                     if(data.code == 0){
-                        location.href = baseURL+"etl/joblog/logdload?etlSystem="+etlSystem+"&jobsessionid=" + jobsessionid +"&scriptfile="+scriptfile+"&txdate="+txdate;
+                        location.href = baseURL+"etl/joblog/logdload?etlSystem="+etlSystem+"&jobsessionid=" + jobsessionid +"&etlJob="+etlJob+"&txdate="+txdate;
                     }else{
                         vm.$alert(data.msg, '系统提示', {
                             confirmButtonText: '确定',
@@ -407,7 +407,7 @@ function getDayStr(s){
 function getMsg(d){
     var job = '【' + d.etlJob + '】';
     var sta = d.returncode == '0' ? '成功' : '失败(' + d.returncode + ')';
-    var fnstr = 'showLog(\"'+ d.etlSystem +'\",\"'+ d.jobsessionid +'\",\"'+ d.scriptfile +'\",\"'+ d.txdate +'\")';
+    var fnstr = 'showLog(\"'+ d.etlSystem +'\",\"'+ d.jobsessionid +'\",\"'+ d.etlJob +'\",\"'+ d.txdate +'\")';
     return '<dt onclick=\''+fnstr+'\'>'+job+'执行状态：' + sta + ',从' + d.starttime + '至' + d.endtime + '</dt>';
 }
 function timelineClick() {
@@ -434,8 +434,8 @@ function timelineClick() {
 
 }
 var _tllog = {};
-function showLog(etlSystem, jobsessionid, scriptfile, txdate){
-    _tllog = {'etlSystem':etlSystem,'jobsessionid':jobsessionid,'scriptfile':scriptfile,'txdate':txdate};
+function showLog(etlSystem, jobsessionid, etlJob, txdate){
+    _tllog = {'etlSystem':etlSystem,'jobsessionid':jobsessionid,'etlJob':etlJob,'txdate':txdate};
     $.ajax({
         type: "GET",
         url: baseURL + "etl/joblog/loadlog",

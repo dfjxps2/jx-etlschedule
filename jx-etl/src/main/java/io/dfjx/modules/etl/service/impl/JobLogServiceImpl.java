@@ -3,6 +3,7 @@ package io.dfjx.modules.etl.service.impl;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import io.dfjx.common.utils.DateUtils;
 import io.dfjx.common.utils.PageUtils;
 import io.dfjx.common.utils.Query;
 import io.dfjx.modules.etl.dao.JobLogDao;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.unit.DataUnit;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -57,12 +59,12 @@ public class JobLogServiceImpl extends ServiceImpl<JobLogDao, JobLogEntity> impl
     }
 
     @Override
-    public String getLogDir(String etlSystem,Integer jobsessionid,String scriptfile,String txdate ){
+    public String getLogDir(String etlSystem,Integer jobsessionid,String etlJob,String txdate ){
 
         JobLogEntity jobLogEntity = this.selectOne(new EntityWrapper<JobLogEntity>()
                             .eq("etl_system",etlSystem)
                             .eq("jobsessionid",jobsessionid)
-                            .eq("scriptfile",scriptfile)
+                            .eq("ETL_Job",etlJob)
                             .eq("txdate",txdate)
 
         );
@@ -87,8 +89,9 @@ public class JobLogServiceImpl extends ServiceImpl<JobLogDao, JobLogEntity> impl
             return null;
         }else{
             String[] datesplit =  jobLogEntity.getStarttime().substring(0,10).split("-");
+            String txDate = DateUtils.format(jobLogEntity.getTxdate(), "yyyyMMdd");
             String datedir = datesplit[0]+datesplit[1]+datesplit[2];
-            String filename = jobLogEntity.getScriptfile() + "." + jobLogEntity.getJobsessionid() + ".log";
+            String filename = etlSystem + "_" + etlJob + "." + jobLogEntity.getJobsessionid() + "_" + txDate + ".log";
             String pathname = baseDir + etlSystem + "/" + datedir + "/" + filename;
             return pathname;
         }

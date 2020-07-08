@@ -108,11 +108,14 @@ public class JobLogController {
         logger.info("loadlog-param==============" + params.toString());
         String etlSystem = params.get("etlSystem").toString();
         Integer jobsessionid = Integer.parseInt(params.get("jobsessionid").toString());
-        String scriptfile = params.get("scriptfile").toString();
+        String etlJob = params.get("etlJob").toString();
         String txdate = params.get("txdate").toString();
 
-        String txdatanew = jobLogService.getLogDir(etlSystem,jobsessionid,scriptfile,txdate);
-        String filename = scriptfile + "." + jobsessionid + ".log";
+        String[] datesplit =  txdate.substring(0,10).split("-");
+        String dateStr = datesplit[0]+datesplit[1]+datesplit[2];
+
+        String txdatanew = jobLogService.getLogDir(etlSystem,jobsessionid,etlJob,txdate);
+        String filename = etlSystem + "_" + etlJob + "_" + dateStr + "." + jobsessionid + ".log";
         String filepathname = systemParams.getFileDownloadDir() + etlSystem + "/" + txdatanew + "/" + filename;
         logger.info("日志名称  "+ filepathname);
         String logresult = ReadFileUtil.readToString(filepathname);
@@ -133,10 +136,14 @@ public class JobLogController {
     public void logdload(HttpServletRequest request, HttpServletResponse response) {
         String etlSystem = request.getParameter("etlSystem");
         Integer jobsessionid = Integer.parseInt(request.getParameter("jobsessionid"));
-        String scriptfile = request.getParameter("scriptfile");
+        String etlJob = request.getParameter("etlJob");
         String txdate = request.getParameter("txdate");
-        String txdatanew = jobLogService.getLogDir(etlSystem,jobsessionid,scriptfile,txdate);
-        String filename = scriptfile + "." + jobsessionid + ".log";
+
+        String[] datesplit =  txdate.substring(0,10).split("-");
+        String dateStr = datesplit[0]+datesplit[1]+datesplit[2];
+
+        String txdatanew = jobLogService.getLogDir(etlSystem,jobsessionid,etlJob,txdate);
+        String filename = etlSystem + "_" + etlJob + "_" + dateStr + "." + jobsessionid + ".log";
         String filepath= systemParams.getFileDownloadDir() + etlSystem + "/" + txdatanew + "/";
         File file = new File(filepath+filename);
         if (!file.exists()){

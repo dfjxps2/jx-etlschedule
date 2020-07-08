@@ -326,6 +326,7 @@ public class AuthServiceImpl implements AuthService {
         onlineUser.setIaAuth(false);
         onlineUser.setUsername("test");
         onlineUser.setRealname("测试用户");
+        onlineUser.setAvatar("");
         return onlineUser;
     }
 
