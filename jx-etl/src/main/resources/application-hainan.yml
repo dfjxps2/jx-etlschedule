@@ -3,9 +3,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://10.217.17.115:3306/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      url: jdbc:mysql://59.212.226.39:3306/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
       username: etl
-      password: edw123
+      password: etl123
       initial-size: 10
       max-active: 100
       min-idle: 10
@@ -33,8 +33,8 @@ spring:
           config:
             multi-statement-allow: true
 
-auth-url: http://172.25.13.75:31234
-auth-frontier-url: http://auth-frontier.jxwda.bjdx.gov.cn
+auth-url: http://59.212.226.45:31987
+auth-frontier-url: http://59.212.226.45:31000
 
 #统一认证
 auth:
@@ -46,23 +46,23 @@ auth:
   login:
     url: ${auth-frontier-url}/frontier/auth/toLogin?redirect_url=
   logout:
-    url: http://10.217.17.116:8094/cas/logout
+    url: http://59.212.226.49:9302/cas/logout
 
 system-params:
   #  配置日志下载目录
-  file_download_dir: /usr/share/etl/LOG/
+  file_download_dir: /home/etl/ETLAuto/LOG/
   #  配置公共脚本上传目录
-  public_script_upload_dir: /usr/share/etl/app/
+  public_script_upload_dir: /home/etl/ETLAuto/app/
   #  配置作业脚本上传目录
-  hql_script_upload_dir: /usr/share/etl/app/
+  hql_script_upload_dir: /home/etl/ETLAuto/app/
   # 配置作业控制文件路径
-  control_file_dir: /usr/share/etl/DATA/receive/
+  control_file_dir: /home/etl/ETLAuto/DATA/receive/
   # 执行脚本软链接目录
-  exec_file_ln_dir: /usr/share/etl/APP/
+  exec_file_ln_dir: /home/etl/ETLAuto/APP/
   # 是否创建软连接标志
   create_ln_flag: true
   # 作业配置导出文件
-  config_export_dir: /home/etl/tmp/
+  config_export_dir: /home/etl/ETLAuto/tmp/
   # cas登录服务地址
   cas-service-url: http://10.217.17.116:8094/cas
   project-url: http://10.217.17.115:7202/jx-etl/

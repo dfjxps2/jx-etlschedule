@@ -3,7 +3,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/jx_etl?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      url: jdbc:mysql://localhost:3306/jx-etl?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
       username: root
       password: rootroot
       initial-size: 10
@@ -42,7 +42,7 @@ auth:
     id: testclientid
     secret: 123456
   config:
-    need: true
+    need: false
   login:
     url: ${auth-frontier-url}/frontier/auth/toLogin?redirect_url=
   logout:

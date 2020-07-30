@@ -879,9 +879,10 @@ function setDoScript(){
 	var script = vm.doScripts.find(x=>{if(x.code == vm.job.publicScript) return x}).name
 	// var script = $("#publicScriptid").find("option:selected").text();
 	console.log('script=',script)
-	var index = script.lastIndexOf(".");
-	var end = script.substring(index, script.length);
-	vm.job.runningscript = vm.job.etlJob.toLocaleLowerCase() + "0100" + end;
+	// var index = script.lastIndexOf(".");
+	// var end = script.substring(index, script.length);
+	// vm.job.runningscript = vm.job.etlJob.toLocaleLowerCase() + "0100" + end;
+	vm.job.runningscript = script;
 	if (isBlank(script)  || isBlank(vm.job.etlJob)) {
 		vm.job.runningscript = '';
 	}
