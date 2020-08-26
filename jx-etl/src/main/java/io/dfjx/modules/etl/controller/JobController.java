@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.dfjx.common.exception.RRException;
 import io.dfjx.modules.etl.util.DownLoadFileUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -398,12 +399,9 @@ public class JobController {
 	 */
 	@RequestMapping("/expconfig")
 //	@RequiresPermissions("etl:job:expconfig")
-	public R jobExpConfig(@RequestParam Map<String, Object> params) {
-		String fileName = jobService.expJobConfigFile();
-		if(fileName != "error"){
-			return R.ok(fileName.trim());
-		}
-			return R.error("作业配置导出失败");
+	public void jobExpConfig(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		jobService.expJobConfigFile(request, response);
 	}
 
 

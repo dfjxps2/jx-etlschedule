@@ -1,5 +1,6 @@
 package io.dfjx.modules.etl.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -58,11 +59,7 @@ public interface JobService extends IService<JobEntity> {
 
 	String jobBatcheConfig() throws Exception;
 
-	List<ExlJobConfig> expJobConfig();
-
-	List<ExlJobDependency> expJobDependency();
-
-	String expJobConfigFile();
+	void expJobConfigFile(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 	int getCount(Integer enable);
 

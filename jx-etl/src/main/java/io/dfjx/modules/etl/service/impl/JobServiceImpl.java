@@ -10,6 +10,7 @@ import io.dfjx.common.utils.PageUtils;
 import io.dfjx.common.utils.Query;
 import io.dfjx.modules.etl.dao.JobDao;
 import io.dfjx.modules.etl.dao.JobDependencyDao;
+import io.dfjx.modules.etl.dao.ScriptDao;
 import io.dfjx.modules.etl.dto.RerunMultiDto;
 import io.dfjx.modules.etl.entity.*;
 import io.dfjx.modules.etl.service.*;
@@ -27,10 +28,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -43,6 +44,9 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 
 	@Autowired
 	private JobDao jobDao;
+
+	@Autowired
+	private ScriptDao scriptDao;
 
 	@Autowired
 	private ScheduleJobDao scheduleJobDao;
@@ -141,6 +145,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	 * @param params
 	 * @return
 	 */
+	@Override
 	public PageUtils getDependencyJobs(Map<String, Object> params){
 		logger.info("service-params======" + params.toString());
 		String etlSystem = params.get("dep_etlSystem").toString();
@@ -482,6 +487,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	 * @param params
 	 * @return
 	 */
+	@Override
 	public PageUtils getAllDependencyJobs2(Map<String, Object> params){
 		logger.info("getAllDependencyJobs2-params======" + params.toString());
 		String etlSystem = params.get("dep_etlSystem").toString();
@@ -568,6 +574,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	 * @param params
 	 * @return
 	 */
+	@Override
 	public PageUtils getAllDependencyJobs3(Map<String, Object> params){
 		String etlSystem = params.get("dep_etlSystem").toString();
 		String etlJob = params.get("dep_etlJob").toString();
@@ -640,6 +647,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	 * @param params
 	 * @return
 	 */
+	@Override
 	public Map<Integer, List<Map>> getAllDependencyJobs4(Map<String, Object> params){
 		String etlSystem = params.get("dep_etlSystem").toString();
 		String etlJob = params.get("dep_etlJob").toString();
@@ -666,6 +674,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	/**
 	 * 按照作业id重跑多个作业
 	 */
+	@Override
 	public Boolean rerunMulti(Map<String, Object> params){
 		String[] rerunjobids = params.get("rerunjobids").toString().split(",");
 		String lastTxDate = params.get("lastTxDate").toString();
@@ -680,6 +689,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	/**
 	 * 按照作业id重跑单个作业
 	 */
+	@Override
 	public Boolean rerunSingle(Integer id,String lastTxDate){
 		JobEntity jobEntity = jobDao.selectById(id);
 		//更新作业状态为Ready
@@ -703,11 +713,13 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	 * @param newJobStatus
 	 * @return
 	 */
+	@Override
 	public Boolean updateSingleJobStatus(int id,String newJobStatus){
 		jobDao.updateSingleJobStatus(newJobStatus,id);
 		return true;
 	}
 
+	@Override
 	public int updateBatchJobStatus(String[] ids,String newJobStatus){
 		int count = 0;
 		for(String id : ids){
@@ -719,7 +731,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 		return count;
 	}
 
-
+	@Override
 	public int updateBatchJobTxDate(String[] ids,String newJobTxDate){
 		int count = 0;
 		for(String id : ids){
@@ -731,11 +743,13 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 		return count;
 	}
 
+	@Override
 	public Boolean updateSingleJobTxDate(int id,String newJobTxDate){
 		jobDao.updateSingleJobTxDate(newJobTxDate,id);
 		return true;
 	}
 
+	@Override
 	public int updateBatchJobEnableFlag(String[] ids, String newEnableFlag){
 		int count = 0;
 		for(String id : ids){
@@ -746,12 +760,13 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 		return count;
 	}
 
+	@Override
 	public Boolean updateSingleJobEnableFlag(int id, String newEnableFlag){
 		jobDao.updateSingleJobEnable(newEnableFlag,id);
 		return true;
 	}
 
-
+	@Override
     @Transactional(rollbackFor = Exception.class)
 	public String jobBatcheConfig() throws Exception{
 		File file = new File(systemParams.getPublicScriptUploadDir()+"job_batch_config.xls");
@@ -822,7 +837,10 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
             jobEntity.setEnable(strings[8].trim());
             jobEntity.setLastJobstatus("Ready");
 //            jobEntity.setLastTxdate(date);
-			jobEntity.setRunningscript(strings[1].toLowerCase().trim()+"0100."+strings[7].trim());
+
+			ScriptEntity scriptEntity = scriptDao.selectById(strings[6]);
+			jobEntity.setRunningscript(scriptEntity.getFilename());
+
            	jobEntity.setEtlServer(strings[2].trim());
             jobEntity.setLastFilecnt(0);
             jobEntity.setCubeflag("N");
@@ -1152,11 +1170,9 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
         return  streamSet;
     }
 
-
-
-	public List<ExlJobConfig> expJobConfig() {
+	public List<ExlJobConfig> expJobConfig(List<String> ids) {
 //		List<JobEntity> jobEntities = jobDao.selectList(new EntityWrapper<JobEntity>().addFilter("enable='1'"));
-		List<JobEntity> jobEntities = jobDao.selectList(new EntityWrapper<JobEntity>());
+		List<JobEntity> jobEntities = jobDao.selectList(new EntityWrapper<JobEntity>().in("id", ids));
 		List<ExlJobConfig> exlJobConfigs = new ArrayList<ExlJobConfig>();
 		ExlJobConfig ejc=null;
 		List<JobStepEntity> jobStepEntitys;
@@ -1196,9 +1212,9 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 	}
 
 
-	public List<ExlJobDependency> expJobDependency() {
+	public List<ExlJobDependency> expJobDependency(List<String> ids) {
 //		List<JobEntity> jobEntities = jobDao.selectList(new EntityWrapper<JobEntity>().addFilter("enable='1'"));
-		List<JobEntity> jobEntities = jobDao.selectList(new EntityWrapper<JobEntity>());
+		List<JobEntity> jobEntities = jobDao.selectList(new EntityWrapper<JobEntity>().in("id", ids));
 		List<ExlJobDependency> exlJobDependencies = new ArrayList<ExlJobDependency>();
 		List<JobDependencyEntity> jobDependencyEntities;
 		ExlJobDependency ejd=null;
@@ -1236,9 +1252,15 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 		return exlJobDependencies;
 	}
 
+	@Override
+	public void expJobConfigFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+		String idsStr = (String) request.getParameter("ids");
+		if (StringUtils.isBlank(idsStr)) {
+			throw new RRException("输入参数有误");
+		}
+		List<String> ids = Arrays.asList(idsStr.split(","));
 
-	public String expJobConfigFile(){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
 		String time = sdf.format(new Date());
 		// 定义文件名
@@ -1261,10 +1283,10 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 		int[] sheetWidth1 = {5000,5000,5000,8000,5000,5000,5000,5000,5000};
 		int[] sheetWidth2 = {5000,8000,6000,8000,5000,5000};
 
-		List<ExlJobConfig>  exlJobConfigs = expJobConfig();
+		List<ExlJobConfig>  exlJobConfigs = expJobConfig(ids);
 		List<Map<String, String>> rs1 = ExcelTool.createJobConfigDataSet(exlJobConfigs);
 
-		List<ExlJobDependency>  exlJobDependencies = expJobDependency();
+		List<ExlJobDependency>  exlJobDependencies = expJobDependency(ids);
 		List<Map<String, String>> rs2 = ExcelTool.createJobDependencyDataSet(exlJobDependencies);
 
 
@@ -1280,25 +1302,21 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 		ExcelTool.createTable(wb,sheet1,rs1);
 		ExcelTool.createThead(wb,sheet2,thead2,sheetWidth2);
 		ExcelTool.createTable(wb,sheet2,rs2);
-		FileOutputStream fos = null;
-		try {
-			File dir = new File(filePath);
-			if(!dir.exists())
-				dir.mkdirs();
-			fos = new FileOutputStream(new File(filePath+fileName));
-			wb.write(fos);
-			fos.close();
-			wb.close();
 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return "error";
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		try {
+			wb.write(bos);
 		} catch (IOException e) {
 			e.printStackTrace();
-			return "error";
 		}
 
-		return fileName;
+		fileName = URLEncoder.encode(fileName, "UTF-8");
+		byte[] bytes = bos.toByteArray();
+		response.setContentType("application/octet-stream");
+		response.setContentLength(bytes.length);
+		response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+		response.getOutputStream().write(bytes);
+		response.flushBuffer();
 	}
 
 	@Override

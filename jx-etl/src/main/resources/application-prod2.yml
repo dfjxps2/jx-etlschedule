@@ -1,0 +1,70 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://192.21.9.219:3316/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      username: etl
+      password: z^SeNj^r$&U7CoDS
+      initial-size: 10
+      max-active: 100
+      min-idle: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      #Oracle需要打开注释
+      #validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        #login-username: admin
+        #login-password: admin
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+        wall:
+          config:
+            multi-statement-allow: true
+
+auth-url: http://172.25.117.56:31003
+auth-frontier-url: http://172.25.117.56:31000
+
+#统一认证
+auth:
+  client:
+    id: testclientid
+    secret: 123456
+  config:
+    need: true
+  login:
+    url: ${auth-frontier-url}/frontier/auth/toLogin?redirect_url=
+  logout:
+    url: http://172.25.117.52:8094/cas/logout
+
+system-params:
+  #  配置日志下载目录
+  file_download_dir: /apps/ETLAuto/LOG/
+  #  配置公共脚本上传目录
+  public_script_upload_dir: /apps/ETLAuto/app/
+  #  配置作业脚本上传目录
+  hql_script_upload_dir: /apps/ETLAuto/app/
+  # 配置作业控制文件路径
+  control_file_dir: /apps/ETLAuto/DATA/receive/
+  # 执行脚本软链接目录
+  exec_file_ln_dir: /apps/ETLAuto/APP/
+  # 是否创建软连接标志
+  create_ln_flag: true
+  # 作业配置导出文件
+  config_export_dir: /apps/ETLAuto
+  # cas登录服务地址
+  cas-service-url: http://10.217.17.116:8094/cas
+  project-url: http://10.217.17.115:7202/jx-etl/
+  portal-app: 备案项目管理
+  soap_url: http://10.217.17.116:18001/portal/intlDataSynchronizedService?wsdl

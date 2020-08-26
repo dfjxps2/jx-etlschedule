@@ -344,22 +344,16 @@ var vm = new Vue({
 			});
 		},
 		expconfig:function(){
-			$.ajax({
-				type: "GET",
-				url: baseURL + "etl/job/expconfig",
-				contentType: "application/json",
-				success: function(data){
-					if(data.code === 0){
-						location.href = baseURL+"etl/job/dloadconfig?cfgName="+data.msg ;
-					}else{
-						vm.$alert('作业配置导出失败', '系统提示', {
-							confirmButtonText: '确定',
-							callback: action => {
-							}
-						});
+			if(vm.multipleSelection.length == 0){
+				vm.$alert("至少选择一条记录", '系统提示', {
+					confirmButtonText: '确定',
+					callback: action => {
 					}
-				}
-			});
+				});
+				return ;
+			}
+			var ids = vm.multipleSelection.map(x=>{return x.id})
+			location.href = baseURL+"etl/job/expconfig?ids="+ids.join(',') ;
 		},
 
 		loadsys: function(){
@@ -826,14 +820,14 @@ function uploadScript() {
 		responseType : "json",
 		cache:false,
 		onSubmit : function(file, extension) {
-			if (!(extension && /^(hql|HQL)$/.test(extension.toLowerCase()))) {
-				vm.$alert("脚本必须是hql类型", '系统提示', {
-					confirmButtonText: '确定',
-					callback: action => {
-					}
-				});
-				return false;
-			}
+			// if (!(extension && /^(hql|HQL)$/.test(extension.toLowerCase()))) {
+			// 	vm.$alert("脚本必须是hql类型", '系统提示', {
+			// 		confirmButtonText: '确定',
+			// 		callback: action => {
+			// 		}
+			// 	});
+			// 	return false;
+			// }
 			this.setData({"uppercase":"1"});
 		},
 		onComplete : function(file, m) {
@@ -848,14 +842,14 @@ function uploadScript() {
 			}
 		},
 		onChange:function(file, extension){
-			if (!(extension && /^(hql|HQL)$/.test(extension.toLowerCase()))) {
-				vm.$alert("脚本必须是hql类型", '系统提示', {
-					confirmButtonText: '确定',
-					callback: action => {
-					}
-				});
-				return false;
-			}
+			// if (!(extension && /^(hql|HQL)$/.test(extension.toLowerCase()))) {
+			// 	vm.$alert("脚本必须是hql类型", '系统提示', {
+			// 		confirmButtonText: '确定',
+			// 		callback: action => {
+			// 		}
+			// 	});
+			// 	return false;
+			// }
 			var lastIndex=file.lastIndexOf(".");
 			var etlJob=file.substr(0,lastIndex).toLocaleUpperCase();
 			vm.job.etlJob=etlJob;
