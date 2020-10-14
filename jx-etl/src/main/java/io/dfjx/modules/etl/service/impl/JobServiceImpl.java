@@ -916,7 +916,10 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
             jobStepEntity.setEtlJob(strings[1].toUpperCase().trim());
             jobStepEntity.setJobstepid("0100");
             jobStepEntity.setScriptid(Integer.parseInt(strings[6]));
-            jobStepEntity.setScriptfile(strings[1].toLowerCase()+"0100."+strings[7]);
+
+			ScriptEntity scriptEntity = scriptDao.selectById(strings[6]);
+
+            jobStepEntity.setScriptfile(scriptEntity.getFilename());
             jobStepEntity.setEnable("1");
 
             if(jobStepService.insert(jobStepEntity)){
