@@ -3,7 +3,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://10.200.22.39:3306/jx_etl?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      url: jdbc:mysql://10.200.22.39:3306/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
       username: etl
       password: edw123
       initial-size: 10

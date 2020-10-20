@@ -3,9 +3,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://59.212.226.39:3306/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
-      username: etl
-      password: etl123
+      url: jdbc:mysql://127.0.0.1:3306/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      username: root
+      password: Asdf@1234
       initial-size: 10
       max-active: 100
       min-idle: 10
@@ -33,8 +33,8 @@ spring:
           config:
             multi-statement-allow: true
 
-auth-url: http://59.212.226.45:31987
-auth-frontier-url: http://59.212.226.45:31000
+auth-url: http://10.200.22.39:31003
+auth-frontier-url: http://10.200.22.39:31000
 
 #统一认证
 auth:
@@ -42,13 +42,13 @@ auth:
     id: testclientid
     secret: 123456
   config:
-    need: true # true为需要登录，false为不需要登录
+    need: false
   login:
     url: ${auth-frontier-url}/frontier/auth/toLogin?redirect_url=
   logout:
-    url: http://59.212.226.49:9302/cas/logout
+    url: http://172.25.117.52:8094/cas/logout
 
-etl-root-url: /home/etl/ETLAuto
+etl-root-url: /data/etl/ETLAuto
 
 system-params:
   #  配置日志下载目录
