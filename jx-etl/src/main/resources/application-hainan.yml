@@ -48,21 +48,23 @@ auth:
   logout:
     url: http://59.212.226.49:9302/cas/logout
 
+etl-root-url: /home/etl/ETLAuto
+
 system-params:
   #  配置日志下载目录
-  file_download_dir: /home/etl/ETLAuto/LOG/
+  file_download_dir: ${etl-root-url}/LOG/
   #  配置公共脚本上传目录
-  public_script_upload_dir: /home/etl/ETLAuto/app/
+  public_script_upload_dir: ${etl-root-url}/app/
   #  配置作业脚本上传目录
-  hql_script_upload_dir: /home/etl/ETLAuto/app/
+  hql_script_upload_dir: ${etl-root-url}/app/
   # 配置作业控制文件路径
-  control_file_dir: /home/etl/ETLAuto/DATA/receive/
+  control_file_dir: ${etl-root-url}/DATA/receive/
   # 执行脚本软链接目录
-  exec_file_ln_dir: /home/etl/ETLAuto/APP/
+  exec_file_ln_dir: ${etl-root-url}/APP/
   # 是否创建软连接标志
   create_ln_flag: true
   # 作业配置导出文件
-  config_export_dir: /home/etl/ETLAuto/tmp/
+  config_export_dir: ${etl-root-url}/tmp/
   # cas登录服务地址
   cas-service-url: http://10.217.17.116:8094/cas
   project-url: http://10.217.17.115:7202/jx-etl/
