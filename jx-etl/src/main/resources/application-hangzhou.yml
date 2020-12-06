@@ -3,9 +3,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://10.200.22.39:3306/jx_etl?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
-      username: etl
-      password: edw123
+      url: jdbc:mysql://10.200.22.43:3306/etldb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      username: root
+      password: Asdf@1234
       initial-size: 10
       max-active: 100
       min-idle: 10
@@ -33,8 +33,8 @@ spring:
           config:
             multi-statement-allow: true
 
-auth-url: http://10.200.22.39:31003
-auth-frontier-url: http://10.200.22.39:31000
+auth-url: http://10.200.22.41:31003
+auth-frontier-url: http://10.200.22.41:31000
 
 #统一认证
 auth:
@@ -42,13 +42,13 @@ auth:
     id: testclientid
     secret: 123456
   config:
-    need: false
+    need: true
   login:
-    url: ${auth-frontier-url}/frontier/auth/toLogin?redirect_url=
+    url: ${auth-url}/bj/cas/authDoLogin?redirect=
   logout:
-    url: http://172.25.117.52:8094/cas/logout
+    url: http://10.200.22.42:8094/cas/logout
 
-etl-root-url: /usr/share/etl
+etl-root-url: /home/etl/ETLAuto
 
 system-params:
   #  配置日志下载目录
@@ -65,8 +65,3 @@ system-params:
   create_ln_flag: true
   # 作业配置导出文件
   config_export_dir: ${etl-root-url}/tmp/
-  # cas登录服务地址
-  cas-service-url: http://10.217.17.116:8094/cas
-  project-url: http://10.217.17.115:7202/jx-etl/
-  portal-app: 备案项目管理
-  soap_url: http://10.217.17.116:18001/portal/intlDataSynchronizedService?wsdl

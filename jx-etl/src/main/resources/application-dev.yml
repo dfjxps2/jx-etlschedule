@@ -44,7 +44,7 @@ auth:
   config:
     need: false
   login:
-    url: ${auth-frontier-url}/frontier/auth/toLogin?redirect_url=
+    url: ${auth-url}/bj/cas/authDoLogin?redirect=
   logout:
     url: http://59.212.226.49:9302/cas/logout
 

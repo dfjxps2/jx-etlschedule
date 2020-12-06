@@ -44,7 +44,7 @@ auth:
   config:
     need: false
   login:
-    url: ${auth-frontier-url}/frontier/auth/toLogin?redirect_url=
+    url: ${auth-url}/bj/cas/authDoLogin?redirect=
   logout:
     url: http://cas.dxdemo.ztdemo.com/cas/logout
 
@@ -65,8 +65,3 @@ system-params:
   create_ln_flag: true
   # 作业配置导出文件
   config_export_dir: ${etl-root-url}/tmp/
-  # cas登录服务地址
-  cas-service-url: http://10.217.17.116:8094/cas
-  project-url: http://10.217.17.115:7202/jx-etl/
-  portal-app: 备案项目管理
-  soap_url: http://10.217.17.116:18001/portal/intlDataSynchronizedService?wsdl
