@@ -44,7 +44,7 @@ auth:
   config:
     need: true
   login:
-    url: ${auth-url}/bj/cas/authDoLogin?redirect=
+    url: ${auth-url}/bj/cas/authDoLogin?redirect=http%3A%2F%2F{{etl_ip}}%3A{{etl_port}}%2Fjx-etl%2Floginback
   logout:
     url: http://172.21.17.53:8094/cas/logout
 

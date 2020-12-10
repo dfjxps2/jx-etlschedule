@@ -44,7 +44,7 @@ auth:
   config:
     need: false
   login:
-    url: ${auth-url}/bj/cas/authDoLogin?redirect=
+    url: ${auth-url}/bj/cas/authDoLogin?redirect=http%3A%2F%2F{{etl_ip}}%3A{{etl_port}}%2Fjx-etl%2Floginback
   logout:
     url: http://59.212.226.49:9302/cas/logout
 
@@ -63,8 +63,3 @@ system-params:
   create_ln_flag: false
 # 作业配置导出文件
   config_export_dir: d:/udf/tmp/
-# cas登录服务地址
-  cas-service-url: http://10.217.17.116:8094/cas
-  project-url: http://localhost:7202/jx-etl/
-  portal-app: 备案项目管理
-  soap_url: http://10.217.17.116:18001/portal/intlDataSynchronizedService?wsdl

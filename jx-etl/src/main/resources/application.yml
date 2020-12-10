@@ -21,7 +21,7 @@ spring:
   application:
     name: jx-etl
   profiles:
-    active: dapeng
+    active: prod
   main:
     allow-bean-definition-overriding: true
   jackson:

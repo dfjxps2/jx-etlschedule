@@ -16,6 +16,7 @@
 
 package io.dfjx.modules.sys.controller;
 
+import com.sun.javafx.binding.StringFormatter;
 import io.dfjx.common.config.SystemParams;
 import io.dfjx.common.utils.Constant;
 import io.dfjx.common.utils.CookieUtils;
@@ -151,12 +152,17 @@ public class SysPageController {
 
 	private String gtoLoginUrl () throws UnsupportedEncodingException {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-		String scheme = request.getScheme();
 		String serverName = request.getServerName();
 		int port = request.getServerPort();
-		String path = request.getContextPath();
-		String basePath = scheme + "://" + serverName + ":" + port + path;
-        return loginUrl + URLEncoder.encode(basePath + "/loginback" , "utf-8");
+
+//		String [] path  = loginUrl.split("redirect");
+//		if (StringUtils.isNotEmpty(redirectUrl)) {
+//			redirectUrl = String.format(redirectUrl, serverName, port);
+//		}
+
+		String url = loginUrl.replace("{{etl_ip}}", serverName).replace("{{etl_port}}", port + "");
+//		return loginUrl + URLEncoder.encode(basePath + "/loginback" , "utf-8");
+		return url;
     }
 
 }
