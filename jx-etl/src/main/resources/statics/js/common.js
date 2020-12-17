@@ -155,6 +155,9 @@ function isBlank(value) {
 }
 
 function dateFormat(fmt, date) {
+	if (!date) {
+		return '';
+	}
 	date = new Date(date);
 	let ret;
 	const opt = {

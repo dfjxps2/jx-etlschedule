@@ -99,10 +99,10 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 				sql.append(" and etl_System like '%"+ etlSystem +"%' ");
 			}
 			if(StringUtils.isNotBlank(lastTxDateStart)){
-				sql.append(" and (last_TxDate>='" + lastTxDateStart +"' or last_TxDate is null) ");
+				sql.append(" and last_TxDate>='" + lastTxDateStart +"' ");
 			}
 			if(StringUtils.isNotBlank(lastTxDateEnd)){
-				sql.append(" and (last_TxDate<='" + lastTxDateEnd +"' or last_TxDate is null) ");
+				sql.append(" and last_TxDate<='" + lastTxDateEnd +"' ");
 			}
 			if(StringUtils.isNotBlank(lastJobStatus)){
 				sql.append(" and last_JobStatus like '%" + lastJobStatus +"%' ");
@@ -120,7 +120,7 @@ public class JobServiceImpl extends ServiceImpl<JobDao, JobEntity> implements Jo
 					//                            .like(StringUtils.isNotBlank(etlJob),"etl_Job", etlJob)
 					//                            .like(StringUtils.isNotBlank(etl_system),"etl_system",etlSystem)
 					//                            .eq("last_TxDate",lastTxDate)
-					.where(" 1=1 "+sql.toString() ));
+					.where(" 1=1 "+sql.toString() ).orderBy("Last_StartTime", false));
 		} else {
 			page = this.selectPage(
 					new Query<JobEntity>(params).getPage(),
